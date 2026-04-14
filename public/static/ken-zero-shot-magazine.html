@@ -171,6 +171,29 @@
   html.mobile .back-cta { padding: 6vh 8vw; }
   .matrix-wrap img { max-width: 90%; max-height: 85%; object-fit: contain; border-radius: 4px; }
   html.mobile .matrix-wrap img { width: 100%; max-height: none; }
+
+  /* === PAGE FLIP ANIMATION (mobile) === */
+  html.mobile .page {
+    opacity: 0;
+    transform: translateY(28px);
+    transition: opacity 0.55s cubic-bezier(0.22, 1, 0.36, 1),
+                transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  html.mobile .page.page-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  /* staggered children */
+  html.mobile .page .page__inner > * {
+    opacity: 0;
+    transform: translateY(16px);
+    transition: opacity 0.45s ease, transform 0.45s ease;
+  }
+  html.mobile .page.page-visible .page__inner > *:nth-child(1) { opacity: 1; transform: translateY(0); transition-delay: 0.05s; }
+  html.mobile .page.page-visible .page__inner > *:nth-child(2) { opacity: 1; transform: translateY(0); transition-delay: 0.12s; }
+  html.mobile .page.page-visible .page__inner > *:nth-child(3) { opacity: 1; transform: translateY(0); transition-delay: 0.19s; }
+  html.mobile .page.page-visible .page__inner > *:nth-child(4) { opacity: 1; transform: translateY(0); transition-delay: 0.26s; }
+  html.mobile .page.page-visible .page__inner > *:nth-child(5) { opacity: 1; transform: translateY(0); transition-delay: 0.33s; }
 </style>
 </head>
 <body>
@@ -630,12 +653,17 @@
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
+        entry.target.classList.add('page-visible');
         const idx = Array.from(pages).indexOf(entry.target);
         if (idx !== -1) { currentPage = idx; updateDots(); }
+      } else {
+        entry.target.classList.remove('page-visible');
       }
     });
-  }, { threshold: 0.5 });
+  }, { threshold: 0.4 });
   pages.forEach(p => observer.observe(p));
+  // Start first page as visible
+  pages[0].classList.add('page-visible');
 </script>
 </body>
 </html>
