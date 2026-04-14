@@ -59,7 +59,7 @@ export async function GET(
   const response = NextResponse.redirect(new URL(`/decks/${encodeURIComponent(filename)}`, request.url));
   response.cookies.set(
     deckAccessCookieName(filename),
-    createDeckAccessCookieValue({ filename, email: stored.email }),
+    createDeckAccessCookieValue(stored.email),
     deckAccessCookieOptions(),
   );
 

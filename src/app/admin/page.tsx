@@ -1,29 +1,43 @@
+import { readdir } from "node:fs/promises";
+import path from "node:path";
+
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
 import { hasValidAdminSession } from "@/lib/auth";
-import { listDecks } from "@/lib/manifests";
+import { listDecks, listRequests } from "@/lib/manifests";
 
 import { LogoutButton } from "./logout-button";
 import styles from "./page.module.css";
+import { RegisterDeckButton } from "./register-deck-button";
 
-interface DeckEmail {
-  email: string;
-  status: string;
-  addedAt: string;
+async function discoverStaticDecks(): Promise<string[]> {
+  try {
+    const staticDir = path.join(process.cwd(), "public", "static");
+    const files = await readdir(staticDir, { withFileTypes: true });
+    return files
+      .filter((entry) => entry.isFile() && /\.html?$/i.test(entry.name))
+      .map((entry) => entry.name)
+      .sort((a, b) => a.localeCompare(b));
+  } catch {
+    return [];
+  }
 }
 
-interface DeckManifest {
-  title: string;
-  mode: string;
-  sharingEnabled: boolean;
-  expiresAt: string | null;
-  emails: DeckEmail[];
-}
+function formatExpiry(expiresAt: string | null): string {
+  if (!expiresAt) return "No expiry";
 
-interface DeckEntry {
-  filename: string;
-  manifest: DeckManifest;
+  const time = new Date(expiresAt).getTime();
+  if (Number.isNaN(time)) return "Invalid";
+  if (time < Date.now()) return "Expired";
+
+  return new Date(expiresAt).toLocaleString(undefined, {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
 }
 
 export default async function AdminDashboardPage() {
@@ -38,54 +52,49 @@ export default async function AdminDashboardPage() {
     redirect("/admin/login");
   }
 
-  let decks: DeckEntry[] = [];
+  let decks: Awaited<ReturnType<typeof listDecks>> = [];
   try {
     decks = await listDecks();
   } catch {
     decks = [];
   }
 
-  let pendingByDeck: Map<string, number> = new Map();
-  try {
-    const pendingResults = await Promise.allSettled(
-      decks.map(async (deck) => {
-        const { listRequests } = await import("@/lib/manifests");
-        const requests = await listRequests(deck.filename);
-        return { filename: deck.filename, count: requests.filter((r: { status: string }) => r.status === "pending").length };
-      }),
-    );
-    for (const result of pendingResults) {
-      if (result.status === "fulfilled") {
-        pendingByDeck.set(result.value.filename, result.value.count);
-      }
-    }
-  } catch {
-    // ignore pending counts
-  }
+  const requestCounts = await Promise.all(
+    decks.map(async (deck) => ({
+      filename: deck.filename,
+      count: (await listRequests(deck.filename)).filter((entry) => entry.status === "pending").length,
+    })),
+  );
 
+  const pendingByDeck = new Map(requestCounts.map((item) => [item.filename, item.count]));
   const totalUsers = decks.reduce(
-    (sum, deck) => sum + deck.manifest.emails.filter((e: DeckEmail) => e.status !== "revoked").length,
+    (sum, deck) => sum + deck.manifest.emails.filter((entry) => entry.status !== "revoked").length,
     0,
   );
-  const totalPending = Array.from(pendingByDeck.values()).reduce((a, b) => a + b, 0);
+  const totalPending = requestCounts.reduce((sum, item) => sum + item.count, 0);
+
+  const staticFiles = await discoverStaticDecks();
+  const knownFiles = new Set(decks.map((deck) => deck.filename));
+  const unregisteredFiles = staticFiles.filter((file) => !knownFiles.has(file));
 
   return (
     <main className={styles.page}>
       <header className={styles.header}>
         <div>
-          <p className={styles.kicker}>Admin</p>
-          <h1>Deck Share</h1>
+          <p className={styles.kicker}>Hawkeye Access Control</p>
+          <h1>Deck Share Control Room</h1>
+          <p className={styles.subhead}>Manage access, sharing requests, expiry windows, and deck manifests.</p>
         </div>
         <LogoutButton />
       </header>
 
       <section className={styles.stats}>
         <article>
-          <p>Total Decks</p>
+          <p>Deck Manifests</p>
           <strong>{decks.length}</strong>
         </article>
         <article>
-          <p>Total Users</p>
+          <p>Authorized Recipients</p>
           <strong>{totalUsers}</strong>
         </article>
         <article>
@@ -94,63 +103,83 @@ export default async function AdminDashboardPage() {
         </article>
       </section>
 
-      <section className={styles.tableWrap}>
-        {decks.length === 0 ? (
-          <p className={styles.empty}>No decks found yet.</p>
-        ) : (
-          <table className={styles.table}>
-            <thead>
-              <tr>
-                <th>Title</th>
-                <th>Filename</th>
-                <th>Mode</th>
-                <th>Users</th>
-                <th>Sharing</th>
-                <th>Pending</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {decks.map((deck) => {
-                const manifest = deck.manifest;
-                const activeCount = manifest.emails.filter((e: DeckEmail) => e.status === "active").length;
-                const pendingCount = manifest.emails.filter((e: DeckEmail) => e.status === "pending").length;
+      <section className={styles.panel}>
+        <div className={styles.panelHead}>
+          <h2>Active Decks</h2>
+          <p>Owner preview links open with owner bypass enabled.</p>
+        </div>
 
-                return (
-                  <tr key={deck.filename}>
-                    <td>{manifest.title}</td>
-                    <td className={styles.filename}>{deck.filename}</td>
-                    <td>
-                      <span className={styles.badge}>{manifest.mode}</span>
-                    </td>
-                    <td>
-                      {activeCount}/{pendingCount}
-                    </td>
-                    <td>{manifest.sharingEnabled ? "On" : "Off"}</td>
-                    <td>{pendingByDeck.get(deck.filename) ?? 0}</td>
-                    <td>
-                      <a href={`/decks/${encodeURIComponent(deck.filename)}`} target="_blank" rel="noopener noreferrer">
-                        View
-                      </a>
-                      {" · "}
-                      <Link href={`/admin/deck/${encodeURIComponent(deck.filename)}`}>Manage</Link>
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
+        {decks.length ? (
+          <div className={styles.deckGrid}>
+            {decks.map(({ filename, manifest }) => {
+              const activeCount = manifest.emails.filter((entry) => entry.status === "active").length;
+              const pendingCount = manifest.emails.filter((entry) => entry.status === "pending").length;
+              const requestCount = pendingByDeck.get(filename) ?? 0;
+
+              return (
+                <article className={styles.deckCard} key={filename}>
+                  <div className={styles.deckTop}>
+                    <h3>{manifest.title}</h3>
+                    <span className={styles.modeBadge}>{manifest.mode}</span>
+                  </div>
+
+                  <p className={styles.filename}>{filename}</p>
+
+                  <div className={styles.metaGrid}>
+                    <p>
+                      <span>Users</span>
+                      <strong>{activeCount + pendingCount}</strong>
+                    </p>
+                    <p>
+                      <span>Pending</span>
+                      <strong>{requestCount}</strong>
+                    </p>
+                    <p>
+                      <span>Sharing</span>
+                      <strong>{manifest.sharingEnabled ? "On" : "Off"}</strong>
+                    </p>
+                    <p>
+                      <span>Expiry</span>
+                      <strong>{formatExpiry(manifest.expiresAt)}</strong>
+                    </p>
+                  </div>
+
+                  <div className={styles.actions}>
+                    <Link href={`/decks/${encodeURIComponent(filename)}?owner_access=true`} target="_blank" rel="noopener noreferrer">
+                      View
+                    </Link>
+                    <Link href={`/admin/deck/${encodeURIComponent(filename)}`}>Manage</Link>
+                  </div>
+                </article>
+              );
+            })}
+          </div>
+        ) : (
+          <p className={styles.empty}>No deck manifests found yet.</p>
         )}
       </section>
 
-      <section className={styles.upload}>
-        <h2>Upload New Deck</h2>
-        <p>Add an HTML file to <code>public/static/</code> in the repo, push, then run:</p>
-        <pre>
-          <code>curl -X PUT https://deck-share.vercel.app/api/decks/admin/decks/your-file.html \
--H "Authorization: Bearer YOUR_ADMIN_TOKEN" \
--d &apos;{"{"}"title":"Your Title"{"}"}&apos;</code>
-        </pre>
+      <section className={styles.panel}>
+        <div className={styles.panelHead}>
+          <h2>Discovered HTML Files</h2>
+          <p>Files in <code>public/static</code> without a manifest.</p>
+        </div>
+
+        {unregisteredFiles.length ? (
+          <ul className={styles.discoveryList}>
+            {unregisteredFiles.map((filename) => (
+              <li key={filename}>
+                <div>
+                  <p>{filename}</p>
+                  <span>Not registered</span>
+                </div>
+                <RegisterDeckButton filename={filename} />
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p className={styles.empty}>No unregistered HTML files found.</p>
+        )}
       </section>
     </main>
   );

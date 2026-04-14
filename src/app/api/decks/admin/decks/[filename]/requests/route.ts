@@ -1,10 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 
-import { adminOrThrow as adminOrThrow, parseDeckAccessCookieValue, deckAccessCookieName } from "@/lib/auth";
+import {
+  adminOrThrow as adminOrThrow,
+  parseDeckAccessCookieValue,
+  deckAccessCookieName,
+} from "@/lib/auth";
 import { createRequest, listRequests, normalizeEmail } from "@/lib/manifests";
 
 export async function GET(
-  _request: NextRequest,
+  request: NextRequest,
   context: { params: Promise<{ filename: string }> },
 ) {
   try {
@@ -25,9 +29,18 @@ export async function POST(
   const { filename } = await context.params;
 
   const cookie = request.cookies.get(deckAccessCookieName(filename))?.value;
-  const session = parseDeckAccessCookieValue(cookie);
+  const sessionEmail = parseDeckAccessCookieValue(cookie);
+  const requestedByOwner = request.nextUrl.searchParams.get("owner") === "true";
+  if (requestedByOwner) {
+    try {
+      await adminOrThrow(request);
+    } catch {
+      return NextResponse.json({ error: "unauthorized" }, { status: 401 });
+    }
+  }
 
-  if (!session || session.filename !== filename) {
+  const requester = requestedByOwner ? "muralikrishnan@gmail.com" : sessionEmail;
+  if (!requester) {
     return NextResponse.json({ error: "unauthorized" }, { status: 401 });
   }
 
@@ -39,7 +52,7 @@ export async function POST(
 
   const created = await createRequest({
     filename,
-    fromEmail: session.email,
+    fromEmail: requester,
     requestedEmail,
   });
 

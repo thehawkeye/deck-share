@@ -31,7 +31,11 @@ export function DeckViewerClient({ filename, title, email, canShare, ownerAccess
     event.preventDefault();
     setStatus("");
 
-    const response = await fetch(`/api/decks/admin/decks/${encodeURIComponent(filename)}/requests`, {
+    const requestUrl = ownerAccess
+      ? `/api/decks/admin/decks/${encodeURIComponent(filename)}/requests?owner=true`
+      : `/api/decks/admin/decks/${encodeURIComponent(filename)}/requests`;
+
+    const response = await fetch(requestUrl, {
       method: "POST",
       headers: { "content-type": "application/json" },
       body: JSON.stringify({ requestedEmail }),

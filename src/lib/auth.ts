@@ -85,7 +85,7 @@ export function deckAccessCookieName(filename: string): string {
   return `deck_access_${encodeURIComponent(filename)}`;
 }
 
-export function deckAccessCookieOptions(maxAge: number) {
+export function deckAccessCookieOptions(maxAge: number = DECK_SESSION_MAX_AGE) {
   return {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
