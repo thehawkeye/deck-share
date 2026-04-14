@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en" class>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Deck Share — Magic Link HTML Hosting</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg-deep: #050507;
+    --bg-primary: #0a0a0d;
+    --bg-elevated: #111115;
+    --bg-card: #18181d;
+    --text-primary: #f4f4f5;
+    --text-secondary: #a1a1aa;
+    --text-muted: #6b6b70;
+    --accent: #c9a962;
+    --accent-subtle: rgba(201,169,98,0.12);
+    --accent-soft: rgba(201,169,98,0.4);
+    --border: rgba(255,255,255,0.04);
+    --border-light: rgba(255,255,255,0.08);
+    --success: rgba(80,200,120,0.8);
+    --info: rgba(80,160,220,0.8);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  /* Desktop */
+  html.desktop { scroll-snap-type: x mandatory; overflow-x: scroll; overflow-y: hidden; }
+  html.mobile { overflow-x: hidden; overflow-y: auto; }
+  body { font-family: 'Outfit', sans-serif; background: var(--bg-deep); color: var(--text-primary); line-height: 1.75; font-weight: 300; letter-spacing: 0.01em; }
+  html.desktop body { display: flex; width: 1100vw; height: 100vh; }
+  html.mobile body { display: block; width: 100%; min-height: 100vh; }
+  ::-webkit-scrollbar { }
+  html.desktop ::-webkit-scrollbar { display: none; }
+  html.mobile ::-webkit-scrollbar { width: 4px; }
+  html.mobile ::-webkit-scrollbar-track { background: var(--bg-deep); }
+  html.mobile ::-webkit-scrollbar-thumb { background: var(--border-light); border-radius: 2px; }
+  .page { position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+  html.desktop .page { width: 100vw; height: 100vh; flex-shrink: 0; scroll-snap-align: start; }
+  html.mobile .page { width: 100vw; min-height: 100vh; padding: 6vh 6vw; }
+  .page__inner { width: 100%; height: 100%; position: relative; }
+  html.mobile .page__inner { height: auto; min-height: calc(100vh - 12vh); display: flex; flex-direction: column; justify-content: center; }
+
+  /* backgrounds */
+  .bg-cover { background: var(--bg-deep); }
+  .bg-cover::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 100% 50% at 50% -10%, rgba(201,169,98,0.22) 0%, transparent 55%); pointer-events: none; }
+  .bg-back { background: var(--bg-deep); }
+  .bg-back::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 80% 50% at 50% 110%, rgba(201,169,98,0.18) 0%, transparent 55%); pointer-events: none; }
+  .bg-p2 { background: #0c1018; }
+  .bg-p2::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 70% 50% at 90% 40%, rgba(201,169,98,0.07) 0%, transparent 55%); pointer-events: none; }
+  .bg-p3 { background: #0d0e0f; }
+  .bg-p3::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 60% 50% at 5% 80%, rgba(201,169,98,0.06) 0%, transparent 50%); pointer-events: none; }
+  .bg-p4 { background: #0c1017; }
+  .bg-p4::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 50% 50% at 50% 0%, rgba(201,169,98,0.05) 0%, transparent 50%); pointer-events: none; }
+  .bg-p5 { background: #0f1310; }
+  .bg-p5::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 70% 40% at 80% 60%, rgba(201,169,98,0.06) 0%, transparent 50%); pointer-events: none; }
+  .bg-p6 { background: #0d0c10; }
+  .bg-p6::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 60% 50% at 70% 20%, rgba(201,169,98,0.06) 0%, transparent 50%); pointer-events: none; }
+  .bg-p7 { background: #111111; }
+  .bg-p7::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 50% 60% at 0% 50%, rgba(201,169,98,0.04) 0%, transparent 50%); pointer-events: none; }
+  .bg-p8 { background: #0e1211; }
+  .bg-p8::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 50% 40% at 50% 100%, rgba(201,169,98,0.05) 0%, transparent 50%); pointer-events: none; }
+
+  /* layouts */
+  .split { display: grid; grid-template-columns: 1fr 1fr; width: 100%; height: 100%; }
+  .split--flush-right .split__right { padding-left: 5vw; overflow-y: auto; }
+  .split__left, .split__right { display: flex; flex-direction: column; justify-content: center; padding: 8vh 6vw; position: relative; }
+  .split__left { border-right: 1px solid var(--border); }
+  /* mobile: stack */
+  html.mobile .split { grid-template-columns: 1fr; height: auto; }
+  html.mobile .split__left { border-right: none; border-bottom: 1px solid var(--border); padding: 6vh 6vw 4vh; }
+  html.mobile .split__right { padding: 4vh 6vw 6vh; overflow-y: visible; max-height: none; }
+
+  /* typography */
+  .label { font-family: 'Outfit', sans-serif; font-size: 0.6rem; font-weight: 500; letter-spacing: 0.3em; text-transform: uppercase; color: var(--accent); margin-bottom: 1.5rem; display: block; }
+  h1 { font-family: 'Cormorant Garamond', serif; font-size: clamp(3.5rem, 7vw, 7rem); font-weight: 300; line-height: 1.0; letter-spacing: -0.01em; color: var(--text-primary); }
+  h1 em { font-style: italic; color: var(--accent); }
+  h2 { font-family: 'Cormorant Garamond', serif; font-size: clamp(2.2rem, 4vw, 4.5rem); font-weight: 300; line-height: 1.05; color: var(--text-primary); margin-bottom: 1.5rem; }
+  h2 em { font-style: italic; color: var(--accent); }
+  h3 { font-family: 'Cormorant Garamond', serif; font-size: clamp(1.3rem, 2vw, 2.2rem); font-weight: 400; color: var(--text-primary); margin-bottom: 0.6rem; }
+  p { font-family: 'Outfit', sans-serif; font-size: clamp(0.78rem, 1.05vw, 1.0rem); font-weight: 300; color: var(--text-secondary); line-height: 1.85; max-width: 44ch; }
+  p + p { margin-top: 1rem; }
+
+  /* components */
+  .accent-line { width: 3rem; height: 1px; background: var(--accent); margin: 1.5rem 0; }
+  .accent-line--center { margin: 1.5rem auto; }
+  .key-hint { font-family: 'Outfit', sans-serif; font-size: 0.55rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--text-muted); display: flex; align-items: center; gap: 0.5rem; }
+  .key-hint kbd { background: var(--bg-card); border: 1px solid var(--border-light); border-radius: 3px; padding: 0.15rem 0.4rem; font-family: inherit; color: var(--text-secondary); }
+  .page-num { position: absolute; bottom: 2rem; right: 3vw; font-family: 'Outfit', sans-serif; font-size: 0.6rem; letter-spacing: 0.2em; color: var(--text-muted); text-transform: uppercase; }
+  .mark { display: flex; align-items: center; gap: 0.75rem; }
+  .mark__circle { width: 40px; height: 40px; border-radius: 50%; border: 1.5px solid var(--accent); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .mark__dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); }
+  .mark__text { font-family: 'Cormorant Garamond', serif; font-size: 1rem; font-weight: 400; letter-spacing: 0.1em; color: var(--text-primary); }
+  .mark__text span { display: block; font-size: 0.55rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--accent); font-family: 'Outfit', sans-serif; font-weight: 500; }
+  .nav-dots { position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%); display: flex; gap: 0.6rem; z-index: 100; }
+  html.mobile .nav-dots { position: static; margin-top: 2rem; transform: none; justify-content: center; }
+  .nav-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--text-muted); cursor: pointer; transition: all 0.3s; border: none; padding: 0; }
+  .nav-dot.active { background: var(--accent); transform: scale(1.4); }
+  .nav-dot:hover { background: var(--accent-soft); }
+
+  /* cards */
+  .card { background: var(--bg-card); border: 1px solid var(--border); padding: 1.8rem 2rem; border-radius: 2px; }
+  .card__label { font-family: 'Outfit', sans-serif; font-size: 0.55rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.6rem; display: block; }
+  .card h3 { font-size: clamp(1.05rem, 1.4vw, 1.4rem); }
+  .card p { font-size: clamp(0.7rem, 0.9vw, 0.88rem); max-width: 30ch; }
+  .card p + p { margin-top: 0.5rem; }
+  .card--accent { border-color: rgba(201,169,98,0.3); }
+  .card--success { border-color: rgba(80,200,120,0.3); }
+  .card--info { border-color: rgba(80,160,220,0.3); }
+  .card--success .card__label { color: var(--success); }
+  .card--info .card__label { color: var(--info); }
+
+  /* highlight */
+  .highlight-box { background: var(--accent-subtle); border: 1px solid rgba(201,169,98,0.2); padding: 1.5rem 2rem; border-radius: 2px; margin-top: 1rem; }
+  .highlight-box p { font-size: clamp(0.72rem, 0.95vw, 0.9rem); color: var(--text-primary); max-width: 38ch; }
+
+  /* flow step */
+  .flow-row { display: flex; align-items: center; gap: 1.5rem; padding: 1.1rem 0; border-bottom: 1px solid var(--border); }
+  .flow-row:last-child { border-bottom: none; }
+  .flow-row__num { font-family: 'Cormorant Garamond', serif; font-size: clamp(2.5rem, 4vw, 4rem); font-weight: 300; color: var(--accent); line-height: 1; flex-shrink: 0; min-width: 2.5rem; }
+  .flow-row__content { flex: 1; }
+  .flow-row__content h3 { margin-bottom: 0.3rem; font-size: clamp(0.95rem, 1.3vw, 1.3rem); }
+  .flow-row__content p { font-size: clamp(0.7rem, 0.9vw, 0.88rem); max-width: none; }
+  .flow-row__arrow { font-family: 'Cormorant Garamond', serif; font-size: 1.5rem; color: var(--text-muted); flex-shrink: 0; }
+
+  /* feature grid */
+  .feat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; width: 100%; }
+  .feat { padding: 1.4rem 1.6rem; border-radius: 2px; border: 1px solid var(--border); background: var(--bg-card); }
+  .feat__icon { font-size: 1.2rem; margin-bottom: 0.6rem; display: block; }
+  .feat h3 { font-size: clamp(0.9rem, 1.2vw, 1.2rem); margin-bottom: 0.4rem; }
+  .feat p { font-size: 0.7rem; max-width: 26ch; }
+  html.mobile .feat-grid { grid-template-columns: 1fr; }
+
+  /* stat */
+  .stat-anchor { font-family: 'Cormorant Garamond', serif; font-size: clamp(4.5rem, 11vw, 11rem); font-weight: 300; line-height: 1; color: var(--accent); display: block; }
+  .stat-label { font-family: 'Outfit', sans-serif; font-size: 0.65rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--text-muted); margin-top: 0.4rem; display: block; }
+
+  /* quote */
+  .hero-quote { font-family: 'Cormorant Garamond', serif; font-size: clamp(2.5rem, 5.5vw, 5.5rem); font-weight: 300; font-style: italic; color: var(--text-primary); line-height: 1.15; max-width: 20ch; text-align: center; margin: 0 auto 2rem; }
+  .hero-quote::before { content: ''; }
+  .back-name { font-family: 'Cormorant Garamond', serif; font-size: clamp(1.2rem, 2vw, 2rem); font-weight: 400; color: var(--text-primary); letter-spacing: 0.05em; margin-bottom: 0.5rem; }
+  .back-tagline { font-family: 'Outfit', sans-serif; font-size: 0.65rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 1.5rem; }
+  .footer-links { display: flex; gap: 2rem; flex-wrap: wrap; }
+  .footer-links a { font-family: 'Outfit', sans-serif; font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); text-decoration: none; border-bottom: 1px solid var(--border); padding-bottom: 0.2rem; transition: color 0.3s, border-color 0.3s; }
+  .footer-links a:hover { color: var(--accent); border-color: var(--accent); }
+  .social-row { display: flex; gap: 1.5rem; flex-wrap: wrap; justify-content: center; margin-bottom: 1.5rem; }
+  .social-link { font-family: 'Outfit', sans-serif; font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-muted); text-decoration: none; display: flex; align-items: center; gap: 0.4rem; transition: color 0.3s; }
+  .social-link:hover { color: var(--accent); }
+  .social-link::before { content: ''; width: 4px; height: 4px; border-radius: 50%; background: currentColor; }
+
+  /* comparison */
+  .comp-table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
+  .comp-table th { font-family: 'Outfit', sans-serif; font-size: 0.58rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--text-muted); text-align: left; padding: 0.5rem 0; border-bottom: 1px solid var(--border); }
+  .comp-table td { font-family: 'Outfit', sans-serif; font-size: clamp(0.68rem, 0.88vw, 0.85rem); color: var(--text-secondary); padding: 0.7rem 0; border-bottom: 1px solid var(--border); vertical-align: top; }
+  .comp-table tr:last-child td { border-bottom: none; }
+  .comp-table .check { color: var(--success); }
+  .comp-table .cross { color: rgba(255,80,80,0.6); }
+
+  /* code */
+  .code { font-family: 'Courier New', monospace; font-size: clamp(0.6rem, 0.85vw, 0.82rem); color: var(--text-secondary); background: var(--bg-card); border: 1px solid var(--border); padding: 0.8rem 1.2rem; border-radius: 2px; display: inline-block; margin-top: 0.5rem; }
+  .code-block { font-family: 'Courier New', monospace; font-size: clamp(0.58rem, 0.8vw, 0.78rem); color: var(--text-secondary); background: var(--bg-card); border: 1px solid var(--border); padding: 1.2rem 1.5rem; border-radius: 2px; white-space: pre; overflow-x: auto; line-height: 1.6; }
+
+  /* mobile */
+  html.mobile .key-hint:first-child { display: none; }
+  html.mobile .page { overflow-x: hidden; }
+  html.mobile .hero-quote { font-size: clamp(2rem, 9vw, 3.5rem); }
+
+  /* === PAGE FLIP ANIMATION (mobile) === */
+  html.mobile .page {
+    opacity: 0;
+    transform: translateY(28px);
+    transition: opacity 0.55s cubic-bezier(0.22, 1, 0.36, 1),
+                transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  html.mobile .page.page-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  html.mobile .page .page__inner > * {
+    opacity: 0;
+    transform: translateY(16px);
+    transition: opacity 0.45s ease, transform 0.45s ease;
+  }
+  html.mobile .page.page-visible .page__inner > *:nth-child(1) { opacity: 1; transform: translateY(0); transition-delay: 0.05s; }
+  html.mobile .page.page-visible .page__inner > *:nth-child(2) { opacity: 1; transform: translateY(0); transition-delay: 0.12s; }
+  html.mobile .page.page-visible .page__inner > *:nth-child(3) { opacity: 1; transform: translateY(0); transition-delay: 0.19s; }
+  html.mobile .page.page-visible .page__inner > *:nth-child(4) { opacity: 1; transform: translateY(0); transition-delay: 0.26s; }
+  html.mobile .page.page-visible .page__inner > *:nth-child(5) { opacity: 1; transform: translateY(0); transition-delay: 0.33s; }
+</style>
+</head>
+<body>
+
+<!-- ============================================================
+     PAGE 1 — COVER
+     ============================================================ -->
+<div class="page bg-cover" id="p1">
+  <div class="page__inner" style="display:flex; flex-direction:column; justify-content:space-between; padding:6vh 6vw;">
+    <div class="mark">
+      <div class="mark__circle"><div class="mark__dot"></div></div>
+      <div class="mark__text">Deck Share</div>
+    </div>
+    <div style="flex:1; display:flex; flex-direction:column; justify-content:center; padding-left:2vw;">
+      <p class="label" style="margin-bottom:1rem;">HTML Presentation Hosting</p>
+      <h1>Your Deck.<br><em>Your</em><br>Link.</h1>
+      <div class="accent-line"></div>
+      <p style="color:var(--text-muted); font-size:0.8rem; letter-spacing:0.15em; text-transform:uppercase; max-width:40ch; line-height:1.6;">
+        Magic link gated HTML hosting.<br>Every recipient, one link, zero shared passwords.
+      </p>
+    </div>
+    <div style="display:flex; justify-content:space-between; align-items:flex-end;">
+      <div class="key-hint"><kbd>←</kbd><kbd>→</kbd> navigate &nbsp;·&nbsp; scroll horizontally</div>
+      <div class="key-hint" style="font-size:0.52rem; color:var(--text-muted);">deck-share.vercel.app</div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     PAGE 2 — THE PROBLEM
+     ============================================================ -->
+<div class="page bg-p2" id="p2">
+  <div class="page__inner" style="display:grid; grid-template-columns:1fr 1fr; width:100%; height:100%;">
+    <div style="display:flex; flex-direction:column; justify-content:center; padding:8vh 5vw 8vh 6vw; border-right:1px solid var(--border);">
+      <p class="label">The Problem</p>
+      <h2>Sharing decks<br>is a <em>security</em><br>nightmare.</h2>
+      <div class="accent-line"></div>
+      <p>Passwords get forwarded. Links stay live indefinitely. You have no idea who actually viewed your deck.</p>
+      <p style="margin-top:1rem;">Google Slides, Notion, Canva. All share by link by default. All of them wrong for confidential decks.</p>
+    </div>
+    <div style="display:flex; flex-direction:column; justify-content:center; padding:8vh 6vw 8vh 5vw; gap:2rem;">
+      <div>
+        <span class="stat-anchor">4+</span>
+        <span class="stat-label">passwords leaked per team, per year</span>
+      </div>
+      <div>
+        <span class="stat-anchor" style="color:var(--text-muted);">∞</span>
+        <span class="stat-label">shared links that never expire</span>
+      </div>
+      <div>
+        <span class="stat-anchor">0</span>
+        <span class="stat-label">insight into who actually opened it</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     PAGE 3 — THE SOLUTION
+     ============================================================ -->
+<div class="page bg-p3" id="p3">
+  <div class="page__inner" style="display:grid; grid-template-columns:1fr 1fr; width:100%; height:100%;">
+    <div style="display:flex; flex-direction:column; justify-content:center; padding:8vh 5vw 8vh 6vw; border-right:1px solid var(--border);">
+      <p class="label">The Solution</p>
+      <h2>Lock it<br>down to<br><em>one email</em><br>at a time.</h2>
+      <div class="accent-line"></div>
+      <p>Every deck is private by default. You add recipients by email. Each one gets a unique magic link that expires in 24 hours and works exactly once.</p>
+      <p style="margin-top:1rem;">No passwords. No forwarding. No shared links. You can revoke access at any time.</p>
+    </div>
+    <div style="display:flex; flex-direction:column; justify-content:center; padding:8vh 6vw 8vh 5vw;">
+      <div class="flow-row">
+        <div class="flow-row__num">01</div>
+        <div class="flow-row__content">
+          <h3>Upload your HTML deck</h3>
+          <p>Drop it into your deck-share folder and push to git. Your deck is live in seconds.</p>
+        </div>
+      </div>
+      <div class="flow-row">
+        <div class="flow-row__num">02</div>
+        <div class="flow-row__content">
+          <h3>Add recipient emails</h3>
+          <p>Use the dashboard to add each viewer. A magic link is sent automatically.</p>
+        </div>
+      </div>
+      <div class="flow-row">
+        <div class="flow-row__num">03</div>
+        <div class="flow-row__content">
+          <h3>They click and view</h3>
+          <p>The link works once. After that it is gone. You can revoke, resend, or delete at any time.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     PAGE 4 — MAGIC LINK SECURITY
+     ============================================================ -->
+<div class="page bg-p4" id="p4">
+  <div class="page__inner" style="display:flex; flex-direction:column; justify-content:center; padding:8vh 8vw; gap:2rem;">
+    <div>
+      <p class="label">How it works</p>
+      <h2>Magic links.<br>No password <em>required.</em></h2>
+    </div>
+    <div class="split" style="height:auto; border-top:1px solid var(--border); padding-top:2rem;">
+      <div class="split__left" style="border-right:1px solid var(--border); padding-right:4vw;">
+        <p class="label">For the recipient</p>
+        <div class="flow-row" style="border:none; padding:0.6rem 0;">
+          <div class="flow-row__num" style="font-size:2rem;">01</div>
+          <div class="flow-row__content">
+            <p>Email arrives. Click the link. Deck opens. No login, no password, no account needed.</p>
+          </div>
+        </div>
+        <div class="flow-row" style="border:none; padding:0.6rem 0;">
+          <div class="flow-row__num" style="font-size:2rem;">02</div>
+          <div class="flow-row__content">
+            <p>Link expires in 24 hours. Works exactly once. Cannot be forwarded.</p>
+          </div>
+        </div>
+      </div>
+      <div class="split__right" style="padding-left:4vw;">
+        <p class="label">For the owner</p>
+        <div class="flow-row" style="border:none; padding:0.6rem 0;">
+          <div class="flow-row__num" style="font-size:2rem;">01</div>
+          <div class="flow-row__content">
+            <p>Dashboard shows every deck, every user, every access state.</p>
+          </div>
+        </div>
+        <div class="flow-row" style="border:none; padding:0.6rem 0;">
+          <div class="flow-row__num" style="font-size:2rem;">02</div>
+          <div class="flow-row__content">
+            <p>Revoke, resend, or remove at any time. Access is never permanent unless you choose it.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     PAGE 5 — ADMIN DASHBOARD
+     ============================================================ -->
+<div class="page bg-p5" id="p5">
+  <div class="page__inner" style="display:grid; grid-template-columns:1fr 1fr; width:100%; height:100%;">
+    <div style="display:flex; flex-direction:column; justify-content:center; padding:8vh 5vw 8vh 6vw; border-right:1px solid var(--border);">
+      <p class="label">Owner Dashboard</p>
+      <h2>One dashboard.<br>Every deck.<br><em>Every user.</em></h2>
+      <div class="accent-line"></div>
+      <p>All your decks in one place. See who has access, who has used their link, and who is still pending.</p>
+      <p style="margin-top:1rem;">Toggle sharing on or off. Set expiry dates. Resend magic links. All in real time.</p>
+    </div>
+    <div style="display:flex; flex-direction:column; justify-content:center; padding:8vh 6vw 8vh 5vw; gap:1.2rem;">
+      <div class="card card--success">
+        <span class="card__label">Per-deck controls</span>
+        <p>Lock or open individual decks. Set expiry. Manage sharing without touching the file.</p>
+      </div>
+      <div class="card card--info">
+        <span class="card__label">User management</span>
+        <p>Add, remove, resend, or revoke per email. See pending, active, and revoked states.</p>
+      </div>
+      <div class="card card--accent">
+        <span class="card__label">Request workflow</span>
+        <p>Set a deck to request mode. Anyone with the link can request access. You approve or reject.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     PAGE 6 — ACCESS MODES
+     ============================================================ -->
+<div class="page bg-p6" id="p6">
+  <div class="page__inner" style="display:flex; flex-direction:column; justify-content:center; padding:8vh 8vw; gap:2rem;">
+    <div>
+      <p class="label">Access modes</p>
+      <h2>Three modes.<br>Pick the right one <em>per deck.</em></h2>
+    </div>
+    <div class="feat-grid" style="margin-top:1rem;">
+      <div class="feat" style="border-color:rgba(255,80,80,0.25);">
+        <span class="feat__icon">&#128274;</span>
+        <h3>Locked</h3>
+        <p>Private. Only explicitly added emails receive magic links. No one else can access it.</p>
+      </div>
+      <div class="feat" style="border-color:rgba(200,150,50,0.25);">
+        <span class="feat__icon">&#128bis;</span>
+        <h3>Request</h3>
+        <p>Anyone with the link can request access. You receive the request and approve or reject it manually.</p>
+      </div>
+      <div class="feat" style="border-color:rgba(80,200,120,0.25);">
+        <span class="feat__icon">&#127758;</span>
+        <h3>Open</h3>
+        <p>Public. No authentication needed. Anyone with the URL can view. Good for published content.</p>
+      </div>
+      <div class="feat" style="border-color:rgba(80,160,220,0.25);">
+        <span class="feat__icon">&#9200;</span>
+        <h3>Expiry</h3>
+        <p>Any mode can have an expiry date set. Access automatically closes on that date.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     PAGE 7 — MAGAZINE FORMAT FEATURES
+     ============================================================ -->
+<div class="page bg-p7" id="p7">
+  <div class="page__inner" style="display:grid; grid-template-columns:1fr 1fr; width:100%; height:100%;">
+    <div style="display:flex; flex-direction:column; justify-content:center; padding:8vh 5vw 8vh 6vw; border-right:1px solid var(--border);">
+      <p class="label">The Magazine Format</p>
+      <h2>HTML decks that<br>look like <em>printed</em><br>magazines.</h2>
+      <div class="accent-line"></div>
+      <p>Built on the same magazine format that hosts the Hermes Unbound book and Ken Zero Shot talk decks.</p>
+      <p style="margin-top:1rem;">Horizontal swipe on desktop. Vertical scroll on mobile. Page-flip animations. Staggered content entrance. All CSS driven, no JavaScript libraries.</p>
+    </div>
+    <div style="display:flex; flex-direction:column; justify-content:center; padding:8vh 6vw 8vh 5vw; gap:1rem;">
+      <div class="card">
+        <span class="card__label">Horizontal swipe</span>
+        <p>100vw by 100vh per page. Keyboard arrows. Mouse scroll. Touch swipe. Scroll snap on all devices.</p>
+      </div>
+      <div class="card">
+        <span class="card__label">Mobile responsive</span>
+        <p>Pages stack vertically on phones. Split layouts collapse to single column. Font sizes scale with viewport.</p>
+      </div>
+      <div class="card">
+        <span class="card__label">Page flip animation</span>
+        <p>Fade and slide on scroll-into-view. Content elements stagger in 70ms apart. CSS transitions only.</p>
+      </div>
+      <div class="card">
+        <span class="card__label">Brand customisable</span>
+        <p>Any Google Fonts. Any colour palette. Self-contained HTML with no external dependencies except fonts.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     PAGE 8 — COMPARISON
+     ============================================================ -->
+<div class="page bg-p8" id="p8">
+  <div class="page__inner" style="display:flex; flex-direction:column; justify-content:center; padding:8vh 8vw; gap:1.5rem;">
+    <div>
+      <p class="label">How it compares</p>
+      <h2>Deck Share <em>vs</em> the rest.</h2>
+    </div>
+    <table class="comp-table" style="margin-top:1.5rem;">
+      <thead>
+        <tr>
+          <th style="width:22ch;"></th>
+          <th>Google Slides</th>
+          <th>Notion</th>
+          <th>Canva</th>
+          <th style="color:var(--accent);">Deck Share</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Private by default</td>
+          <td class="cross">&#10005;</td>
+          <td class="cross">&#10005;</td>
+          <td class="cross">&#10005;</td>
+          <td class="check">&#10003;</td>
+        </tr>
+        <tr>
+          <td>One link per recipient</td>
+          <td class="cross">&#10005;</td>
+          <td class="cross">&#10005;</td>
+          <td class="cross">&#10005;</td>
+          <td class="check">&#10003;</td>
+        </tr>
+        <tr>
+          <td>Link expires after one use</td>
+          <td class="cross">&#10005;</td>
+          <td class="cross">&#10005;</td>
+          <td class="cross">&#10005;</td>
+          <td class="check">&#10003;</td>
+        </tr>
+        <tr>
+          <td>Revocable access</td>
+          <td class="cross">&#10005;</td>
+          <td class="cross">&#10005;</td>
+          <td class="cross">&#10005;</td>
+          <td class="check">&#10003;</td>
+        </tr>
+        <tr>
+          <td>Magic link email delivery</td>
+          <td class="cross">&#10005;</td>
+          <td class="cross">&#10005;</td>
+          <td class="cross">&#10005;</td>
+          <td class="check">&#10003;</td>
+        </tr>
+        <tr>
+          <td>Magazine HTML format</td>
+          <td class="cross">&#10005;</td>
+          <td class="cross">&#10005;</td>
+          <td class="cross">&#10005;</td>
+          <td class="check">&#10003;</td>
+        </tr>
+        <tr>
+          <td>Own your data / self-host</td>
+          <td class="cross">&#10005;</td>
+          <td class="cross">&#10005;</td>
+          <td class="cross">&#10005;</td>
+          <td class="check">&#10003;</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ============================================================
+     PAGE 9 — TECH STACK
+     ============================================================ -->
+<div class="page bg-p2" id="p9">
+  <div class="page__inner" style="display:grid; grid-template-columns:1fr 1fr; width:100%; height:100%;">
+    <div style="display:flex; flex-direction:column; justify-content:center; padding:8vh 5vw 8vh 6vw; border-right:1px solid var(--border);">
+      <p class="label">Built on</p>
+      <h2>The tech<br>stack behind<br><em>the magic.</em></h2>
+      <div class="accent-line"></div>
+      <p>Built with Next.js 14 App Router and TypeScript. Deployed on Vercel. Auth via HttpOnly cookies. Storage via Upstash Redis.</p>
+      <p style="margin-top:1rem;">Magic links generated as UUID tokens. Tokens are single-use and expire in 24 hours by default.</p>
+    </div>
+    <div style="display:flex; flex-direction:column; justify-content:center; padding:8vh 6vw 8vh 5vw; gap:1.2rem;">
+      <div class="card">
+        <span class="card__label">Frontend</span>
+        <p>Next.js 14 App Router. CSS Modules. No Tailwind. Dark editorial theme. Fully responsive.</p>
+      </div>
+      <div class="card">
+        <span class="card__label">Auth</span>
+        <p>HttpOnly + Secure + SameSite=Strict cookies. Admin token in env vars. Per-recipient UUID tokens.</p>
+      </div>
+      <div class="card">
+        <span class="card__label">Storage</span>
+        <p>Upstash Redis for manifests and token state. Zero database setup. Scales to any number of decks.</p>
+      </div>
+      <div class="card">
+        <span class="card__label">Email</span>
+        <p>Resend for magic link delivery. One API call to send. HTML email with branded CTA button.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     PAGE 10 — BACK COVER
+     ============================================================ -->
+<nav class="nav-dots" aria-label="Page navigation">
+  <button class="nav-dot active" data-page="1" aria-label="Page 1"></button>
+  <button class="nav-dot" data-page="2" aria-label="Page 2"></button>
+  <button class="nav-dot" data-page="3" aria-label="Page 3"></button>
+  <button class="nav-dot" data-page="4" aria-label="Page 4"></button>
+  <button class="nav-dot" data-page="5" aria-label="Page 5"></button>
+  <button class="nav-dot" data-page="6" aria-label="Page 6"></button>
+  <button class="nav-dot" data-page="7" aria-label="Page 7"></button>
+  <button class="nav-dot" data-page="8" aria-label="Page 8"></button>
+  <button class="nav-dot" data-page="9" aria-label="Page 9"></button>
+  <button class="nav-dot" data-page="10" aria-label="Page 10"></button>
+</nav>
+
+<div class="page bg-back" id="p10">
+  <div class="page__inner" style="display:flex; flex-direction:column; align-items:center; justify-content:center; height:100%; padding:8vh 10vw; text-align:center;">
+    <div class="mark" style="margin-bottom:2rem;">
+      <div class="mark__circle" style="width:50px; height:50px;"><div class="mark__dot" style="width:10px; height:10px;"></div></div>
+    </div>
+    <p class="hero-quote" style="margin-bottom:2.5rem;">Your deck deserves<br>better than a shared link.</p>
+    <div class="accent-line accent-line--center"></div>
+    <p class="back-name">Deck Share</p>
+    <p class="back-tagline">deck-share.vercel.app</p>
+    <div class="footer-links" style="justify-content:center; margin-top:0.5rem;">
+      <a href="https://github.com/thehawkeye/deck-share" target="_blank">GitHub</a>
+      <a href="mailto:muralikrishnan@gmail.com">Contact</a>
+    </div>
+  </div>
+</div>
+
+<script>
+  (function() {
+    const isMobile = window.innerWidth < 768 || /Mobi|Android/i.test(navigator.userAgent);
+    document.documentElement.classList.add(isMobile ? 'mobile' : 'desktop');
+  })();
+  const pages = document.querySelectorAll('.page');
+  const dots = document.querySelectorAll('.nav-dot');
+  let currentPage = 0;
+  function scrollToPage(index) {
+    if (index < 0 || index >= pages.length) return;
+    const isMobile = document.documentElement.classList.contains('mobile');
+    if (isMobile) {
+      pages[index].scrollIntoView({ behavior: 'smooth', block: 'start' });
+    } else {
+      pages[index].scrollIntoView({ behavior: 'smooth', inline: 'start' });
+    }
+    currentPage = index;
+    updateDots();
+  }
+  function updateDots() { dots.forEach((d, i) => d.classList.toggle('active', i === currentPage)); }
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') scrollToPage(currentPage + 1);
+    if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')   scrollToPage(currentPage - 1);
+  });
+  dots.forEach(dot => dot.addEventListener('click', () => scrollToPage(parseInt(dot.dataset.page) - 1)));
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('page-visible');
+        const idx = Array.from(pages).indexOf(entry.target);
+        if (idx !== -1) { currentPage = idx; updateDots(); }
+      } else {
+        entry.target.classList.remove('page-visible');
+      }
+    });
+  }, { threshold: 0.4 });
+  pages.forEach(p => observer.observe(p));
+  pages[0].classList.add('page-visible');
+</script>
+</body>
+</html>
