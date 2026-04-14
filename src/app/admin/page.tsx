@@ -8,11 +8,23 @@ import { LogoutButton } from "./logout-button";
 import styles from "./page.module.css";
 
 export default async function AdminDashboardPage() {
-  if (!(await hasValidAdminSession())) {
+  let isLoggedIn = false;
+  try {
+    isLoggedIn = await hasValidAdminSession();
+  } catch {
+    isLoggedIn = false;
+  }
+
+  if (!isLoggedIn) {
     redirect("/admin/login");
   }
 
-  const decks = await listDecks();
+  let decks: Awaited<ReturnType<typeof listDecks>> = [];
+  try {
+    decks = await listDecks();
+  } catch {
+    decks = [];
+  }
   const requestCounts = await Promise.all(
     decks.map(async (deck) => ({
       filename: deck.filename,
