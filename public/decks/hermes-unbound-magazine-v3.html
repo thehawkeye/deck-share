@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hermes Unbound — The Agent Economy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg-deep: #050507;
+    --bg-primary: #0a0a0d;
+    --bg-elevated: #111115;
+    --bg-card: #18181d;
+    --text-primary: #f4f4f5;
+    --text-secondary: #a1a1aa;
+    --text-muted: #6b6b70;
+    --accent: #c9a962;
+    --accent-subtle: rgba(201,169,98,0.12);
+    --accent-soft: rgba(201,169,98,0.4);
+    --border: rgba(255,255,255,0.04);
+    --border-light: rgba(255,255,255,0.08);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; scroll-snap-type: x mandatory; overflow-x: scroll; overflow-y: hidden; }
+  body { font-family: 'Outfit', sans-serif; background: var(--bg-deep); color: var(--text-primary); line-height: 1.75; font-weight: 300; letter-spacing: 0.01em; display: flex; width: 1000vw; height: 100vh; }
+  ::-webkit-scrollbar { display: none; }
+  .page { width: 100vw; height: 100vh; flex-shrink: 0; scroll-snap-align: start; position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+  .page__inner { width: 100%; height: 100%; position: relative; }
+  /* backgrounds */
+  .bg-cover, .bg-back { background: var(--bg-deep); }
+  .bg-cover::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 100% 50% at 50% -10%, rgba(201,169,98,0.22) 0%, transparent 55%); pointer-events: none; }
+  .bg-back::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 80% 50% at 50% 110%, rgba(201,169,98,0.18) 0%, transparent 55%); pointer-events: none; }
+  .bg-p2 { background: #0c1018; }
+  .bg-p2::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 70% 50% at 90% 40%, rgba(201,169,98,0.08) 0%, transparent 55%); pointer-events: none; }
+  .bg-p3 { background: #0d0e0f; }
+  .bg-p3::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 60% 50% at 5% 80%, rgba(201,169,98,0.07) 0%, transparent 50%); pointer-events: none; }
+  .bg-p4 { background: #0c1017; }
+  .bg-p4::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 50% 50% at 50% 0%, rgba(201,169,98,0.06) 0%, transparent 50%); pointer-events: none; }
+  .bg-p5 { background: #0f1310; }
+  .bg-p5::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 70% 40% at 80% 60%, rgba(201,169,98,0.06) 0%, transparent 50%); pointer-events: none; }
+  .bg-p6 { background: #0d0c10; }
+  .bg-p6::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 60% 50% at 70% 20%, rgba(201,169,98,0.06) 0%, transparent 50%); pointer-events: none; }
+  .bg-p7 { background: #111111; }
+  .bg-p7::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 50% 60% at 0% 50%, rgba(201,169,98,0.05) 0%, transparent 50%); pointer-events: none; }
+  .bg-p8 { background: #0e1211; }
+  .bg-p8::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 50% 40% at 50% 100%, rgba(201,169,98,0.06) 0%, transparent 50%); pointer-events: none; }
+  /* layouts */
+  .split { display: grid; grid-template-columns: 1fr 1fr; width: 100%; height: 100%; }
+  .split__left, .split__right { display: flex; flex-direction: column; justify-content: center; padding: 8vh 6vw; position: relative; }
+  .split__left { border-right: 1px solid var(--border); }
+  .full-bleed { width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: center; padding: 8vh 8vw; }
+  /* typography */
+  .label { font-family: 'Outfit', sans-serif; font-size: 0.6rem; font-weight: 500; letter-spacing: 0.3em; text-transform: uppercase; color: var(--accent); margin-bottom: 1.5rem; display: block; }
+  h1 { font-family: 'Cormorant Garamond', serif; font-size: clamp(3.5rem, 7vw, 7rem); font-weight: 300; line-height: 1.0; letter-spacing: -0.01em; color: var(--text-primary); }
+  h1 em { font-style: italic; color: var(--accent); }
+  h2 { font-family: 'Cormorant Garamond', serif; font-size: clamp(2.2rem, 4vw, 4.5rem); font-weight: 300; line-height: 1.05; color: var(--text-primary); margin-bottom: 1.5rem; }
+  h2 em { font-style: italic; color: var(--accent); }
+  h3 { font-family: 'Cormorant Garamond', serif; font-size: clamp(1.3rem, 2vw, 2.2rem); font-weight: 400; color: var(--text-primary); margin-bottom: 0.6rem; }
+  p { font-family: 'Outfit', sans-serif; font-size: clamp(0.78rem, 1.05vw, 1.0rem); font-weight: 300; color: var(--text-secondary); line-height: 1.85; max-width: 44ch; }
+  p + p { margin-top: 1rem; }
+  /* stats */
+  .stat-anchor { font-family: 'Cormorant Garamond', serif; font-size: clamp(4.5rem, 11vw, 11rem); font-weight: 300; line-height: 1; color: var(--accent); display: block; }
+  .stat-label { font-family: 'Outfit', sans-serif; font-size: 0.65rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--text-muted); margin-top: 0.4rem; display: block; }
+  /* components */
+  .accent-line { width: 3rem; height: 1px; background: var(--accent); margin: 1.5rem 0; }
+  .key-hint { font-family: 'Outfit', sans-serif; font-size: 0.55rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--text-muted); display: flex; align-items: center; gap: 0.5rem; }
+  .key-hint kbd { background: var(--bg-card); border: 1px solid var(--border-light); border-radius: 3px; padding: 0.15rem 0.4rem; font-family: inherit; color: var(--text-secondary); }
+  .page-num { position: absolute; bottom: 2rem; right: 3vw; font-family: 'Outfit', sans-serif; font-size: 0.6rem; letter-spacing: 0.2em; color: var(--text-muted); text-transform: uppercase; }
+  .mark { display: flex; align-items: center; gap: 0.75rem; }
+  .mark__circle { width: 40px; height: 40px; border-radius: 50%; border: 1.5px solid var(--accent); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .mark__dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); }
+  .mark__text { font-family: 'Cormorant Garamond', serif; font-size: 1rem; font-weight: 400; letter-spacing: 0.1em; color: var(--text-primary); }
+  .mark__text span { display: block; font-size: 0.55rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--accent); font-family: 'Outfit', sans-serif; font-weight: 500; }
+  .footer-links { display: flex; gap: 2rem; flex-wrap: wrap; }
+  .footer-links a { font-family: 'Outfit', sans-serif; font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); text-decoration: none; border-bottom: 1px solid var(--border); padding-bottom: 0.2rem; transition: color 0.3s, border-color 0.3s; }
+  .footer-links a:hover { color: var(--accent); border-color: var(--accent); }
+  .nav-dots { position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%); display: flex; gap: 0.6rem; z-index: 100; }
+  .nav-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--text-muted); cursor: pointer; transition: all 0.3s; border: none; padding: 0; }
+  .nav-dot.active { background: var(--accent); transform: scale(1.4); }
+  .nav-dot:hover { background: var(--accent-soft); }
+  .badge { display: inline-block; font-family: 'Outfit', sans-serif; font-size: 0.55rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); border: 1px solid var(--accent-soft); padding: 0.3rem 0.8rem; border-radius: 2rem; margin-bottom: 0.75rem; }
+  .quote { font-family: 'Cormorant Garamond', serif; font-size: clamp(1.3rem, 2.2vw, 2.2rem); font-weight: 300; font-style: italic; color: var(--text-primary); line-height: 1.4; max-width: 22ch; }
+  .quote::before { content: '"'; color: var(--accent); font-size: 1.3em; line-height: 0; vertical-align: -0.3em; margin-right: 0.1em; }
+  .card { background: var(--bg-card); border: 1px solid var(--border); padding: 1.8rem 2rem; border-radius: 2px; }
+  .card__label { font-family: 'Outfit', sans-serif; font-size: 0.55rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.6rem; display: block; }
+  .card h3 { font-size: clamp(1.05rem, 1.4vw, 1.4rem); }
+  .card p { font-size: clamp(0.7rem, 0.9vw, 0.88rem); max-width: 30ch; }
+  .card p + p { margin-top: 0.5rem; }
+  .card--accent { border-color: rgba(201,169,98,0.3); }
+  .part-tag { position: absolute; top: 2.5rem; left: 6vw; font-family: 'Outfit', sans-serif; font-size: 0.55rem; letter-spacing: 0.35em; text-transform: uppercase; color: var(--accent); opacity: 0.7; }
+  .highlight-box { background: var(--accent-subtle); border: 1px solid rgba(201,169,98,0.2); padding: 1.5rem 2rem; border-radius: 2px; margin-top: 1rem; }
+  .highlight-box p { font-size: clamp(0.72rem, 0.95vw, 0.9rem); color: var(--text-primary); max-width: 38ch; }
+  .takeaway { border-left: 2px solid var(--accent); padding-left: 1.2rem; margin: 0.75rem 0; }
+  .takeaway p { font-size: clamp(0.7rem, 0.9vw, 0.88rem); max-width: 36ch; }
+  .comparison-table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
+  .comparison-table th { font-family: 'Outfit', sans-serif; font-size: 0.58rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); font-weight: 500; text-align: left; padding: 0.75rem 1rem 0.75rem 0; border-bottom: 1px solid var(--border); }
+  .comparison-table td { font-family: 'Outfit', sans-serif; font-size: clamp(0.68rem, 0.88vw, 0.85rem); font-weight: 300; color: var(--text-secondary); padding: 0.75rem 1rem 0.75rem 0; border-bottom: 1px solid var(--border); vertical-align: top; line-height: 1.6; }
+  .comparison-table tr:last-child td { border-bottom: none; }
+  .comparison-table .arrow { color: var(--accent); font-family: 'Cormorant Garamond', serif; }
+  .back-cta { display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; height: 100%; padding: 8vh 10vw; }
+  .back-cta .mark { margin-bottom: 2.5rem; }
+  .back-cta h2 { font-size: clamp(2.5rem, 5vw, 5rem); }
+  .back-cta .accent-line { margin: 1.5rem auto; }
+  .china-grid { display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: auto auto auto; gap: 1rem; width: 100%; }
+  .china-card { background: var(--bg-card); border: 1px solid var(--border); padding: 1.2rem 1.4rem; border-radius: 2px; }
+  .china-card__name { font-family: 'Cormorant Garamond', serif; font-size: 1rem; color: var(--text-primary); margin-bottom: 0.3rem; }
+  .china-card__type { font-family: 'Outfit', sans-serif; font-size: 0.55rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.5rem; display: block; }
+  .china-card p { font-size: 0.7rem; max-width: 28ch; }
+  .china-card--wide { grid-column: span 2; }
+  .failure-mode { border-left: 3px solid; padding-left: 1.2rem; margin-bottom: 1.5rem; }
+  .failure-mode:last-child { margin-bottom: 0; }
+  .failure-mode h3 { font-size: clamp(1rem, 1.3vw, 1.3rem); }
+  .failure-mode p { font-size: clamp(0.68rem, 0.88vw, 0.85rem); max-width: 32ch; }
+  .proto-list { display: flex; flex-direction: column; gap: 0.6rem; }
+  .proto-row { display: flex; align-items: center; gap: 1rem; padding: 0.8rem 0; border-bottom: 1px solid var(--border); }
+  .proto-row:last-child { border-bottom: none; }
+  .proto-row__dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); flex-shrink: 0; }
+  .proto-row__name { font-family: 'Cormorant Garamond', serif; font-size: 0.9rem; color: var(--text-primary); min-width: 6rem; }
+  .proto-row__desc { font-family: 'Outfit', sans-serif; font-size: 0.68rem; color: var(--text-muted); }
+  .small-stat { font-family: 'Cormorant Garamond', serif; font-size: clamp(2.5rem, 4vw, 4rem); font-weight: 300; color: var(--accent); line-height: 1; display: block; }
+  .timeline-bar { display: flex; align-items: stretch; gap: 0; width: 100%; margin-top: 1.5rem; }
+  .timeline-bar__segment { flex: 1; padding: 1rem 1.2rem; border-right: 1px solid var(--border); }
+  .timeline-bar__segment:last-child { border-right: none; }
+  .timeline-bar__phase { font-family: 'Outfit', sans-serif; font-size: 0.55rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); display: block; margin-bottom: 0.3rem; }
+  .timeline-bar__desc { font-size: 0.68rem; color: var(--text-muted); }
+</style>
+</head>
+<body>
+
+<!-- ============================================================
+     PAGE 1 — COVER
+     ============================================================ -->
+<div class="page bg-cover" id="p1">
+  <div class="page__inner" style="display:flex; flex-direction:column; justify-content:space-between; padding:6vh 6vw;">
+    <div class="mark">
+      <div class="mark__circle"><div class="mark__dot"></div></div>
+      <div class="mark__text">Dr. Muralikrishnan <span>Platform Research · ISB</span></div>
+    </div>
+    <div style="flex:1; display:flex; flex-direction:column; justify-content:center; padding-left:2vw;">
+      <p class="label" style="margin-bottom:1rem;">Book Manuscript — Consumer Edition · 2026</p>
+      <h1>Hermes<br><em>Unbound</em></h1>
+      <div class="accent-line"></div>
+      <p style="color:var(--text-muted); font-size:0.8rem; letter-spacing:0.15em; text-transform:uppercase; max-width:40ch; line-height:1.6;">
+        The Agent Economy — How AI Agents<br>Are Rewriting Consumer Markets
+      </p>
+      <div style="margin-top:2rem; display:flex; gap:2rem; flex-wrap:wrap; align-items:flex-end;">
+        <div>
+          <span class="stat-anchor" style="font-size:clamp(3rem,6vw,6rem);">5</span>
+          <span class="stat-label">Book Parts</span>
+        </div>
+        <div>
+          <span class="stat-anchor" style="font-size:clamp(3rem,6vw,6rem);">16</span>
+          <span class="stat-label">Chapters</span>
+        </div>
+        <div>
+          <span class="stat-anchor" style="font-size:clamp(3rem,6vw,6rem);">50M</span>
+          <span class="stat-label">Shopping queries/day on ChatGPT</span>
+        </div>
+      </div>
+    </div>
+    <div style="display:flex; justify-content:space-between; align-items:flex-end;">
+      <div class="key-hint"><kbd>←</kbd><kbd>→</kbd> navigate &nbsp;·&nbsp; scroll horizontally</div>
+      <div class="key-hint" style="font-size:0.52rem; color:var(--text-muted);">ISB EFPM · Platform Ecosystems Research</div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     PAGE 2 — WHAT'S HAPPENING: The Delegation Shift
+     ============================================================ -->
+<div class="page bg-p2" id="p2">
+  <div class="part-tag">Part I — What's Going On</div>
+  <div class="split">
+    <div class="split__left">
+      <span class="label">The Delegation Shift</span>
+      <h2>Not a<br>technology<br>shift.<br>A <em>friction</em><br>shift.</h2>
+      <div class="accent-line"></div>
+      <p>Humans never wanted software. They wanted outcomes. Every generation of technology migrated toward lower friction for the same underlying want.</p>
+      <p>The internet gave access. Mobile gave when-and-where. Cloud gave scale. The agent shift changes <em>who executes</em>.</p>
+      <p>This is not a technology shift. It is the last intermediary between intention and outcome being removed.</p>
+    </div>
+    <div class="split__right" style="justify-content:center; align-items:flex-start; padding-left:8vw;">
+      <div style="display:flex; flex-direction:column; gap:2.5rem; width:100%;">
+        <div>
+          <span class="stat-anchor">4</span>
+          <span class="stat-label">generations of consumer tech</span>
+          <p style="margin-top:0.5rem; font-size:0.7rem; max-width:24ch; color:var(--text-muted);">Web → Mobile → Cloud → Agent</p>
+        </div>
+        <div>
+          <span class="stat-anchor" style="font-size:clamp(3rem,7vw,7rem);">2hr</span>
+          <span class="stat-label">of reliable AI task length — late 2025</span>
+          <p style="margin-top:0.5rem; font-size:0.7rem; max-width:24ch; color:var(--text-muted);">Source: METR, cited in McKinsey, September 2025.</p>
+        </div>
+        <div>
+          <span class="stat-anchor" style="font-size:clamp(3rem,6vw,6rem);">50M</span>
+          <span class="stat-label">shopping queries/day on ChatGPT</span>
+          <p style="margin-top:0.5rem; font-size:0.7rem; max-width:24ch; color:var(--text-muted);">Not to buy — to decide. The discovery layer is already shifting.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="page-num">02 / 10</div>
+</div>
+
+<!-- ============================================================
+     PAGE 3 — WHAT'S HAPPENING: The Economics
+     ============================================================ -->
+<div class="page bg-p3" id="p3">
+  <div class="part-tag">Part I — What's Going On</div>
+  <div class="split">
+    <div class="split__left">
+      <span class="label">The Economics</span>
+      <h2>The<br>attention<br>economy<br>is <em>dying.</em></h2>
+      <div class="accent-line"></div>
+      <p>For 27 years the internet ran on distraction as a business model. Google invented ads because credit card fixed fees killed micropayments in 1997. HTTP code 402, "Payment Required", sat unused for a generation.</p>
+      <p>LLMs do not get distracted. StackOverflow views down 75% since GPT-4. Tech news traffic down 60%. The contract is broken.</p>
+      <div class="highlight-box" style="margin-top:1.5rem;">
+        <p>Attention to Outcomes: this shift disrupts ad-led models. It opens a new lane. Agent-to-Agent affiliate commissions. Your agent recommends. My agent transacts. Commission flows.</p>
+      </div>
+    </div>
+    <div class="split__right" style="justify-content:center; padding-left:6vw; overflow-y:auto;">
+      <span class="label" style="margin-bottom:1.5rem;">Market Reclassification</span>
+      <div style="display:flex; flex-direction:column; gap:1.2rem;">
+        <div class="card">
+          <span class="card__label">SaaS — The Old Addressable Market</span>
+          <span class="small-stat">$200B</span>
+          <p>Software licenses, seat subscriptions, perceived pricing. Competes with other software.</p>
+        </div>
+        <div class="card card--accent">
+          <span class="card__label">AaaS — The New Addressable Market</span>
+          <span class="small-stat" style="color:var(--accent);">$4–5.5T</span>
+          <p style="color:var(--text-primary);">Agencies, outsourcers, professional services. Competes with every outcome a human currently produces. Source: Coatue, via Jason Shuman, March 2026.</p>
+        </div>
+        <div class="highlight-box">
+          <p>"I would be alarmed if an engineer earning $500K a year did not consume at least $250K worth of tokens." — Jensen Huang, GTC</p>
+        </div>
+        <div class="highlight-box" style="margin-top:0.75rem;">
+          <p>Token costs falling 40x in years. Agents will be 10x cheaper to run by 2028. Intelligence becoming "too cheap to meter" is the precondition for the consumer agent economy.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="page-num">03 / 10</div>
+</div>
+
+<!-- ============================================================
+     PAGE 4 — HOW IT'S HAPPENING: The Consumer Agent
+     ============================================================ -->
+<div class="page bg-p4" id="p4">
+  <div class="part-tag">Part II — How Is That Happening</div>
+  <div class="split">
+    <div class="split__left">
+      <span class="label">Consumer Agent Anatomy</span>
+      <h2>The<br>agent<br>that<br><em>knows</em><br>you.</h2>
+      <div class="accent-line"></div>
+      <p>A consumer agent holds what no brand can: your preferences, your history, your budget, your context. Accumulated over every interaction.</p>
+      <p>The competitive advantage is not how many users an agent has. It is how well the agent knows this user. Depth compounds. Breadth does not.</p>
+      <div class="highlight-box" style="margin-top:1.5rem;">
+        <p>Pre-articulation: the agent anticipates what you want before you say it. The agent-human flywheel compounds. More interactions gives deeper context, which enables better pre-articulation, which builds trust, which drives more delegation, which generates more signal.</p>
+      </div>
+    </div>
+    <div class="split__right" style="justify-content:center; padding-left:6vw; overflow-y:auto;">
+      <span class="label" style="margin-bottom:1.5rem;">The Delegation Boundary</span>
+      <table class="comparison-table">
+        <thead><tr><th></th><th>Routine</th><th>Non-routine</th></tr></thead>
+        <tbody>
+          <tr>
+            <td style="font-family:'Cormorant Garamond',serif; color:var(--text-primary); font-size:0.85rem;">Low criticality</td>
+            <td style="color:var(--accent); font-size:0.8rem;">Full agent autonomy</td>
+            <td style="font-size:0.8rem;">Agent recommends, human confirms</td>
+          </tr>
+          <tr>
+            <td style="font-family:'Cormorant Garamond',serif; color:var(--text-primary); font-size:0.85rem;">High criticality</td>
+            <td style="font-size:0.8rem;">Agent pre-selects, human approves</td>
+            <td style="font-size:0.8rem;">Human decides, agent assists</td>
+          </tr>
+        </tbody>
+      </table>
+      <p>Full agentic commerce arrives first in low-stakes, high-frequency, pattern-established purchases. The top-right quadrant may never become fully autonomous.</p>
+      <div class="highlight-box" style="margin-top:1.5rem;">
+        <p>The supervision spectrum runs from cruise control to Waymo. Trust earns autonomy. Architecture determines how much trust is required. This is a strategic decision, not a technical one.</p>
+      </div>
+    </div>
+  </div>
+  <div class="page-num">04 / 10</div>
+</div>
+
+<!-- ============================================================
+     PAGE 5 — HOW IT'S HAPPENING: China Consumer Agents
+     ============================================================ -->
+<div class="page bg-p5" id="p5">
+  <div class="part-tag">Part II — How Is That Happening</div>
+  <div class="split">
+    <div class="split__left">
+      <span class="label">China: Consumer Agent Ecosystem</span>
+      <h2>Eight<br>examples.<br>One<br><em>logic.</em></h2>
+      <div class="accent-line"></div>
+      <p>China's consumer agent ecosystem runs on open model weights, domestic compute, and government-aligned incentive structures. Super-apps already function as agent aggregators. The consumer agent is not theoretical. It is deployed at scale.</p>
+      <p>The pattern: agents trained on vast Chinese-language interaction data, embedded in WeChat and Alipay-style super-apps, operating within governed economic rails.</p>
+    </div>
+    <div class="split__right" style="justify-content:center; padding-left:5vw; overflow-y:auto;">
+      <div class="china-grid">
+        <div class="china-card">
+          <div class="china-card__type">Consumer / Logistics</div>
+          <div class="china-card__name">JD.com</div>
+          <p>Autonomous procurement agents. Logistics agents automate supply chain decisions. One million plus daily deliveries managed with minimal human intervention.</p>
+        </div>
+        <div class="china-card">
+          <div class="china-card__type">Consumer / Social Commerce</div>
+          <div class="china-card__name">Taobao / Lazada</div>
+          <p>Consumer shopping agents. Algorithmic recommendations have evolved into proactive purchase agents embedded in the super-app.</p>
+        </div>
+        <div class="china-card">
+          <div class="china-card__type">Consumer / Group Buy</div>
+          <div class="china-card__name">Pinduoduo</div>
+          <p>Group-buy agents. AI coordinates collective purchasing decisions across social graphs. Nine hundred million plus users in a model built on agent-driven price discovery.</p>
+        </div>
+        <div class="china-card">
+          <div class="china-card__type">Consumer / Merchant</div>
+          <div class="china-card__name">Alibaba</div>
+          <p>Merchant agents. AI tools for sellers: pricing, inventory, logistics, customer service. A full agent stack for the merchant side of the platform.</p>
+        </div>
+        <div class="china-card">
+          <div class="china-card__type">Super-App / Consumer</div>
+          <div class="china-card__name">WeChat / WeChat Work</div>
+          <p>The OS of Chinese daily life. Mini-programs have evolved into agent services. WeChat Work extends this into enterprise-consumer integration.</p>
+        </div>
+        <div class="china-card">
+          <div class="china-card__type">Enterprise / Voice</div>
+          <div class="china-card__name">DingTalk</div>
+          <p>Alibaba's enterprise agent platform. Voice-first, workflow-integrated. Over 700M users — the enterprise counterpart to consumer WeChat.</p>
+        </div>
+        <div class="china-card china-card--wide">
+          <div class="china-card__type">Content + Commerce</div>
+          <div class="china-card__name">ByteDance — Douyin</div>
+          <p>The most advanced consumer agent deployment at scale. Content and commerce fused: recommendation, intent, transaction in a single session. No separate app-switching. Where TikTok Shop leads, the world follows.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="page-num">05 / 10</div>
+</div>
+
+<!-- ============================================================
+     PAGE 6 — WHAT IT MEANS: The Moat Migration
+     ============================================================ -->
+<div class="page bg-p6" id="p6">
+  <div class="part-tag">Part III — What Does That Mean</div>
+  <div class="split">
+    <div class="split__left">
+      <span class="label">The Central Thesis</span>
+      <h2>The moat<br>migrates<br>from<br><em>breadth</em><br>to depth.</h2>
+      <div class="accent-line"></div>
+      <p>Platform era: more users means more data means more lock-in. The agent economy flips this. The new competitive advantage is not how many users you have. It is how well your agent understands each one.</p>
+      <div class="takeaway" style="margin-top:1.5rem;">
+        <p><strong style="color:var(--text-primary);">Platforms whose main value prop is solving supply aggregation or discovery friction will be challenged, if not fully disrupted, by Agentic AI.</strong></p>
+      </div>
+    </div>
+    <div class="split__right" style="justify-content:center; padding-left:6vw; overflow-y:auto;">
+      <span class="label" style="margin-bottom:1.5rem;">The Three Moat-Failure Modes — The Ken Scenarios</span>
+      <div style="display:flex; flex-direction:column;">
+        <div class="failure-mode" style="border-color:rgba(255,80,80,0.6);">
+          <span class="card__label" style="color:rgba(255,80,80,0.8);">1 — Discovery Moat Collapse</span>
+          <h3>Agents skip the browse.</h3>
+          <p>Instamart's ad revenue collapses because agents do not see shelf placement. Flipkart's Big Billion Day visits drop from 600 million to under 200 million. Makemytrip's aggregation value becomes a single API call.</p>
+        </div>
+        <div class="failure-mode" style="border-color:rgba(255,150,50,0.6);">
+          <span class="card__label" style="color:rgba(255,150,50,0.8);">2 — Aggregation Moat Collapse</span>
+          <h3>Agents route around the platform.</h3>
+          <p>Zomato loses to direct restaurant ordering via ONDC at 18 to 22% savings. Cred's exclusive pre-approved loans become commodity in one agent scan for a 0.1 percentage point rate improvement.</p>
+        </div>
+        <div class="failure-mode" style="border-color:rgba(80,200,120,0.6);">
+          <span class="card__label" style="color:rgba(80,200,120,0.8);">3 — Open-Architecture Survival</span>
+          <h3>Meesho Vaani: built for the agent era.</h3>
+          <p>Zero-commission model became the routing default. Twenty-two percent higher conversion than app. Sixty percent of Rapido rides agent-initiated by 2028. Architectural alignment with agent access means survival.</p>
+        </div>
+      </div>
+      <div class="highlight-box" style="margin-top:1.5rem;">
+        <p>The diagnostic question: which failure mode applies to your business? Discovery collapse means build ADO architecture. Aggregation collapse means become the open protocol. If neither applies: the depth moat is your only path.</p>
+      </div>
+    </div>
+  </div>
+  <div class="page-num">06 / 10</div>
+</div>
+
+<!-- ============================================================
+     PAGE 7 — WHAT IT MEANS: The Walmart Case
+     ============================================================ -->
+<div class="page bg-p7" id="p7">
+  <div class="part-tag">Part III — What Does That Mean</div>
+  <div class="split">
+    <div class="split__left">
+      <span class="label">Case Study</span>
+      <h2>Walmart<br>x OpenAI:<br>Depth<br><em>beats</em><br>breadth.</h2>
+      <div class="accent-line"></div>
+      <p>October 2025. Walmart joins OpenAI's Instant Checkout inside ChatGPT. The vision: consumer asks for a product, agent finds it, checkout completes without leaving the chat.</p>
+      <p>The result: conversion rates roughly one-third of Walmart.com. Daniel Danker, EVP of AI, called it "unsatisfying." Linear chat cannot support multi-item baskets, bundling, or accessory recommendations.</p>
+      <p>Walmart's response: deploy Sparky, its own agent, inside ChatGPT. Users log in directly. Carts sync. Checkout runs on Walmart's infrastructure. Sparky converts at 70% of Walmart.com's rate. Double Instant Checkout.</p>
+      <div class="highlight-box" style="margin-top:1.5rem;">
+        <p>The finding is unambiguous: consumers will delegate discovery to an AI agent. They will not delegate the transaction. The platform that owns the customer relationship beats the platform that owns the AI interface.</p>
+      </div>
+    </div>
+    <div class="split__right" style="justify-content:center; padding-left:6vw; overflow-y:auto;">
+      <span class="label" style="margin-bottom:1.5rem;">Platform Resilience Lens</span>
+      <div style="display:flex; flex-direction:column; gap:1.5rem;">
+        <div class="card">
+          <span class="card__label" style="color:rgba(255,80,80,0.8);">Agent-Resistant</span>
+          <h3>Value built on friction.</h3>
+          <p>Attention capture. Information asymmetry. Pure aggregators. These face the most pressure as agents bypass discovery layers.</p>
+        </div>
+        <div class="card">
+          <span class="card__label" style="color:rgba(255,150,50,0.8);">Agent-Replaceable</span>
+          <h3>Low depth. Commodity offering.</h3>
+          <p>Any agent can arbitrage these away in a single API call. No accumulated context. No trust. No moat.</p>
+        </div>
+        <div class="card card--accent">
+          <span class="card__label">Agent-Enhanced</span>
+          <h3 style="color:var(--accent);">Depth becomes the moat.</h3>
+          <p style="color:var(--text-primary);">Platforms with strong physical or intangible assets, brand, know-how, R&D, compounded through deep personalisation, emerge stronger. Not in spite of agents. Through them.</p>
+        </div>
+      </div>
+      <div class="highlight-box" style="margin-top:1.5rem;">
+        <p>Alignment is a major unsolved problem. Principal-Aligned versus Influenced, sponsored, agents. This leads to three agent business models: Subscription, Outcome-based, or Sponsored. Who funds the agent determines whose interests it serves.</p>
+      </div>
+    </div>
+  </div>
+  <div class="page-num">07 / 10</div>
+</div>
+
+<!-- ============================================================
+     PAGE 8 — WHAT TO DO: India Consumer Agents
+     ============================================================ -->
+<div class="page bg-p8" id="p8">
+  <div class="part-tag">Part IV — What Should You Do About It</div>
+  <div class="split">
+    <div class="split__left">
+      <span class="label">India: The Open Rails Model</span>
+      <h2>India<br>evolves<br><em>differently.</em></h2>
+      <div class="accent-line"></div>
+      <p>India's consumer agent model is structurally open. UPI solved payments. ONDC opened supply. Edge computing enables vernacular. The rails any agent can access. The agent routing layer is the new contested territory.</p>
+      <p>China takes the governed-bounded path. India takes the open-protocol path. Both will produce powerful consumer agent ecosystems, but with different winners.</p>
+      <div class="takeaway" style="margin-top:1.5rem;">
+        <p><strong style="color:var(--text-primary);">The agent economy in India will evolve differently versus China. Open versus Bounded agents is not just a technical distinction. It is a regulatory and strategic one.</strong></p>
+      </div>
+    </div>
+    <div class="split__right" style="justify-content:center; padding-left:6vw; overflow-y:auto;">
+      <span class="label" style="margin-bottom:1.5rem;">India Consumer Agent Evidence</span>
+      <div style="display:flex; flex-direction:column; gap:1.2rem;">
+        <div class="card">
+          <span class="card__label">Voice Commerce</span>
+          <h3>Meesho Vaani</h3>
+          <p>Voice-first, vernacular AI shopping assistant. 1.5M users at launch. 22% higher conversion than the app. Purpose-built for the next billion users — not the app generation.</p>
+        </div>
+        <div class="card">
+          <span class="card__label">Payments Rail</span>
+          <h3>UPI → Agentic Commerce</h3>
+          <p>Razorpay and NPCI enabled agentic UPI payments through ChatGPT. India may skip the checkout battle — UPI already solved payments. The agent layer routes; UPI settles.</p>
+        </div>
+        <div class="card">
+          <span class="card__label">Open Commerce</span>
+          <h3>ONDC — Open Network</h3>
+          <p>Sixty-three million MSMEs on open rails. Any agent can access supply directly. The commission arbitrage window is already opening: 18 to 22% savings over incumbent aggregators.</p>
+        </div>
+        <div class="card card--accent">
+          <span class="card__label">Emerging Pattern</span>
+          <h3>The WhatsApp Bridge</h3>
+          <p>Sixty-three million Indian MSMEs run on WhatsApp, Excel, and trust. For the next billion users, the agent is not an interface to learn. It is a conversation already being had. Intent runs through WhatsApp, not a browser or app store.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="page-num">08 / 10</div>
+</div>
+
+<!-- ============================================================
+     PAGE 9 — WHAT TO DO: The Protocols
+     ============================================================ -->
+<div class="page bg-p4" id="p9">
+  <div class="part-tag">Part IV — What Should You Do About It</div>
+  <div class="split">
+    <div class="split__left">
+      <span class="label">The Infrastructure Layer</span>
+      <h2>The<br>protocols<br>that<br><em>matter.</em></h2>
+      <div class="accent-line"></div>
+      <p>Agentic commerce requires three layers to converge simultaneously: payment rails, compositional intelligence, and discovery infrastructure. Two implementations have emerged. The parallel to the 1990s is exact.</p>
+      <div class="highlight-box" style="margin-top:1.5rem;">
+        <p>Google's UCP, January 2026: 20 plus partners including Walmart, Shopify, Flipkart, Target, Visa, Stripe. Open-source standard covering discovery, evaluation, transaction, settlement. The TCP/IP of commerce. Not a walled garden.</p>
+      </div>
+    </div>
+    <div class="split__right" style="justify-content:center; padding-left:6vw; overflow-y:auto;">
+      <span class="label" style="margin-bottom:1.5rem;">The Emerging Protocol Stack</span>
+      <div class="proto-list">
+        <div class="proto-row">
+          <div class="proto-row__dot"></div>
+          <div class="proto-row__name">MCP</div>
+          <div class="proto-row__desc">Model Context Protocol. Context propagation between agents.</div>
+        </div>
+        <div class="proto-row">
+          <div class="proto-row__dot"></div>
+          <div class="proto-row__name">A2A</div>
+          <div class="proto-row__desc">Agent-to-Agent communication. Coordination without human mediation.</div>
+        </div>
+        <div class="proto-row">
+          <div class="proto-row__dot"></div>
+          <div class="proto-row__name">AP2 / x402</div>
+          <div class="proto-row__desc">Payment rails. Sub-cent transactions via stablecoins. Solved the fixed-fee problem that killed 1997 micropayments.</div>
+        </div>
+        <div class="proto-row">
+          <div class="proto-row__dot"></div>
+          <div class="proto-row__name">UCP</div>
+          <div class="proto-row__desc">Universal Commerce Protocol. Discovery, evaluation, transaction, settlement. Google's open standard.</div>
+        </div>
+        <div class="proto-row">
+          <div class="proto-row__dot"></div>
+          <div class="proto-row__name">ADO</div>
+          <div class="proto-row__desc">Agent Discoverability Optimization. The new SEO, but for APIs. Ranking factors: discoverability, reliability, capability, performance.</div>
+        </div>
+      </div>
+      <div class="highlight-box" style="margin-top:1.5rem;">
+        <p>The practical result: an agent managing a household budget notices a 15% tariff-driven price increase, discovers three local alternatives, requests samples, negotiates volume pricing, and switches. All before the owner's morning workout. No procurement team.</p>
+      </div>
+      <div class="takeaway" style="margin-top:1rem;">
+        <p><strong style="color:var(--text-primary);">Regulation must get ahead: KYA, Know Your Agent, norms, traceability, guardrails enforcement. India's KYA framework is not yet defined.</strong></p>
+      </div>
+    </div>
+  </div>
+  <div class="page-num">09 / 10</div>
+</div>
+
+<!-- ============================================================
+     PAGE 10 — BACK COVER: The Three Futures
+     ============================================================ -->
+<div class="page bg-back" id="p10">
+  <div class="part-tag" style="color:var(--text-muted);">Part V — What to Expect Next</div>
+  <div class="back-cta">
+    <div class="mark">
+      <div class="mark__circle"><div class="mark__dot"></div></div>
+      <div class="mark__text">Hermes Unbound <span>The Agent Economy</span></div>
+    </div>
+    <h2 style="margin-top:1.5rem;">Three<br><em>Futures.</em></h2>
+    <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:1.5rem; width:100%; max-width:72vw; margin:2rem 0; text-align:left;">
+      <div class="card">
+        <span class="badge">A</span>
+        <h3 style="font-size:clamp(1rem,1.4vw,1.4rem);">Fragmentation</h3>
+        <p style="font-size:0.72rem; max-width:22ch;">Personal agents proliferate. Ecosystems stay open. Value accrues to specialists and orchestrators.</p>
+      </div>
+      <div class="card">
+        <span class="badge">B</span>
+        <h3 style="font-size:clamp(1rem,1.4vw,1.4rem);">Consolidation</h3>
+        <p style="font-size:0.72rem; max-width:22ch;">One or two agent operating systems capture dominant share. The next platform lock-in — at the agent layer.</p>
+      </div>
+      <div class="card card--accent">
+        <span class="badge" style="border-color:var(--accent-soft);">C</span>
+        <h3 style="font-size:clamp(1rem,1.4vw,1.4rem);">Hybrid</h3>
+        <p style="font-size:0.72rem; max-width:22ch;">General-purpose agents handle most tasks. Regulated domains maintain distinct structures.</p>
+      </div>
+    </div>
+    <div class="quote" style="max-width:22ch; text-align:center; margin:1rem auto;">
+      The agent that knows you best wins.
+    </div>
+    <div style="max-width:36ch; text-align:center; margin:0.5rem auto 0;">
+      <p style="font-size:0.72rem; color:var(--text-muted); max-width:36ch; text-align:center; margin:0 auto;">Not the one with the most users. Not the one with the shiniest AI. The one that has accumulated the deepest understanding of what you actually want.</p>
+    </div>
+    <div class="accent-line" style="margin:1.5rem auto;"></div>
+    <div class="footer-links" style="justify-content:center;">
+      <a href="https://hawkeye.substack.com" target="_blank">Substack</a>
+      <a href="https://muralikrishnan.net" target="_blank">Author Site</a>
+      <a href="https://www.linkedin.com/in/muralikrishnan" target="_blank">LinkedIn</a>
+      <a href="https://calendly.com/muralikrishnan-maf9/catch-up-with-murali" target="_blank">Book a Call</a>
+    </div>
+    <div style="margin-top:auto; padding-top:2rem;">
+      <p style="font-size:0.6rem; color:var(--text-muted); letter-spacing:0.15em; text-transform:uppercase; text-align:center;">
+        Hermes Unbound: The Agent Economy &nbsp;·&nbsp; Dr. Muralikrishnan &nbsp;·&nbsp; ISB EFPM &nbsp;·&nbsp; 2026
+      </p>
+    </div>
+  </div>
+</div>
+
+<!-- NAV DOTS -->
+<nav class="nav-dots" aria-label="Page navigation">
+  <button class="nav-dot active" data-page="1" aria-label="Page 1"></button>
+  <button class="nav-dot" data-page="2" aria-label="Page 2"></button>
+  <button class="nav-dot" data-page="3" aria-label="Page 3"></button>
+  <button class="nav-dot" data-page="4" aria-label="Page 4"></button>
+  <button class="nav-dot" data-page="5" aria-label="Page 5"></button>
+  <button class="nav-dot" data-page="6" aria-label="Page 6"></button>
+  <button class="nav-dot" data-page="7" aria-label="Page 7"></button>
+  <button class="nav-dot" data-page="8" aria-label="Page 8"></button>
+  <button class="nav-dot" data-page="9" aria-label="Page 9"></button>
+  <button class="nav-dot" data-page="10" aria-label="Page 10"></button>
+</nav>
+
+<script>
+  const pages = document.querySelectorAll('.page');
+  const dots = document.querySelectorAll('.nav-dot');
+  let currentPage = 0;
+  function scrollToPage(index) {
+    if (index < 0 || index >= pages.length) return;
+    pages[index].scrollIntoView({ behavior: 'smooth', inline: 'start' });
+    currentPage = index;
+    updateDots();
+  }
+  function updateDots() { dots.forEach((d, i) => d.classList.toggle('active', i === currentPage)); }
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') scrollToPage(currentPage + 1);
+    if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')   scrollToPage(currentPage - 1);
+  });
+  dots.forEach(dot => dot.addEventListener('click', () => scrollToPage(parseInt(dot.dataset.page) - 1)));
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const idx = Array.from(pages).indexOf(entry.target);
+        if (idx !== -1) { currentPage = idx; updateDots(); }
+      }
+    });
+  }, { threshold: 0.5 });
+  pages.forEach(p => observer.observe(p));
+</script>
+</body>
+</html>
