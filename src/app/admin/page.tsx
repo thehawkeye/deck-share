@@ -27,6 +27,7 @@ export default async function AdminDashboardPage() {
     0,
   );
   const totalPending = requestCounts.reduce((sum, item) => sum + item.count, 0);
+  const baseUrl = process.env.NEXT_PUBLIC_DECKS_URL ?? "";
 
   return (
     <main className={styles.page}>
@@ -58,8 +59,8 @@ export default async function AdminDashboardPage() {
           <table className={styles.table}>
             <thead>
               <tr>
-                <th>Filename</th>
                 <th>Title</th>
+                <th>Filename</th>
                 <th>Mode</th>
                 <th>Users</th>
                 <th>Expiry</th>
@@ -72,11 +73,12 @@ export default async function AdminDashboardPage() {
               {decks.map(({ filename, manifest }) => {
                 const activeCount = manifest.emails.filter((entry) => entry.status === "active").length;
                 const pendingCount = manifest.emails.filter((entry) => entry.status === "pending").length;
+                const deckUrl = `${baseUrl}/decks/${encodeURIComponent(filename)}`;
 
                 return (
                   <tr key={filename}>
-                    <td>{filename}</td>
                     <td>{manifest.title}</td>
+                    <td className={styles.filename}>{filename}</td>
                     <td>
                       <span className={styles.badge}>{manifest.mode}</span>
                     </td>
@@ -87,6 +89,8 @@ export default async function AdminDashboardPage() {
                     <td>{manifest.sharingEnabled ? "On" : "Off"}</td>
                     <td>{pendingByDeck.get(filename) ?? 0}</td>
                     <td>
+                      <a href={deckUrl} target="_blank" rel="noopener noreferrer">View</a>
+                      {" · "}
                       <Link href={`/admin/deck/${encodeURIComponent(filename)}`}>Manage</Link>
                     </td>
                   </tr>
@@ -101,11 +105,11 @@ export default async function AdminDashboardPage() {
 
       <section className={styles.upload}>
         <h2>Upload New Deck</h2>
-        <p>Place your HTML file in `public/decks/` and create a manifest from the API:</p>
+        <p>Add an HTML file to <code>public/decks/</code> in the repo, push, then create the manifest via API:</p>
         <pre>
-          <code>
-            {'curl -X PUT /api/decks/admin/decks -H "content-type: application/json" -d \'{"filename":"your-deck.html"}\''}
-          </code>
+          <code>{`curl -X PUT ${baseUrl}/api/decks/admin/decks/your-file.html \\
+  -H "Authorization: Bearer YOUR_ADMIN_TOKEN" \\
+  -d '{"title":"Your Title"}'`}</code>
         </pre>
       </section>
     </main>
