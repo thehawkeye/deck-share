@@ -1,0 +1,829 @@
+<!DOCTYPE html>
+<html lang="en" class>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Understanding Portfolio Diffusion and Lock-In in Platform Ecosystems</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg-deep: #050507;
+    --bg-primary: #0a0a0d;
+    --bg-elevated: #111115;
+    --bg-card: #18181d;
+    --text-primary: #f4f4f5;
+    --text-secondary: #a1a1aa;
+    --text-muted: #6b6b70;
+    --accent: #c9a962;
+    --accent-subtle: rgba(201,169,98,0.12);
+    --accent-soft: rgba(201,169,98,0.4);
+    --border: rgba(255,255,255,0.04);
+    --border-light: rgba(255,255,255,0.08);
+    --quote-accent: rgba(201,169,98,0.85);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  html.desktop { scroll-snap-type: x mandatory; overflow-x: scroll; overflow-y: hidden; }
+  html.mobile { overflow-x: hidden; overflow-y: auto; }
+  body { font-family: 'Outfit', sans-serif; background: var(--bg-deep); color: var(--text-primary); line-height: 1.75; font-weight: 300; letter-spacing: 0.01em; }
+  html.desktop body { display: flex; width: 1500vw; height: 100vh; }
+  html.mobile body { display: block; width: 100%; min-height: 100vh; }
+  html.desktop ::-webkit-scrollbar { display: none; }
+  html.mobile ::-webkit-scrollbar { width: 4px; }
+  html.mobile ::-webkit-scrollbar-track { background: var(--bg-deep); }
+  html.mobile ::-webkit-scrollbar-thumb { background: var(--border-light); border-radius: 2px; }
+  .page { position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+  html.desktop .page { width: 100vw; height: 100vh; flex-shrink: 0; scroll-snap-align: start; }
+  html.mobile .page { width: 100vw; min-height: 100vh; padding: 6vh 6vw; }
+  .page__inner { width: 100%; height: 100%; position: relative; }
+  html.mobile .page__inner { height: auto; min-height: calc(100vh - 12vh); display: flex; flex-direction: column; justify-content: center; }
+  /* backgrounds */
+  .bg-cover { background: var(--bg-deep); }
+  .bg-cover::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 100% 50% at 50% -10%, rgba(201,169,98,0.22) 0%, transparent 55%); pointer-events: none; }
+  .bg-back { background: var(--bg-deep); }
+  .bg-back::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 80% 50% at 50% 110%, rgba(201,169,98,0.18) 0%, transparent 55%); pointer-events: none; }
+  .bg-p2 { background: #0c1018; }
+  .bg-p2::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 70% 50% at 90% 40%, rgba(201,169,98,0.07) 0%, transparent 55%); pointer-events: none; }
+  .bg-p3 { background: #0d0e0f; }
+  .bg-p3::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 60% 50% at 5% 80%, rgba(201,169,98,0.06) 0%, transparent 50%); pointer-events: none; }
+  .bg-p4 { background: #0c1017; }
+  .bg-p4::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 50% 50% at 50% 0%, rgba(201,169,98,0.05) 0%, transparent 50%); pointer-events: none; }
+  .bg-p5 { background: #0f1310; }
+  .bg-p5::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 70% 40% at 80% 60%, rgba(201,169,98,0.06) 0%, transparent 50%); pointer-events: none; }
+  .bg-p6 { background: #0d0c10; }
+  .bg-p6::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 60% 50% at 70% 20%, rgba(201,169,98,0.06) 0%, transparent 50%); pointer-events: none; }
+  .bg-p7 { background: #111111; }
+  .bg-p7::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 50% 60% at 0% 50%, rgba(201,169,98,0.04) 0%, transparent 50%); pointer-events: none; }
+  .bg-p8 { background: #0e1211; }
+  .bg-p8::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 50% 40% at 50% 100%, rgba(201,169,98,0.05) 0%, transparent 50%); pointer-events: none; }
+  .bg-p9 { background: #0d0e10; }
+  .bg-p9::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 70% 40% at 20% 60%, rgba(201,169,98,0.06) 0%, transparent 50%); pointer-events: none; }
+  /* layouts */
+  .split { display: grid; grid-template-columns: 1fr 1fr; width: 100%; height: 100%; }
+  .split__left, .split__right { display: flex; flex-direction: column; justify-content: center; padding: 8vh 6vw; position: relative; }
+  .split__left { border-right: 1px solid var(--border); }
+  html.mobile .split { grid-template-columns: 1fr; height: auto; }
+  html.mobile .split__left { border-right: none; border-bottom: 1px solid var(--border); padding: 6vh 6vw 4vh; }
+  html.mobile .split__right { padding: 4vh 6vw 6vh; overflow-y: visible; max-height: none; }
+  .hero-center { display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; height: 100%; padding: 8vh 10vw; }
+  /* typography */
+  .label { font-family: 'Outfit', sans-serif; font-size: 0.6rem; font-weight: 500; letter-spacing: 0.3em; text-transform: uppercase; color: var(--accent); margin-bottom: 1.5rem; display: block; }
+  h1 { font-family: 'Cormorant Garamond', serif; font-size: clamp(3.5rem, 7vw, 7rem); font-weight: 300; line-height: 1.0; letter-spacing: -0.01em; color: var(--text-primary); }
+  h1 em { font-style: italic; color: var(--accent); }
+  h2 { font-family: 'Cormorant Garamond', serif; font-size: clamp(2.2rem, 4vw, 4.5rem); font-weight: 300; line-height: 1.05; color: var(--text-primary); margin-bottom: 1.5rem; }
+  h2 em { font-style: italic; color: var(--accent); }
+  h3 { font-family: 'Cormorant Garamond', serif; font-size: clamp(1.3rem, 2vw, 2.2rem); font-weight: 400; color: var(--text-primary); margin-bottom: 0.6rem; }
+  p { font-family: 'Outfit', sans-serif; font-size: clamp(0.78rem, 1.05vw, 1.0rem); font-weight: 300; color: var(--text-secondary); line-height: 1.85; max-width: 44ch; }
+  p + p { margin-top: 1rem; }
+  /* components */
+  .accent-line { width: 3rem; height: 1px; background: var(--accent); margin: 1.5rem 0; }
+  .accent-line--center { margin: 1.5rem auto; }
+  .page-num { position: absolute; bottom: 2rem; right: 3vw; font-family: 'Outfit', sans-serif; font-size: 0.6rem; letter-spacing: 0.2em; color: var(--text-muted); text-transform: uppercase; }
+  .mark { display: flex; align-items: center; gap: 0.75rem; }
+  .mark__circle { width: 40px; height: 40px; border-radius: 50%; border: 1.5px solid var(--accent); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .mark__dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); }
+  .mark__text { font-family: 'Cormorant Garamond', serif; font-size: 1rem; font-weight: 400; letter-spacing: 0.1em; color: var(--text-primary); }
+  .mark__text span { display: block; font-size: 0.55rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--accent); font-family: 'Outfit', sans-serif; font-weight: 500; }
+  .nav-dots { position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%); display: flex; gap: 0.6rem; z-index: 100; }
+  html.mobile .nav-dots { position: static; margin-top: 2rem; transform: none; justify-content: center; }
+  .nav-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--text-muted); cursor: pointer; transition: all 0.3s; border: none; padding: 0; }
+  .nav-dot.active { background: var(--accent); transform: scale(1.4); }
+  .nav-dot:hover { background: var(--accent-soft); }
+  .card { background: var(--bg-card); border: 1px solid var(--border); padding: 1.8rem 2rem; border-radius: 2px; }
+  .card__label { font-family: 'Outfit', sans-serif; font-size: 0.55rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.6rem; display: block; }
+  .card h3 { font-size: clamp(1.05rem, 1.4vw, 1.4rem); }
+  .card p { font-size: clamp(0.7rem, 0.9vw, 0.88rem); max-width: 30ch; }
+  .card p + p { margin-top: 0.5rem; }
+  .card--accent { border-color: rgba(201,169,98,0.3); }
+  .highlight-box { background: var(--accent-subtle); border: 1px solid rgba(201,169,98,0.2); padding: 1.5rem 2rem; border-radius: 2px; margin-top: 1rem; }
+  .highlight-box p { font-size: clamp(0.72rem, 0.95vw, 0.9rem); color: var(--text-primary); max-width: 38ch; }
+  .takeaway { border-left: 2px solid var(--accent); padding-left: 1.2rem; margin: 0.75rem 0; }
+  .quote { font-family: 'Cormorant Garamond', serif; font-size: clamp(1.3rem, 2.2vw, 2.2rem); font-weight: 300; font-style: italic; color: var(--text-primary); line-height: 1.4; max-width: 22ch; }
+  .quote::before { content: '"'; color: var(--accent); font-size: 1.3em; line-height: 0; vertical-align: -0.3em; margin-right: 0.1em; }
+  /* citation table */
+  .cit-table { width: 100%; }
+  .cit-row { display: grid; grid-template-columns: 2fr 3fr 1.5fr; gap: 1rem; padding: 0.9rem 0; border-bottom: 1px solid var(--border); align-items: start; }
+  .cit-row:last-child { border-bottom: none; }
+  .cit-domain { font-family: 'Outfit', sans-serif; font-size: 0.55rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--accent); padding-top: 0.1rem; }
+  .cit-desc { font-family: 'Outfit', sans-serif; font-size: clamp(0.65rem, 0.85vw, 0.85rem); color: var(--text-secondary); line-height: 1.6; }
+  .cit-src { font-family: 'Cormorant Garamond', serif; font-size: clamp(0.7rem, 0.9vw, 0.9rem); color: var(--text-primary); font-style: italic; text-align: right; }
+  /* findings list */
+  .finding-row { display: flex; align-items: flex-start; gap: 1.5rem; padding: 1.2rem 0; border-bottom: 1px solid var(--border); }
+  .finding-row:last-child { border-bottom: none; }
+  .finding__num { font-family: 'Cormorant Garamond', serif; font-size: clamp(2.5rem, 4vw, 4rem); font-weight: 300; color: var(--accent); line-height: 1; flex-shrink: 0; width: 3rem; }
+  .finding__text { font-family: 'Outfit', sans-serif; font-size: clamp(0.72rem, 0.95vw, 0.92rem); color: var(--text-primary); max-width: 36ch; padding-top: 0.3rem; line-height: 1.65; }
+  /* path result */
+  .path-row { display: flex; align-items: center; gap: 1rem; padding: 0.7rem 0; border-bottom: 1px solid var(--border); }
+  .path-row:last-child { border-bottom: none; }
+  .path-row--head { border-bottom: 2px solid rgba(201,169,98,0.3); }
+  .path-label { font-family: 'Outfit', sans-serif; font-size: clamp(0.6rem, 0.8vw, 0.8rem); color: var(--text-secondary); flex: 1; }
+  .path-beta { font-family: 'Cormorant Garamond', serif; font-size: clamp(1rem, 1.4vw, 1.4rem); color: var(--accent); min-width: 4rem; text-align: center; }
+  .path-beta--big { font-size: clamp(1.4rem, 2vw, 2rem); }
+  .path-t { font-family: 'Outfit', sans-serif; font-size: 0.58rem; color: var(--text-muted); min-width: 5rem; }
+  /* model viz */
+  .model-stage { display: flex; flex-direction: column; align-items: center; gap: 0.5rem; }
+  .model-stage__box { background: var(--bg-card); border: 1px solid var(--border); padding: 1rem 1.5rem; border-radius: 2px; text-align: center; min-width: 14rem; }
+  .model-stage__box--active { border-color: rgba(201,169,98,0.4); background: var(--accent-subtle); }
+  .model-stage__label { font-family: 'Outfit', sans-serif; font-size: 0.55rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.4rem; }
+  .model-stage__title { font-family: 'Cormorant Garamond', serif; font-size: clamp(0.9rem, 1.2vw, 1.2rem); color: var(--text-primary); margin-bottom: 0.3rem; }
+  .model-stage__desc { font-family: 'Outfit', sans-serif; font-size: 0.62rem; color: var(--text-muted); }
+  .model-arrow { font-family: 'Outfit', sans-serif; font-size: 1.5rem; color: var(--accent); letter-spacing: 0.2em; }
+  /* agenda */
+  .agenda-list { display: flex; flex-direction: column; gap: 0.6rem; }
+  .agenda-item { display: flex; align-items: baseline; gap: 1rem; }
+  .agenda-num { font-family: 'Cormorant Garamond', serif; font-size: clamp(1.2rem, 1.8vw, 1.8rem); font-weight: 300; color: var(--accent); min-width: 2rem; line-height: 1; }
+  .agenda-text { font-family: 'Outfit', sans-serif; font-size: clamp(0.72rem, 1vw, 1rem); color: var(--text-secondary); }
+  /* big number */
+  .big-num { font-family: 'Cormorant Garamond', serif; font-size: clamp(5rem, 12vw, 12rem); font-weight: 300; color: var(--accent); line-height: 1; }
+  .big-num-label { font-family: 'Outfit', sans-serif; font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--text-muted); margin-top: 0.5rem; }
+  /* implications */
+  .imp-section { margin-bottom: 1.5rem; }
+  .imp-section:last-child { margin-bottom: 0; }
+  .imp-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(1.1rem, 1.5vw, 1.5rem); color: var(--accent); margin-bottom: 0.6rem; }
+  .imp-items { display: flex; flex-direction: column; gap: 0.4rem; }
+  .imp-item { font-family: 'Outfit', sans-serif; font-size: clamp(0.65rem, 0.85vw, 0.85rem); color: var(--text-secondary); padding-left: 1rem; border-left: 1px solid var(--border); }
+  /* back cover */
+  .back-cta { display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; height: 100%; padding: 8vh 10vw; }
+  .hero-quote { font-family: 'Cormorant Garamond', serif; font-size: clamp(2.5rem, 5.5vw, 5.5rem); font-weight: 300; font-style: italic; color: var(--text-primary); line-height: 1.15; max-width: 20ch; text-align: center; margin: 0 auto 2rem; }
+  .back-name { font-family: 'Cormorant Garamond', serif; font-size: clamp(1.2rem, 2vw, 2rem); font-weight: 400; color: var(--text-primary); letter-spacing: 0.05em; margin-bottom: 0.5rem; }
+  .back-tagline { font-family: 'Outfit', sans-serif; font-size: 0.65rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 1.5rem; }
+  .footer-links { display: flex; gap: 2rem; flex-wrap: wrap; justify-content: center; }
+  .footer-links a { font-family: 'Outfit', sans-serif; font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); text-decoration: none; border-bottom: 1px solid var(--border); padding-bottom: 0.2rem; transition: color 0.3s, border-color 0.3s; }
+  .footer-links a:hover { color: var(--accent); border-color: var(--accent); }
+  /* mobile */
+  html.mobile .hero-quote { font-size: clamp(2rem, 9vw, 3.5rem); }
+  html.mobile .back-cta { padding: 6vh 8vw; }
+  /* page flip */
+  html.mobile .page { opacity: 0; transform: translateY(28px); transition: opacity 0.55s cubic-bezier(0.22, 1, 0.36, 1), transform 0.55s cubic-bezier(0.22, 1, 0.36, 1); }
+  html.mobile .page.page-visible { opacity: 1; transform: translateY(0); }
+  html.mobile .page .page__inner > * { opacity: 0; transform: translateY(16px); transition: opacity 0.45s ease, transform 0.45s ease; }
+  html.mobile .page.page-visible .page__inner > *:nth-child(1) { opacity: 1; transform: translateY(0); transition-delay: 0.05s; }
+  html.mobile .page.page-visible .page__inner > *:nth-child(2) { opacity: 1; transform: translateY(0); transition-delay: 0.12s; }
+  html.mobile .page.page-visible .page__inner > *:nth-child(3) { opacity: 1; transform: translateY(0); transition-delay: 0.19s; }
+  html.mobile .page.page-visible .page__inner > *:nth-child(4) { opacity: 1; transform: translateY(0); transition-delay: 0.26s; }
+  html.mobile .page.page-visible .page__inner > *:nth-child(5) { opacity: 1; transform: translateY(0); transition-delay: 0.33s; }
+</style>
+</head>
+<body>
+
+<!-- PAGE 1: TITLE -->
+<div class="page bg-cover" id="p1">
+  <div class="hero-center">
+    <div class="mark" style="margin-bottom:2rem;">
+      <div class="mark__circle"><div class="mark__dot"></div></div>
+    </div>
+    <p class="label" style="margin-bottom:1.5rem;">ISB EFPM &nbsp;&middot;&nbsp; Dissertation Defense &nbsp;&middot;&nbsp; 2026</p>
+    <h1 style="margin-bottom:1.5rem;">Understanding<br><em>Portfolio Diffusion</em><br>and Lock-In</h1>
+    <div class="accent-line accent-line--center"></div>
+    <p style="color:var(--text-muted); font-size:clamp(0.72rem,1vw,0.95rem); max-width:44ch; text-align:center; line-height:1.8;">
+      A Mixed-Methods Test of the<br>Ecosystem Vortex Model
+    </p>
+    <div style="margin-top:3rem;">
+      <p style="font-family:'Cormorant Garamond',serif; font-size:clamp(0.9rem,1.2vw,1.2rem); color:var(--text-primary); max-width:none; line-height:1.8;">
+        Muralikrishnan Balakrishnan<br>
+        <span style="font-family:'Outfit',sans-serif; font-size:0.6rem; letter-spacing:0.2em; text-transform:uppercase; color:var(--text-muted);">Executive Doctoral Candidate &nbsp;&middot;&nbsp; Indian School of Business</span>
+      </p>
+    </div>
+    <div style="margin-top:1.5rem;">
+      <p style="font-family:'Outfit',sans-serif; font-size:0.6rem; letter-spacing:0.15em; text-transform:uppercase; color:var(--text-muted); max-width:none;">
+        Advisors: Prof. Raj Srinivas &nbsp;&middot;&nbsp; Prof. Abhishek Kathuria
+      </p>
+    </div>
+  </div>
+  <div class="page-num">01 / 15</div>
+</div>
+
+<!-- PAGE 2: AGENDA -->
+<div class="page bg-p2" id="p2">
+  <div class="split">
+    <div class="split__left">
+      <span class="label">Overview</span>
+      <h2>What<br>this<br>talk<br>covers.</h2>
+      <div class="accent-line"></div>
+    </div>
+    <div class="split__right" style="justify-content:center; padding-left:6vw; overflow-y:auto;">
+      <div class="agenda-list">
+        <div class="agenda-item">
+          <div class="agenda-num">01</div>
+          <div class="agenda-text">The Engagement Puzzle — what the cases reveal</div>
+        </div>
+        <div class="agenda-item">
+          <div class="agenda-num">02</div>
+          <div class="agenda-text">Theoretical Foundations — validated citations</div>
+        </div>
+        <div class="agenda-item">
+          <div class="agenda-num">03</div>
+          <div class="agenda-text">Research Questions and Methodology</div>
+        </div>
+        <div class="agenda-item">
+          <div class="agenda-num">04</div>
+          <div class="agenda-text">Qualitative Findings — six emergent themes</div>
+        </div>
+        <div class="agenda-item">
+          <div class="agenda-num">05</div>
+          <div class="agenda-text">The Ecosystem Vortex Model — three stages</div>
+        </div>
+        <div class="agenda-item">
+          <div class="agenda-num">06</div>
+          <div class="agenda-text">Case Evidence — Apple and Google</div>
+        </div>
+        <div class="agenda-item">
+          <div class="agenda-num">07</div>
+          <div class="agenda-text">Quantitative Validation — key results</div>
+        </div>
+        <div class="agenda-item">
+          <div class="agenda-num">08</div>
+          <div class="agenda-text">What the Model Explains</div>
+        </div>
+        <div class="agenda-item">
+          <div class="agenda-num">09</div>
+          <div class="agenda-text">Implications, Contributions, Limitations</div>
+        </div>
+        <div class="agenda-item">
+          <div class="agenda-num">10</div>
+          <div class="agenda-text">Conclusion</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="page-num">02 / 15</div>
+</div>
+
+<!-- PAGE 3: THE ENGAGEMENT PUZZLE -->
+<div class="page bg-p3" id="p3">
+  <div class="split">
+    <div class="split__left">
+      <span class="label">The Engagement Puzzle</span>
+      <h2>Five<br>platforms.<br><em>Five</em><br>different<br>outcomes.</h2>
+      <div class="accent-line"></div>
+      <p>All five built ecosystems at scale. All five exhibit the same internal asymmetry.</p>
+    </div>
+    <div class="split__right" style="justify-content:center; padding-left:6vw; overflow-y:auto;">
+      <div style="display:flex; flex-direction:column; gap:1.2rem;">
+        <div class="card">
+          <span class="card__label">Apple</span>
+          <h3>Device lock-in is profound.</h3>
+          <p>Services (TV+, Arcade, News+) remain peripheral. Face superior standalone alternatives.</p>
+        </div>
+        <div class="card">
+          <span class="card__label">Google</span>
+          <h3>Service loyalty exceeds device loyalty.</h3>
+          <p>Android OEM fragmentation dilutes coherence at device level.</p>
+        </div>
+        <div class="card">
+          <span class="card__label">Amazon</span>
+          <h3>Prime penetration is high.</h3>
+          <p>Alexa, Fire TV, and Prime Video engagement is low. No cross-service habit loop.</p>
+        </div>
+        <div class="card">
+          <span class="card__label">Meta</span>
+          <h3>Massive reach across apps.</h3>
+          <p>Minimal synergy between them. Each operates independently.</p>
+        </div>
+        <div class="highlight-box" style="margin-top:0.5rem;">
+          <p>Platform scale does not automatically translate into portfolio depth. Architecture alone does not explain the difference.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="page-num">03 / 15</div>
+</div>
+
+<!-- PAGE 4: THEORETICAL FOUNDATIONS -->
+<div class="page bg-p4" id="p4">
+  <div class="split">
+    <div class="split__left">
+      <span class="label">Theoretical Foundations</span>
+      <h2>Four<br>streams.<br><em>Eight</em><br>validated<br>citations.</h2>
+      <div class="accent-line"></div>
+      <p>All references verified. No fabricated citations. The model integrates rather than merely cites.</p>
+    </div>
+    <div class="split__right" style="justify-content:center; padding-left:4vw; overflow-y:auto;">
+      <div class="cit-table">
+        <div class="cit-row">
+          <div class="cit-domain">Consumer Behavior</div>
+          <div class="cit-desc">Intertemporal cost dynamics shape switching behavior. Future switching costs are weighted against present convenience in ways that favor inertia.</div>
+          <div class="cit-src">Zauberman, 2003</div>
+        </div>
+        <div class="cit-row">
+          <div class="cit-domain">Consumer Behavior</div>
+          <div class="cit-desc">Skill-based habits with a platform interface create cognitive lock-in. Learned competence becomes a reason to stay.</div>
+          <div class="cit-src">Murray and Häubl, 2007</div>
+        </div>
+        <div class="cit-row">
+          <div class="cit-domain">Technology Adoption</div>
+          <div class="cit-desc">TAM: perceived usefulness and ease of use drive initial adoption. Davis, 1989.</div>
+          <div class="cit-src">Davis, 1989</div>
+        </div>
+        <div class="cit-row">
+          <div class="cit-domain">Technology Adoption</div>
+          <div class="cit-desc">UTAUT: social influence and effort expectancy shape sustained engagement. Venkatesh et al., 2003.</div>
+          <div class="cit-src">Venkatesh et al., 2003</div>
+        </div>
+        <div class="cit-row">
+          <div class="cit-domain">Platform Strategy</div>
+          <div class="cit-desc">Ecosystem architecture and complementarity drive portfolio diffusion. Jacobides, Cennamo, and Gawer, 2018.</div>
+          <div class="cit-src">Jacobides et al., 2018</div>
+        </div>
+        <div class="cit-row">
+          <div class="cit-domain">Platform Economics</div>
+          <div class="cit-desc">Network effects amplify platform value and create cross-side dependencies. Katz and Shapiro, 1985.</div>
+          <div class="cit-src">Katz and Shapiro, 1985</div>
+        </div>
+        <div class="cit-row">
+          <div class="cit-domain">Lock-In Theory</div>
+          <div class="cit-desc">Switching costs are strategic barriers to exit in technology markets. Klemperer, 1995.</div>
+          <div class="cit-src">Klemperer, 1995</div>
+        </div>
+        <div class="cit-row">
+          <div class="cit-domain">Lock-In Theory</div>
+          <div class="cit-desc">Behavioral and emotional barriers compound economic switching costs in sustaining retention. Jones et al., 2000.</div>
+          <div class="cit-src">Jones et al., 2000</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="page-num">04 / 15</div>
+</div>
+
+<!-- PAGE 5: RESEARCH QUESTIONS -->
+<div class="page bg-p5" id="p5">
+  <div class="split">
+    <div class="split__left">
+      <span class="label">Research Questions</span>
+      <h2>Four<br>questions.<br>One<br><em>model.</em></h2>
+      <div class="accent-line"></div>
+      <p>The contribution is an integrated process model that unifies adoption triggers, ecosystem synergies, network effects, data entrenchment, and habit formation into a single framework.</p>
+    </div>
+    <div class="split__right" style="justify-content:center; padding-left:6vw; overflow-y:auto;">
+      <div style="display:flex; flex-direction:column; gap:1.5rem;">
+        <div class="card">
+          <span class="card__label">RQ 1</span>
+          <h3>Initial adoption drivers</h3>
+          <p>What drives initial adoption of ecosystem products?</p>
+        </div>
+        <div class="card">
+          <span class="card__label">RQ 2</span>
+          <h3>The mediation role of engagement</h3>
+          <p>How does ecosystem engagement mediate the relationship between adoption drivers and perceived lock-in?</p>
+        </div>
+        <div class="card">
+          <span class="card__label">RQ 3</span>
+          <h3>Behavioral versus cognitive</h3>
+          <p>What is the relative weight of behavioral versus cognitive lock-in in overall lock-in perception?</p>
+        </div>
+        <div class="card card--accent">
+          <span class="card__label">RQ 4</span>
+          <h3 style="color:var(--accent);">Cross-market generalisability</h3>
+          <p style="color:var(--text-primary);">Do these relationships differ between Indian and US consumers?</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="page-num">05 / 15</div>
+</div>
+
+<!-- PAGE 6: RESEARCH METHODOLOGY -->
+<div class="page bg-p6" id="p6">
+  <div class="split">
+    <div class="split__left">
+      <span class="label">Research Methodology</span>
+      <h2>Mixed<br>methods.<br>Two<br><em>phases.</em></h2>
+      <div class="accent-line"></div>
+      <p>PLS-SEM two-stage approach (Becker et al., 2012) to separate reflective and formative measurement. Multi-group analysis for India versus US comparison.</p>
+    </div>
+    <div class="split__right" style="justify-content:center; padding-left:6vw; overflow-y:auto;">
+      <div style="display:flex; flex-direction:column; gap:1.5rem;">
+        <div class="card">
+          <span class="card__label">Phase 1 — Qualitative</span>
+          <h3>36 semi-structured interviews</h3>
+          <p>18 in India and 18 in the US. Active users of at least two products within a single ecosystem. Thematic analysis refined constructs and measurement items.</p>
+        </div>
+        <div class="card">
+          <span class="card__label">Phase 2 — Quantitative</span>
+          <h3>N = 369 usable responses</h3>
+          <p>India N = 186, US N = 183. Balanced gender, age 18 to 45. 7-point Likert. Professional stratified panels.</p>
+        </div>
+        <div class="card card--accent">
+          <span class="card__label">Analytical Approach</span>
+          <h3 style="color:var(--accent);">PLS-SEM two-stage method</h3>
+          <p style="color:var(--text-primary);">Stage 1: reflective lower-order constructs. Stage 2: formative higher-order Perceived Lock-In construct using latent scores from Stage 1.</p>
+        </div>
+        <div class="highlight-box" style="margin-top:0.5rem;">
+          <p>Two-stage separation avoids interpretational confounding between reflective and formative measurement.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="page-num">06 / 15</div>
+</div>
+
+<!-- PAGE 7: QUALITATIVE FINDINGS -->
+<div class="page bg-p7" id="p7">
+  <div class="split">
+    <div class="split__left">
+      <span class="label">Qualitative Findings</span>
+      <h2>Six<br><em>themes</em><br>from 36<br>interviews.</h2>
+      <div class="accent-line"></div>
+      <p>Consistent across both India and US samples. These themes informed measurement items and model refinement.</p>
+    </div>
+    <div class="split__right" style="justify-content:center; padding-left:4vw; overflow-y:auto;">
+      <div class="finding-row">
+        <div class="finding__num">1</div>
+        <div class="finding__text">Cross-product seamlessness is a design expectation, not a differentiating feature. When it is absent, it registers as a failure.</div>
+      </div>
+      <div class="finding-row">
+        <div class="finding__num">2</div>
+        <div class="finding__text">The social graph is the invisible binding agent. Peers make switching feel like leaving a community, not just a service.</div>
+      </div>
+      <div class="finding-row">
+        <div class="finding__num">3</div>
+        <div class="finding__text">Data functions as memory. Users describe accumulated platform data as an extension of their cognitive archive.</div>
+      </div>
+      <div class="finding-row">
+        <div class="finding__num">4</div>
+        <div class="finding__text">Brand operates as shorthand for trust, particularly in privacy-sensitive contexts. Users default to platforms they associate with reliability.</div>
+      </div>
+      <div class="finding-row">
+        <div class="finding__num">5</div>
+        <div class="finding__text">Portfolio expansion is organic drift, not a deliberate multi-product decision. The architecture makes it frictionless.</div>
+      </div>
+      <div class="finding-row">
+        <div class="finding__num">6</div>
+        <div class="finding__text">The effort illusion is pervasive. Users systematically underestimate what switching requires until they attempt it.</div>
+      </div>
+    </div>
+  </div>
+  <div class="page-num">07 / 15</div>
+</div>
+
+<!-- PAGE 8: THE ECOSYSTEM VORTEX MODEL -->
+<div class="page bg-p8" id="p8">
+  <div class="split">
+    <div class="split__left">
+      <span class="label">The Ecosystem Vortex — Overview</span>
+      <h2>Three<br>stages.<br>One<br><em>vortex.</em></h2>
+      <div class="accent-line"></div>
+      <p>Each stage introduces new mechanisms that deepen dependence. Exit becomes progressively harder not because of a single decision, but because of cumulative behavioral and structural entanglement.</p>
+      <div class="highlight-box" style="margin-top:1.5rem;">
+        <p>Hotel California effect: you can check out any time you like, but you can never leave.</p>
+      </div>
+    </div>
+    <div class="split__right" style="justify-content:center; padding-left:6vw; overflow-y:auto;">
+      <div style="display:flex; flex-direction:column; align-items:center; gap:0.8rem; padding: 2rem 0;">
+        <div class="model-stage">
+          <div class="model-stage__box">
+            <div class="model-stage__label">Stage 1</div>
+            <div class="model-stage__title">Entry</div>
+            <div class="model-stage__desc">Functional value, brand alignment, or social influence. Necessary but not sufficient for sustained engagement.</div>
+          </div>
+        </div>
+        <div class="model-arrow">&darr;</div>
+        <div class="model-stage">
+          <div class="model-stage__box model-stage__box--active">
+            <div class="model-stage__label">Stage 2 — Focus of this research</div>
+            <div class="model-stage__title">Ecosystem Envelopment</div>
+            <div class="model-stage__desc">Ecosystem synergies, network effects, and data entrenchment operate simultaneously. The vortex tightens here.</div>
+          </div>
+        </div>
+        <div class="model-arrow">&darr;</div>
+        <div class="model-stage">
+          <div class="model-stage__box">
+            <div class="model-stage__label">Stage 3</div>
+            <div class="model-stage__title">Entrapment</div>
+            <div class="model-stage__desc">Habit inertia, cognitive lock-in, and switching costs converge. Exit is technically possible but behaviorally improbable.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="page-num">08 / 15</div>
+</div>
+
+<!-- PAGE 9: STAGE 2 — ECOSYSTEM ENVELOPMENT -->
+<div class="page bg-p9" id="p9">
+  <div class="split">
+    <div class="split__left">
+      <span class="label">Stage 2 — Ecosystem Envelopment</span>
+      <h2>The<br>three<br><em>mechanisms</em><br>that<br>tighten<br>the vortex.</h2>
+      <div class="accent-line"></div>
+      <p>They operate simultaneously. Each independently raises the cost of exit. Together they create a self-reinforcing system.</p>
+    </div>
+    <div class="split__right" style="justify-content:center; padding-left:6vw; overflow-y:auto;">
+      <div style="display:flex; flex-direction:column; gap:1.2rem;">
+        <div class="card">
+          <span class="card__label">Ecosystem Synergies</span>
+          <h3>Interoperability and portfolio diffusion</h3>
+          <p>Services share identity, authentication, and context across devices. Transitions become invisible. Users drift deeper without making explicit choices. The ecosystem becomes the ambient environment.</p>
+        </div>
+        <div class="card">
+          <span class="card__label">Network Effects</span>
+          <h3>Direct, indirect, and social amplification</h3>
+          <p>More users increase platform value for all. More complementors attract more users. The social graph and the platform graph become indistinguishable.</p>
+        </div>
+        <div class="card card--accent">
+          <span class="card__label">Data Entrenchment</span>
+          <h3 style="color:var(--accent);">The most durable mechanism</h3>
+          <p style="color:var(--text-primary);">Behavioral and content data accumulates in centralized infrastructure. More data produces better personalization, which drives deeper usage, which generates more data. This transforms preference into dependency.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="page-num">09 / 15</div>
+</div>
+
+<!-- PAGE 10: CASE — APPLE -->
+<div class="page bg-p3" id="p10">
+  <div class="split">
+    <div class="split__left">
+      <span class="label">Case Narrative</span>
+      <h2>Apple.<br><em>Design,</em><br>continuity,<br>identity.</h2>
+      <div class="accent-line"></div>
+      <p>Emotional architecture and technical integration combine to produce deep lock-in.</p>
+    </div>
+    <div class="split__right" style="justify-content:center; padding-left:6vw; overflow-y:auto;">
+      <div style="display:flex; flex-direction:column; gap:1.2rem;">
+        <div class="card">
+          <span class="card__label">Entry</span>
+          <p>Aspirational brand identity and tightly controlled user experience establish early emotional connection. Design quality and privacy positioning function as trust signals.</p>
+        </div>
+        <div class="card">
+          <span class="card__label">Envelopment</span>
+          <p>Handoff, AirDrop, iMessage, and iCloud sync create an invisible mesh of continuity. Apple Watch, AirPods, and MacBook deepen integration without requiring deliberate adoption decisions.</p>
+        </div>
+        <div class="card">
+          <span class="card__label">Entrapment</span>
+          <p>Years of photos, messages, health data, and preferences sit in iCloud. Leaving Apple means reconstructing an entire digital identity. The cost is technical, functional, and emotional.</p>
+        </div>
+        <div class="highlight-box" style="margin-top:0.5rem;">
+          <p>Vulnerability: ancillary services (TV+, Arcade, News+) lack interoperability advantages of core devices and face superior standalone competitors. Users multi-home for those services.</p>
+        </div>
+        <div class="takeaway">
+          <p>Apple's lock-in is emotional as much as architectural. Users do not merely own Apple products. They inhabit Apple's worldview.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="page-num">10 / 15</div>
+</div>
+
+<!-- PAGE 11: CASE — GOOGLE -->
+<div class="page bg-p4" id="p11">
+  <div class="split">
+    <div class="split__left">
+      <span class="label">Case Narrative</span>
+      <h2>Google.<br><em>Ubiquity,</em><br>utility,<br>invisible<br>infrastructure.</h2>
+      <div class="accent-line"></div>
+      <p>Different logic from Apple. Less aspirational, more infrastructural.</p>
+    </div>
+    <div class="split__right" style="justify-content:center; padding-left:6vw; overflow-y:auto;">
+      <div style="display:flex; flex-direction:column; gap:1.2rem;">
+        <div class="card">
+          <span class="card__label">Entry</span>
+          <p>Free, high-utility services — Gmail, Maps, Search — require minimal adoption friction. Immediate value, no commitment required.</p>
+        </div>
+        <div class="card">
+          <span class="card__label">Envelopment</span>
+          <p>A single Google Account links Drive, Photos, Calendar, and Chrome. Cloud infrastructure makes data accessible across every device. Service loyalty decouples from device loyalty.</p>
+        </div>
+        <div class="card">
+          <span class="card__label">Entrapment</span>
+          <p>Search history, travel plans, emails, photos, and location data accumulated over years. Google Photos alone represents thousands of hours of curated memory. Most users find migration unfeasible.</p>
+        </div>
+        <div class="highlight-box" style="margin-top:0.5rem;">
+          <p>Vulnerability: Android OEM fragmentation — Samsung, Xiaomi, and Vivo building parallel ecosystems on top of Android — creates internal competition and dilutes standardization.</p>
+        </div>
+        <div class="takeaway">
+          <p>Google's lock-in is invisible. Users often do not know how deeply they are embedded. The platform becomes the operating system of everyday digital life without presenting itself as one.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="page-num">11 / 15</div>
+</div>
+
+<!-- PAGE 12: QUANTITATIVE RESULTS -->
+<div class="page bg-p5" id="p12">
+  <div class="split">
+    <div class="split__left">
+      <span class="label">Quantitative Results</span>
+      <h2>The<br>headline<br><em>numbers.</em></h2>
+      <div class="accent-line"></div>
+      <p>Behavioral lock-in dominates. Ecosystem engagement is the decisive mechanism. All effects fully mediated.</p>
+    </div>
+    <div class="split__right" style="justify-content:center; padding-left:4vw; overflow-y:auto;">
+      <div style="display:flex; flex-direction:column; gap:0.8rem;">
+        <div class="path-row path-row--head">
+          <div class="path-label" style="color:var(--accent); font-size:0.55rem; letter-spacing:0.2em; text-transform:uppercase;">Path</div>
+          <div class="path-beta" style="color:var(--accent); text-align:center;">Beta</div>
+          <div class="path-t" style="color:var(--accent);">t-value</div>
+        </div>
+        <div class="path-row">
+          <div class="path-label">Social Effects to Core Adoption Drivers</div>
+          <div class="path-beta">0.48</div>
+          <div class="path-t">8.12, p < .001</div>
+        </div>
+        <div class="path-row">
+          <div class="path-label">Social Effects to Network Effects</div>
+          <div class="path-beta">0.58</div>
+          <div class="path-t">9.45, p < .001</div>
+        </div>
+        <div class="path-row">
+          <div class="path-label">Core Adoption Drivers to Ecosystem Engagement</div>
+          <div class="path-beta">0.43</div>
+          <div class="path-t">7.22, p < .001</div>
+        </div>
+        <div class="path-row">
+          <div class="path-label">Network Effects to Ecosystem Engagement</div>
+          <div class="path-beta">0.50</div>
+          <div class="path-t">8.55, p < .001</div>
+        </div>
+        <div class="path-row" style="border-top:2px solid rgba(201,169,98,0.3); padding-top:1rem; margin-top:0.5rem;">
+          <div class="path-label" style="color:var(--text-primary); font-weight:500;">Ecosystem Engagement to Perceived Lock-In</div>
+          <div class="path-beta path-beta--big">0.75</div>
+          <div class="path-t" style="color:var(--accent);">15.60, p < .001</div>
+        </div>
+      </div>
+      <div style="display:grid; grid-template-columns: 1fr 1fr; gap:1rem; margin-top:1.5rem;">
+        <div class="card" style="text-align:center;">
+          <div class="big-num">0.82</div>
+          <div class="big-num-label">R-squared — Perceived Lock-In</div>
+        </div>
+        <div class="card" style="text-align:center;">
+          <div class="big-num">0.72</div>
+          <div class="big-num-label">Behavioral weight in formative HOC</div>
+        </div>
+      </div>
+      <div class="highlight-box" style="margin-top:1rem;">
+        <p>Ecosystem Engagement fully mediates both CAD to Lock-In and NE to Lock-In. No significant direct effect of adoption drivers on lock-in. Behavioral lock-in dominates cognitive lock-in (weight 0.72 vs 0.28).</p>
+      </div>
+    </div>
+  </div>
+  <div class="page-num">12 / 15</div>
+</div>
+
+<!-- PAGE 13: WHAT THE MODEL EXPLAINS -->
+<div class="page bg-p6" id="p13">
+  <div class="split">
+    <div class="split__left">
+      <span class="label">What the Model Explains</span>
+      <h2>Why<br><em>Apple</em><br>deepens<br>lock-in<br>where<br>Amazon<br>fails.</h2>
+      <div class="accent-line"></div>
+    </div>
+    <div class="split__right" style="justify-content:center; padding-left:6vw; overflow-y:auto;">
+      <div style="display:flex; flex-direction:column; gap:1.5rem;">
+        <div class="card">
+          <span class="card__label">Apple</span>
+          <h3>Architecture, identity, and behavior converge</h3>
+          <p>Handoff, iCloud, brand trust, and daily device habit loops create deep ecosystem engagement. Each product reinforces the others. The portfolio compounds in value.</p>
+        </div>
+        <div class="card">
+          <span class="card__label">Amazon</span>
+          <h3>Transactional bundling without behavioral integration</h3>
+          <p>Prime subscription drives transactional convenience but there is no equivalent habit loop connecting Prime Video, Alexa, and Kindle. No emotional anchor. No social graph.</p>
+          <div class="highlight-box" style="margin-top:0.8rem;">
+            <p>The model predicts this precisely. Without ecosystem engagement driving habit inertia, lock-in remains shallow. Transactional bundling is not the same as behavioral integration.</p>
+          </div>
+        </div>
+        <div class="card card--accent">
+          <span class="card__label">Google</span>
+          <h3 style="color:var(--accent);">Resilient despite architectural fragmentation</h3>
+          <p style="color:var(--text-primary);">Service-layer lock-in operates independently of device loyalty. Users switch between Android and iOS while continuing Gmail, YouTube, and Drive with full commitment. Data entrenchment through cumulative personalization creates invisible switching costs.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="page-num">13 / 15</div>
+</div>
+
+<!-- PAGE 14: IMPLICATIONS, CONTRIBUTIONS, LIMITATIONS -->
+<div class="page bg-p7" id="p14">
+  <div class="split">
+    <div class="split__left">
+      <span class="label">Implications, Contributions, Limitations</span>
+      <h2>So<br><em>what</em><br>does it<br>mean?</h2>
+      <div class="accent-line"></div>
+    </div>
+    <div class="split__right" style="justify-content:center; padding-left:6vw; overflow-y:auto;">
+      <div class="imp-section">
+        <div class="imp-title">Academic Contributions</div>
+        <div class="imp-items">
+          <div class="imp-item">First integrated process model unifying entry hooks, ecosystem synergies, network effects, data entrenchment, and habit formation</div>
+          <div class="imp-item">Ecosystem engagement confirmed as decisive mediating mechanism (beta = 0.75, R-squared = 0.82)</div>
+          <div class="imp-item">Behavioral lock-in dominates cognitive lock-in in the formative decomposition (weight 0.72 vs 0.28)</div>
+          <div class="imp-item">Model holds cross-culturally in India and US markets</div>
+        </div>
+      </div>
+      <div class="imp-section">
+        <div class="imp-title">Managerial Implications — Stage-Based Roadmap</div>
+        <div class="imp-items">
+          <div class="imp-item">Stage 1: Functional hygiene, social hooks, brand trust. Reduce adoption friction. Establish emotional affiliation.</div>
+          <div class="imp-item">Stage 2: Interoperability, portfolio diffusion, network effects, data continuity. Goal is organic deepening, not bundling.</div>
+          <div class="imp-item">Stage 3: Habit loops, structural switching costs, psychological reinforcement. Lock-in follows from engagement, not the reverse.</div>
+        </div>
+      </div>
+      <div class="imp-section">
+        <div class="imp-title">Limitations</div>
+        <div class="imp-items">
+          <div class="imp-item">India and US panels only. Generalisability to other markets requires further validation.</div>
+          <div class="imp-item">Cross-sectional design captures association, not temporal sequence.</div>
+          <div class="imp-item">Research designed in the platform era. Agent economy changes the lock-in mechanism fundamentally. Ongoing work.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="page-num">14 / 15</div>
+</div>
+
+<!-- PAGE 15: CONCLUSION + BACK COVER -->
+<div class="page bg-back" id="p15">
+  <div class="hero-center">
+    <p class="label" style="margin-bottom:1.5rem;">Conclusion</p>
+    <h2 style="font-size:clamp(2rem,4vw,4rem); margin-bottom:2rem;">Three<br>things<br><em>matter most.</em></h2>
+    <div class="accent-line accent-line--center"></div>
+    <div style="display:flex; flex-direction:column; gap:1.2rem; max-width:52ch; text-align:left; margin:0 auto 2rem;">
+      <div class="takeaway">
+        <p>Ecosystem engagement is the decisive mechanism. Not architecture. Not bundling. Design for engagement first. Switching costs follow from deep engagement.</p>
+      </div>
+      <div class="takeaway">
+        <p>Behavioral lock-in dominates cognitive lock-in. Users do not stay primarily because switching is expensive. They stay because leaving feels like abandoning a version of themselves.</p>
+      </div>
+      <div class="takeaway">
+        <p>The vortex tightens through layered value delivery, not coercion.</p>
+      </div>
+    </div>
+    <div class="hero-quote">Hotel California remains the most accurate metaphor. You can check out any time you like. But you can never leave.</div>
+    <div class="accent-line accent-line--center" style="margin-top:2rem;"></div>
+    <div class="back-name">Muralikrishnan Balakrishnan</div>
+    <div class="back-tagline">Indian School of Business &nbsp;&middot;&nbsp; Executive Doctoral Candidate</div>
+    <div class="footer-links">
+      <a href="https://www.linkedin.com/in/muralikrishnan" target="_blank">LinkedIn</a>
+      <a href="https://hawkeye.substack.com" target="_blank">Substack</a>
+      <a href="https://muralikrishnan.net" target="_blank">Website</a>
+    </div>
+  </div>
+  <div class="page-num">15 / 15</div>
+</div>
+
+<!-- NAV DOTS -->
+<nav class="nav-dots" aria-label="Page navigation">
+  <button class="nav-dot active" data-page="1" aria-label="Page 1"></button>
+  <button class="nav-dot" data-page="2" aria-label="Page 2"></button>
+  <button class="nav-dot" data-page="3" aria-label="Page 3"></button>
+  <button class="nav-dot" data-page="4" aria-label="Page 4"></button>
+  <button class="nav-dot" data-page="5" aria-label="Page 5"></button>
+  <button class="nav-dot" data-page="6" aria-label="Page 6"></button>
+  <button class="nav-dot" data-page="7" aria-label="Page 7"></button>
+  <button class="nav-dot" data-page="8" aria-label="Page 8"></button>
+  <button class="nav-dot" data-page="9" aria-label="Page 9"></button>
+  <button class="nav-dot" data-page="10" aria-label="Page 10"></button>
+  <button class="nav-dot" data-page="11" aria-label="Page 11"></button>
+  <button class="nav-dot" data-page="12" aria-label="Page 12"></button>
+  <button class="nav-dot" data-page="13" aria-label="Page 13"></button>
+  <button class="nav-dot" data-page="14" aria-label="Page 14"></button>
+  <button class="nav-dot" data-page="15" aria-label="Page 15"></button>
+</nav>
+
+<script>
+  (function() {
+    const isMobile = window.innerWidth < 768 || /Mobi|Android/i.test(navigator.userAgent);
+    document.documentElement.classList.add(isMobile ? 'mobile' : 'desktop');
+  })();
+  const pages = document.querySelectorAll('.page');
+  const dots = document.querySelectorAll('.nav-dot');
+  let currentPage = 0;
+  function scrollToPage(index) {
+    if (index < 0 || index >= pages.length) return;
+    const isMobile = document.documentElement.classList.contains('mobile');
+    if (isMobile) {
+      pages[index].scrollIntoView({ behavior: 'smooth', block: 'start' });
+    } else {
+      pages[index].scrollIntoView({ behavior: 'smooth', inline: 'start' });
+    }
+    currentPage = index;
+    updateDots();
+  }
+  function updateDots() { dots.forEach((d, i) => d.classList.toggle('active', i === currentPage)); }
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') scrollToPage(currentPage + 1);
+    if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')   scrollToPage(currentPage - 1);
+  });
+  dots.forEach(dot => dot.addEventListener('click', () => scrollToPage(parseInt(dot.dataset.page) - 1)));
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('page-visible');
+        const idx = Array.from(pages).indexOf(entry.target);
+        if (idx !== -1) { currentPage = idx; updateDots(); }
+      } else {
+        entry.target.classList.remove('page-visible');
+      }
+    });
+  }, { threshold: 0.4 });
+  pages.forEach(p => observer.observe(p));
+  pages[0].classList.add('page-visible');
+</script>
+</body>
+</html>
