@@ -21,37 +21,42 @@
     --accent-soft: rgba(201,169,98,0.4);
     --border: rgba(255,255,255,0.04);
     --border-light: rgba(255,255,255,0.08);
+    --casualty: rgba(255,80,80,0.7);
+    --pivot: rgba(200,150,50,0.7);
+    --fortress: rgba(80,200,120,0.7);
+    --relic: rgba(120,120,140,0.7);
   }
   * { margin: 0; padding: 0; box-sizing: border-box; }
   html { scroll-behavior: smooth; scroll-snap-type: x mandatory; overflow-x: scroll; overflow-y: hidden; }
-  body { font-family: 'Outfit', sans-serif; background: var(--bg-deep); color: var(--text-primary); line-height: 1.75; font-weight: 300; letter-spacing: 0.01em; display: flex; width: 1000vw; height: 100vh; }
+  body { font-family: 'Outfit', sans-serif; background: var(--bg-deep); color: var(--text-primary); line-height: 1.75; font-weight: 300; letter-spacing: 0.01em; display: flex; width: 1100vw; height: 100vh; }
   ::-webkit-scrollbar { display: none; }
   .page { width: 100vw; height: 100vh; flex-shrink: 0; scroll-snap-align: start; position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; }
   .page__inner { width: 100%; height: 100%; position: relative; }
-  .bg-cover::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 100% 50% at 50% -10%, rgba(201,169,98,0.22) 0%, transparent 55%); pointer-events: none; }
+  /* backgrounds */
   .bg-cover { background: var(--bg-deep); }
-  .bg-back::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 80% 50% at 50% 110%, rgba(201,169,98,0.18) 0%, transparent 55%); pointer-events: none; }
+  .bg-cover::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 100% 50% at 50% -10%, rgba(201,169,98,0.22) 0%, transparent 55%); pointer-events: none; }
   .bg-back { background: var(--bg-deep); }
+  .bg-back::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 80% 50% at 50% 110%, rgba(201,169,98,0.18) 0%, transparent 55%); pointer-events: none; }
   .bg-p2 { background: #0c1018; }
-  .bg-p2::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 70% 50% at 90% 40%, rgba(201,169,98,0.08) 0%, transparent 55%); pointer-events: none; }
+  .bg-p2::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 70% 50% at 90% 40%, rgba(201,169,98,0.07) 0%, transparent 55%); pointer-events: none; }
   .bg-p3 { background: #0d0e0f; }
-  .bg-p3::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 60% 50% at 5% 80%, rgba(201,169,98,0.07) 0%, transparent 50%); pointer-events: none; }
+  .bg-p3::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 60% 50% at 5% 80%, rgba(201,169,98,0.06) 0%, transparent 50%); pointer-events: none; }
   .bg-p4 { background: #0c1017; }
-  .bg-p4::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 50% 50% at 50% 0%, rgba(201,169,98,0.06) 0%, transparent 50%); pointer-events: none; }
+  .bg-p4::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 50% 50% at 50% 0%, rgba(201,169,98,0.05) 0%, transparent 50%); pointer-events: none; }
   .bg-p5 { background: #0f1310; }
   .bg-p5::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 70% 40% at 80% 60%, rgba(201,169,98,0.06) 0%, transparent 50%); pointer-events: none; }
   .bg-p6 { background: #0d0c10; }
   .bg-p6::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 60% 50% at 70% 20%, rgba(201,169,98,0.06) 0%, transparent 50%); pointer-events: none; }
   .bg-p7 { background: #111111; }
-  .bg-p7::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 50% 60% at 0% 50%, rgba(201,169,98,0.05) 0%, transparent 50%); pointer-events: none; }
+  .bg-p7::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 50% 60% at 0% 50%, rgba(201,169,98,0.04) 0%, transparent 50%); pointer-events: none; }
   .bg-p8 { background: #0e1211; }
-  .bg-p8::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 50% 40% at 50% 100%, rgba(201,169,98,0.06) 0%, transparent 50%); pointer-events: none; }
-  .bg-p9 { background: #100d0a; }
-  .bg-p9::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 60% 50% at 30% 70%, rgba(201,169,98,0.07) 0%, transparent 50%); pointer-events: none; }
+  .bg-p8::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 50% 40% at 50% 100%, rgba(201,169,98,0.05) 0%, transparent 50%); pointer-events: none; }
+  /* layouts */
   .split { display: grid; grid-template-columns: 1fr 1fr; width: 100%; height: 100%; }
   .split__left, .split__right { display: flex; flex-direction: column; justify-content: center; padding: 8vh 6vw; position: relative; }
   .split__left { border-right: 1px solid var(--border); }
-  .full-bleed { width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: center; padding: 8vh 8vw; }
+  .split--flush-right .split__right { padding-left: 5vw; overflow-y: auto; }
+  /* typography */
   .label { font-family: 'Outfit', sans-serif; font-size: 0.6rem; font-weight: 500; letter-spacing: 0.3em; text-transform: uppercase; color: var(--accent); margin-bottom: 1.5rem; display: block; }
   h1 { font-family: 'Cormorant Garamond', serif; font-size: clamp(3.5rem, 7vw, 7rem); font-weight: 300; line-height: 1.0; letter-spacing: -0.01em; color: var(--text-primary); }
   h1 em { font-style: italic; color: var(--accent); }
@@ -60,6 +65,7 @@
   h3 { font-family: 'Cormorant Garamond', serif; font-size: clamp(1.3rem, 2vw, 2.2rem); font-weight: 400; color: var(--text-primary); margin-bottom: 0.6rem; }
   p { font-family: 'Outfit', sans-serif; font-size: clamp(0.78rem, 1.05vw, 1.0rem); font-weight: 300; color: var(--text-secondary); line-height: 1.85; max-width: 44ch; }
   p + p { margin-top: 1rem; }
+  /* components */
   .stat-anchor { font-family: 'Cormorant Garamond', serif; font-size: clamp(4.5rem, 11vw, 11rem); font-weight: 300; line-height: 1; color: var(--accent); display: block; }
   .stat-label { font-family: 'Outfit', sans-serif; font-size: 0.65rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--text-muted); margin-top: 0.4rem; display: block; }
   .accent-line { width: 3rem; height: 1px; background: var(--accent); margin: 1.5rem 0; }
@@ -83,54 +89,59 @@
   .card p { font-size: clamp(0.7rem, 0.9vw, 0.88rem); max-width: 30ch; }
   .card p + p { margin-top: 0.5rem; }
   .card--accent { border-color: rgba(201,169,98,0.3); }
-  .part-tag { position: absolute; top: 2.5rem; left: 6vw; font-family: 'Outfit', sans-serif; font-size: 0.55rem; letter-spacing: 0.35em; text-transform: uppercase; color: var(--accent); opacity: 0.7; }
   .highlight-box { background: var(--accent-subtle); border: 1px solid rgba(201,169,98,0.2); padding: 1.5rem 2rem; border-radius: 2px; margin-top: 1rem; }
   .highlight-box p { font-size: clamp(0.72rem, 0.95vw, 0.9rem); color: var(--text-primary); max-width: 38ch; }
   .takeaway { border-left: 2px solid var(--accent); padding-left: 1.2rem; margin: 0.75rem 0; }
   .takeaway p { font-size: clamp(0.7rem, 0.9vw, 0.88rem); max-width: 36ch; }
-  .comparison-table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
-  .comparison-table th { font-family: 'Outfit', sans-serif; font-size: 0.58rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); font-weight: 500; text-align: left; padding: 0.75rem 1rem 0.75rem 0; border-bottom: 1px solid var(--border); }
-  .comparison-table td { font-family: 'Outfit', sans-serif; font-size: clamp(0.68rem, 0.88vw, 0.85rem); font-weight: 300; color: var(--text-secondary); padding: 0.75rem 1rem 0.75rem 0; border-bottom: 1px solid var(--border); vertical-align: top; line-height: 1.6; }
-  .comparison-table tr:last-child td { border-bottom: none; }
-  .comparison-table .arrow { color: var(--accent); font-family: 'Cormorant Garamond', serif; }
+  /* matrix */
+  .matrix-wrap { position: relative; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; }
+  .matrix-wrap img { max-width: 90%; max-height: 85%; object-fit: contain; border-radius: 4px; }
+  .matrix-overlay { position: absolute; inset: 0; pointer-events: none; }
+  /* quadrant cards */
+  .quad-grid { display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: auto auto; gap: 1rem; width: 100%; }
+  .quad { padding: 1.4rem 1.6rem; border-radius: 2px; }
+  .quad__tag { font-family: 'Outfit', sans-serif; font-size: 0.55rem; letter-spacing: 0.25em; text-transform: uppercase; margin-bottom: 0.4rem; display: block; }
+  .quad--casualty { background: rgba(255,80,80,0.06); border: 1px solid rgba(255,80,80,0.2); }
+  .quad--casualty .quad__tag { color: rgba(255,80,80,0.85); }
+  .quad--pivot { background: rgba(200,150,50,0.06); border: 1px solid rgba(200,150,50,0.2); }
+  .quad--pivot .quad__tag { color: rgba(200,150,50,0.85); }
+  .quad--fortress { background: rgba(80,200,120,0.06); border: 1px solid rgba(80,200,120,0.2); }
+  .quad--fortress .quad__tag { color: rgba(80,200,120,0.85); }
+  .quad--relic { background: rgba(100,100,130,0.06); border: 1px solid rgba(100,100,130,0.2); }
+  .quad--relic .quad__tag { color: rgba(100,100,130,0.85); }
+  .quad h3 { font-size: clamp(0.95rem, 1.3vw, 1.3rem); margin-bottom: 0.4rem; }
+  .quad p { font-size: 0.68rem; max-width: 26ch; }
+  /* axis labels for matrix */
+  .matrix-axis { position: absolute; font-family: 'Outfit', sans-serif; font-size: 0.58rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--text-muted); }
+  .matrix-axis--x { bottom: 1.5rem; left: 50%; transform: translateX(-50%); }
+  .matrix-axis--y { right: 1.5rem; top: 50%; transform: translateY(-50%) rotate(90deg); transform-origin: center center; }
+  /* delegation */
+  .del-row { display: flex; align-items: center; gap: 1.2rem; padding: 0.85rem 0; border-bottom: 1px solid var(--border); }
+  .del-row:last-child { border-bottom: none; }
+  .del-row__lvl { font-family: 'Cormorant Garamond', serif; font-size: 0.9rem; color: var(--text-primary); min-width: 5.5rem; }
+  .del-row__mode { font-family: 'Outfit', sans-serif; font-size: 0.58rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent); min-width: 5rem; }
+  .del-row__desc { font-family: 'Outfit', sans-serif; font-size: 0.68rem; color: var(--text-muted); }
+  /* 3 questions */
+  .q-row { display: flex; align-items: flex-start; gap: 1.5rem; margin-bottom: 2rem; }
+  .q-row:last-child { margin-bottom: 0; }
+  .q-row__num { font-family: 'Cormorant Garamond', serif; font-size: clamp(3rem, 5vw, 5rem); font-weight: 300; color: var(--accent); line-height: 1; flex-shrink: 0; width: 3rem; }
+  .q-row__text { font-family: 'Outfit', sans-serif; font-size: clamp(0.78rem, 1.1vw, 1.05rem); color: var(--text-primary); max-width: 36ch; padding-top: 0.5rem; }
+  /* back cover */
   .back-cta { display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; height: 100%; padding: 8vh 10vw; }
-  .back-cta .mark { margin-bottom: 2.5rem; }
+  .back-cta .mark { margin-bottom: 2rem; }
   .back-cta h2 { font-size: clamp(2.5rem, 5vw, 5rem); }
   .back-cta .accent-line { margin: 1.5rem auto; }
   .footer-links { display: flex; gap: 2rem; flex-wrap: wrap; }
   .footer-links a { font-family: 'Outfit', sans-serif; font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); text-decoration: none; border-bottom: 1px solid var(--border); padding-bottom: 0.2rem; transition: color 0.3s, border-color 0.3s; }
   .footer-links a:hover { color: var(--accent); border-color: var(--accent); }
-  .proto-list { display: flex; flex-direction: column; gap: 0.6rem; }
-  .proto-row { display: flex; align-items: center; gap: 1rem; padding: 0.8rem 0; border-bottom: 1px solid var(--border); }
-  .proto-row:last-child { border-bottom: none; }
-  .proto-row__dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); flex-shrink: 0; }
-  .proto-row__name { font-family: 'Cormorant Garamond', serif; font-size: 0.9rem; color: var(--text-primary); min-width: 6rem; }
-  .proto-row__desc { font-family: 'Outfit', sans-serif; font-size: 0.68rem; color: var(--text-muted); }
-  .failure-mode { border-left: 3px solid; padding-left: 1.2rem; margin-bottom: 1.5rem; }
-  .failure-mode:last-child { margin-bottom: 0; }
-  .failure-mode h3 { font-size: clamp(1rem, 1.3vw, 1.3rem); }
-  .failure-mode p { font-size: clamp(0.68rem, 0.88vw, 0.85rem); max-width: 32ch; }
-  .diag-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; width: 100%; }
-  .diag-cell { padding: 1.2rem 1.4rem; border-radius: 2px; }
-  .diag-cell--casualty { background: rgba(255,80,80,0.06); border: 1px solid rgba(255,80,80,0.2); }
-  .diag-cell--pivot { background: rgba(200,150,50,0.06); border: 1px solid rgba(200,150,50,0.2); }
-  .diag-cell--fortress { background: rgba(80,200,120,0.06); border: 1px solid rgba(80,200,120,0.2); }
-  .diag-cell__label { font-family: 'Outfit', sans-serif; font-size: 0.55rem; letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 0.4rem; display: block; }
-  .diag-cell--casualty .diag-cell__label { color: rgba(255,80,80,0.9); }
-  .diag-cell--pivot .diag-cell__label { color: rgba(200,150,50,0.9); }
-  .diag-cell--fortress .diag-cell__label { color: rgba(80,200,120,0.9); }
-  .diag-cell h3 { font-size: clamp(0.95rem, 1.2vw, 1.2rem); margin-bottom: 0.4rem; }
-  .diag-cell p { font-size: 0.68rem; max-width: 26ch; }
-  .delegation-bar { display: flex; flex-direction: column; gap: 0; width: 100%; margin-top: 1rem; }
-  .del-level { display: flex; align-items: center; gap: 1rem; padding: 0.9rem 0; border-bottom: 1px solid var(--border); }
-  .del-level:last-child { border-bottom: none; }
-  .del-level__level { font-family: 'Cormorant Garamond', serif; font-size: 0.85rem; color: var(--text-primary); min-width: 7rem; }
-  .del-level__mode { font-family: 'Outfit', sans-serif; font-size: 0.6rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent); min-width: 5rem; }
-  .del-level__desc { font-family: 'Outfit', sans-serif; font-size: 0.68rem; color: var(--text-muted); }
-  .q-block { margin-bottom: 1.8rem; }
-  .q-block:last-child { margin-bottom: 0; }
-  .q-block__num { font-family: 'Cormorant Garamond', serif; font-size: clamp(2rem, 3.5vw, 3.5rem); font-weight: 300; color: var(--accent); line-height: 1; margin-bottom: 0.3rem; }
-  .q-block__text { font-family: 'Outfit', sans-serif; font-size: clamp(0.7rem, 0.9vw, 0.88rem); color: var(--text-primary); max-width: 32ch; }
+  .social-row { display: flex; gap: 1.5rem; flex-wrap: wrap; justify-content: center; margin-bottom: 1.5rem; }
+  .social-link { font-family: 'Outfit', sans-serif; font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-muted); text-decoration: none; display: flex; align-items: center; gap: 0.4rem; transition: color 0.3s; }
+  .social-link:hover { color: var(--accent); }
+  .social-link::before { content: ''; width: 4px; height: 4px; border-radius: 50%; background: currentColor; }
+  /* misc */
+  .part-tag { position: absolute; top: 2.5rem; left: 6vw; font-family: 'Outfit', sans-serif; font-size: 0.55rem; letter-spacing: 0.35em; text-transform: uppercase; color: var(--accent); opacity: 0.7; }
+  .small-tag { display: inline-block; font-family: 'Outfit', sans-serif; font-size: 0.55rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); border: 1px solid var(--accent-soft); padding: 0.25rem 0.7rem; border-radius: 2rem; margin-bottom: 0.6rem; }
+  .ex-tag { display: inline-block; font-family: 'Outfit', sans-serif; font-size: 0.55rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--text-muted); background: var(--bg-card); border: 1px solid var(--border); padding: 0.2rem 0.6rem; border-radius: 2px; margin-right: 0.4rem; margin-bottom: 0.3rem; }
 </style>
 </head>
 <body>
@@ -142,25 +153,15 @@
   <div class="page__inner" style="display:flex; flex-direction:column; justify-content:space-between; padding:6vh 6vw;">
     <div class="mark">
       <div class="mark__circle"><div class="mark__dot"></div></div>
-      <div class="mark__text">Dr. Muralikrishnan <span>Platform Research · ISB EFPM</span></div>
+      <div class="mark__text">Muralikrishnan Balakrishnan <span>Platform Strategy · ISB</span></div>
     </div>
     <div style="flex:1; display:flex; flex-direction:column; justify-content:center; padding-left:2vw;">
       <p class="label" style="margin-bottom:1rem;">The Ken Zero Shot &nbsp;·&nbsp; April 12, 2026 &nbsp;·&nbsp; Bengaluru</p>
       <h1>The<br><em>Great</em><br>Unbundling</h1>
       <div class="accent-line"></div>
       <p style="color:var(--text-muted); font-size:0.8rem; letter-spacing:0.15em; text-transform:uppercase; max-width:40ch; line-height:1.6;">
-        How Agentic AI Disrupts<br>Every Business Model
+        How Agentic AI Rewrites<br>Every Business Model
       </p>
-      <div style="margin-top:2rem; display:flex; gap:2rem; flex-wrap:wrap; align-items:flex-end;">
-        <div>
-          <span class="stat-anchor" style="font-size:clamp(3rem,6vw,6rem);">100M</span>
-          <span class="stat-label">MAU in 2 months — Qwen App</span>
-        </div>
-        <div>
-          <span class="stat-anchor" style="font-size:clamp(3rem,6vw,6rem);">120M</span>
-          <span class="stat-label">AI-mediated transactions — 1 week</span>
-        </div>
-      </div>
     </div>
     <div style="display:flex; justify-content:space-between; align-items:flex-end;">
       <div class="key-hint"><kbd>←</kbd><kbd>→</kbd> navigate &nbsp;·&nbsp; scroll horizontally</div>
@@ -170,36 +171,53 @@
 </div>
 
 <!-- ============================================================
-     PAGE 2 — Aggregation Is a Solved Problem
+     PAGE 2 — THE AGENTIC DISRUPTION MATRIX
      ============================================================ -->
 <div class="page bg-p2" id="p2">
-  <div class="part-tag">Talk Point 1</div>
-  <div class="split">
-    <div class="split__left">
-      <span class="label">The Core Disruption</span>
-      <h2>Aggregation<br>and discovery<br>are <em>solved.</em></h2>
-      <div class="accent-line"></div>
-      <p>If your business model relies entirely on aggregating supply and reducing friction for user discovery, you are already obsolete.</p>
-      <p>AI agents strip away human emotional bias and solve the supply-demand matching problem mathematically. The moment an agent can search across all endpoints, shelf placement, brand positioning, and discovery friction become irrelevant.</p>
-      <div class="highlight-box" style="margin-top:1.5rem;">
-        <p>The agent replaces your frontend without changing the underlying supply.</p>
-      </div>
-    </div>
-    <div class="split__right" style="justify-content:center; align-items:flex-start; padding-left:8vw;">
-      <span class="label" style="margin-bottom:1.5rem;">Evidence: Qwen App</span>
-      <div style="display:flex; flex-direction:column; gap:2rem; width:100%;">
-        <div>
-          <span class="stat-anchor">100M</span>
-          <span class="stat-label">Monthly active users</span>
-          <p style="margin-top:0.5rem; font-size:0.7rem; max-width:24ch; color:var(--text-muted);">In 2 months. Anchored on food delivery, local services, travel.</p>
+  <div class="matrix-wrap">
+    <img src="https://deck-share.vercel.app/static/agentic_disruption_matrix_v5_global.png" alt="Agentic Disruption Matrix" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+    <div style="display:none; flex-direction:column; align-items:center; justify-content:center; width:90%; height:80%;" class="matrix-fallback">
+      <div style="position:relative; width:100%; max-width:700px; aspect-ratio:1.3;">
+        <!-- Y-axis -->
+        <div style="position:absolute; left:5%; top:5%; bottom:15%; width:1px; background:var(--border-light);"></div>
+        <!-- X-axis -->
+        <div style="position:absolute; left:5%; right:5%; bottom:15%; height:1px; background:var(--border-light);"></div>
+        <!-- Quadrant labels -->
+        <div style="position:absolute; top:8%; right:8%; font-family:'Outfit',sans-serif; font-size:0.55rem; letter-spacing:0.2em; text-transform:uppercase; color:var(--relic);">Relic</div>
+        <div style="position:absolute; top:8%; left:8%; font-family:'Outfit',sans-serif; font-size:0.55rem; letter-spacing:0.2em; text-transform:uppercase; color:var(--pivot);">Pivot</div>
+        <div style="position:absolute; bottom:18%; right:8%; font-family:'Outfit',sans-serif; font-size:0.55rem; letter-spacing:0.2em; text-transform:uppercase; color:var(--casualty);">Casualty</div>
+        <div style="position:absolute; bottom:18%; left:8%; font-family:'Outfit',sans-serif; font-size:0.55rem; letter-spacing:0.2em; text-transform:uppercase; color:var(--fortress);">Fortress</div>
+        <!-- Axis labels -->
+        <div style="position:absolute; bottom:5%; left:50%; transform:translateX(-50%); font-family:'Outfit',sans-serif; font-size:0.55rem; letter-spacing:0.2em; text-transform:uppercase; color:var(--text-muted);">Agent-Replicable → Agent-Resistant</div>
+        <div style="position:absolute; left:1%; top:50%; transform:translateY(-50%) rotate(-90deg); font-family:'Outfit',sans-serif; font-size:0.55rem; letter-spacing:0.2em; text-transform:uppercase; color:var(--text-muted); white-space:nowrap;">Value Erodes → Value Compounds</div>
+        <!-- Content -->
+        <div style="position:absolute; bottom:18%; right:8%; width:38%; height:36%; display:flex; flex-direction:column; justify-content:flex-end;">
+          <div style="background:rgba(255,80,80,0.07); border:1px solid rgba(255,80,80,0.2); padding:0.8rem 1rem; border-radius:2px;">
+            <div style="font-family:'Outfit',sans-serif; font-size:0.55rem; letter-spacing:0.15em; text-transform:uppercase; color:rgba(255,80,80,0.8); margin-bottom:0.3rem;">Casualty</div>
+            <div style="font-family:'Cormorant Garamond',serif; font-size:0.85rem; color:var(--text-primary); margin-bottom:0.3rem;">Aggregation + Discovery</div>
+            <div style="font-family:'Outfit',sans-serif; font-size:0.6rem; color:var(--text-muted);">Instamart · Zomato · MakeMyTrip</div>
+          </div>
         </div>
-        <div>
-          <span class="stat-anchor" style="font-size:clamp(2.5rem,5vw,5rem);">2 mo</span>
-          <span class="stat-label">from zero to 100M MAU</span>
-          <p style="margin-top:0.5rem; font-size:0.7rem; max-width:24ch; color:var(--text-muted);">Fastest consumer app growth in history. Anchored on high-frequency, low-risk categories.</p>
+        <div style="position:absolute; top:8%; left:8%; width:38%; height:36%; display:flex; flex-direction:column; justify-content:flex-start;">
+          <div style="background:rgba(200,150,50,0.07); border:1px solid rgba(200,150,50,0.2); padding:0.8rem 1rem; border-radius:2px;">
+            <div style="font-family:'Outfit',sans-serif; font-size:0.55rem; letter-spacing:0.15em; text-transform:uppercase; color:rgba(200,150,50,0.8); margin-bottom:0.3rem;">Pivot</div>
+            <div style="font-family:'Cormorant Garamond',seris; font-size:0.85rem; color:var(--text-primary); margin-bottom:0.3rem;">Build Depth Before Commoditisation</div>
+            <div style="font-family:'Outfit',sans-serif; font-size:0.6rem; color:var(--text-muted);">Meesho · ONDC · HealthTech</div>
+          </div>
         </div>
-        <div class="highlight-box">
-          <p>Alibaba Qwen reached 100M MAU faster than Instagram, TikTok, or any prior platform. Not through branding. Through agentic routing.</p>
+        <div style="position:absolute; top:8%; right:8%; width:38%; height:36%; display:flex; flex-direction:column; justify-content:flex-start;">
+          <div style="background:rgba(80,200,120,0.07); border:1px solid rgba(80,200,120,0.2); padding:0.8rem 1rem; border-radius:2px;">
+            <div style="font-family:'Outfit',sans-serif; font-size:0.55rem; letter-spacing:0.15em; text-transform:uppercase; color:rgba(80,200,120,0.8); margin-bottom:0.3rem;">Fortress</div>
+            <div style="font-family:'Cormorant Garamond',serif; font-size:0.85rem; color:var(--text-primary); margin-bottom:0.3rem;">Fulfilment + Deep Trust</div>
+            <div style="font-family:'Outfit',sans-serif; font-size:0.6rem; color:var(--text-muted);">Amazon · Urban Company · Banks</div>
+          </div>
+        </div>
+        <div style="position:absolute; bottom:18%; left:8%; width:38%; height:36%; display:flex; flex-direction:column; justify-content:flex-end;">
+          <div style="background:rgba(100,100,130,0.07); border:1px solid rgba(100,100,130,0.2); padding:0.8rem 1rem; border-radius:2px;">
+            <div style="font-family:'Outfit',sans-serif; font-size:0.55rem; letter-spacing:0.15em; text-transform:uppercase; color:rgba(100,100,130,0.8); margin-bottom:0.3rem;">Relic</div>
+            <div style="font-family:'Cormorant Garamond',serif; font-size:0.85rem; color:var(--text-primary); margin-bottom:0.3rem;">Commoditised + Irrelevant</div>
+            <div style="font-family:'Outfit',sans-serif; font-size:0.6rem; color:var(--text-muted);">Legacy portals · Pure ad-led</div>
+          </div>
         </div>
       </div>
     </div>
@@ -208,16 +226,74 @@
 </div>
 
 <!-- ============================================================
-     PAGE 3 — Bounded vs Open Agentic
+     PAGE 3 — The Moat Migration: Breadth → Depth
      ============================================================ -->
 <div class="page bg-p3" id="p3">
-  <div class="part-tag">Talk Point 2</div>
+  <div class="split">
+    <div class="split__left">
+      <span class="label">The Central Thesis</span>
+      <h2>The moat<br>has shifted<br>from<br><em>breadth</em><br>to depth.</h2>
+      <div class="accent-line"></div>
+      <p>For two decades, platform power came from capturing breadth — more users, more supply, more transactions.</p>
+      <p>In the agent economy, the competitive moat is depth — how deeply a system understands a user's intent, history, and context, creating unavoidable dependency.</p>
+      <div class="highlight-box" style="margin-top:1.5rem;">
+        <p>The question is no longer "how many eyeballs?" It is "how deeply are we embedded in outcomes that matter?"</p>
+      </div>
+    </div>
+    <div class="split__right" style="justify-content:center; padding-left:6vw; overflow-y:auto;">
+      <span class="label" style="margin-bottom:1.5rem;">The Four Quadrants</span>
+      <div class="quad-grid">
+        <div class="quad quad--casualty">
+          <span class="quad__tag">Casualty — Eroding Now</span>
+          <h3>Aggregation + Discovery</h3>
+          <p>Agent replaces frontend without changing supply. The most exposed category.</p>
+          <div style="margin-top:0.5rem;">
+            <span class="ex-tag">Instamart</span><span class="ex-tag">Zomato</span><span class="ex-tag">PolicyBazaar</span>
+          </div>
+        </div>
+        <div class="quad quad--pivot">
+          <span class="quad__tag">Pivot — Compounding</span>
+          <h3>Build Depth Now</h3>
+          <p>Migration window is open. Move before routing gets commoditised.</p>
+          <div style="margin-top:0.5rem;">
+            <span class="ex-tag">Meesho</span><span class="ex-tag">ONDC</span><span class="ex-tag">HealthTech</span>
+          </div>
+        </div>
+        <div class="quad quad--fortress">
+          <span class="quad__tag">Fortress — Protected</span>
+          <h3>Fulfilment + Deep Trust</h3>
+          <p>Agents route to you. Physics and verified trust create unavoidable dependency.</p>
+          <div style="margin-top:0.5rem;">
+            <span class="ex-tag">Urban Company</span><span class="ex-tag">Amazon FBA</span><span class="ex-tag">Banks</span>
+          </div>
+        </div>
+        <div class="quad quad--relic">
+          <span class="quad__tag">Relic — Commoditised</span>
+          <h3>Pure Ad-Led Portals</h3>
+          <p>No depth. No trust infrastructure. No path to agentic discovery.</p>
+          <div style="margin-top:0.5rem;">
+            <span class="ex-tag">Legacy portals</span>
+          </div>
+        </div>
+      </div>
+      <div class="highlight-box" style="margin-top:1.5rem;">
+        <p>The pivot window is finite. Casualty firms can still recover — but only if they build depth before routing commoditises them.</p>
+      </div>
+    </div>
+  </div>
+  <div class="page-num">03 / 10</div>
+</div>
+
+<!-- ============================================================
+     PAGE 4 — Two Architectures: Bounded vs Open
+     ============================================================ -->
+<div class="page bg-p4" id="p4">
   <div class="split">
     <div class="split__left">
       <span class="label">The Architectural Divide</span>
       <h2>Bounded<br>or <em>open?</em><br>The distinction<br>determines<br>survival.</h2>
       <div class="accent-line"></div>
-      <p>An open agent will eventually bypass aggregators like Zomato entirely by searching open internet endpoints to connect a user directly with a restaurant, completely eroding the platform's margin.</p>
+      <p>An open agent will eventually bypass aggregators entirely — searching open endpoints to connect a user directly with a provider, completely eroding the platform's margin.</p>
       <div class="highlight-box" style="margin-top:1.5rem;">
         <p>Bounded agents replace your frontend. Open agents replace your entire platform.</p>
       </div>
@@ -227,59 +303,17 @@
       <div style="display:flex; flex-direction:column; gap:1.5rem;">
         <div class="card">
           <span class="card__label">Bounded Agentic</span>
-          <h3>Qwen App model</h3>
+          <h3>The incumbent's compromise</h3>
           <p>Agent operates within a single ecosystem's service graph. Platform retains orchestration control. Supply is limited to what the platform owns.</p>
-          <p style="margin-top:0.5rem; color:var(--text-muted); font-size:0.68rem;">Navigates between Taobao, Alipay, Fliggy, Amap — but cannot cross into competing ecosystems.</p>
         </div>
         <div class="card card--accent">
           <span class="card__label">Open Agentic</span>
-          <h3 style="color:var(--accent);">The existential threat</h3>
-          <p style="color:var(--text-primary);">Agent operates across ecosystem endpoints, discovers supply wherever it exists, completes transactions without returning to any platform's frontend.</p>
-          <p style="margin-top:0.5rem; color:var(--text-muted); font-size:0.68rem;">Orchestration control shifts to the agent. The platform becomes invisible.</p>
-        </div>
-        <div class="highlight-box">
-          <p>For the restaurant owner wanting an alternative: she needs open agentic endpoints. If Zomato controls the agent's routing, she pays Zomato's margin regardless of the agent intermediary.</p>
+          <h3 style="color:var(--accent);">The existential threat to incumbents</h3>
+          <p style="color:var(--text-primary);">Agent operates across ecosystem endpoints. Discovers supply wherever it exists. Completes transactions without returning to any platform frontend.</p>
         </div>
       </div>
-    </div>
-  </div>
-  <div class="page-num">03 / 10</div>
-</div>
-
-<!-- ============================================================
-     PAGE 4 — Trust Must Be Machine-Readable
-     ============================================================ -->
-<div class="page bg-p4" id="p4">
-  <div class="part-tag">Talk Point 3</div>
-  <div class="split">
-    <div class="split__left">
-      <span class="label">The Trust Imperative</span>
-      <h2>Trust is no<br>longer a<br>marketing<br><em>promise.</em></h2>
-      <div class="accent-line"></div>
-      <p>If your organisation cannot express its reliability in auditable, data-driven ways, algorithms will structurally filter you out of agentic routing before a human ever knows you exist.</p>
-      <p>Unreliable execution becomes a structural disqualifier, not a competitive weakness.</p>
       <div class="highlight-box" style="margin-top:1.5rem;">
-        <p>Only trust that can be verified scales. Alibaba's phased rollout: food delivery and travel first, high-stakes payment deferred until trust infrastructure was built.</p>
-      </div>
-    </div>
-    <div class="split__right" style="justify-content:center; padding-left:6vw; overflow-y:auto;">
-      <span class="label" style="margin-bottom:1.5rem;">The Verification Layer</span>
-      <div style="display:flex; flex-direction:column; gap:1.2rem;">
-        <div class="card">
-          <span class="card__label">Alipay Agentic Commerce Trust Protocol</span>
-          <h3>Launched January 15, 2026</h3>
-          <p>Single integration for merchants to reach all agents. Whoever controls the protocol controls which agents can reach which merchants.</p>
-        </div>
-        <div class="card">
-          <span class="card__label">UnionPay Response</span>
-          <h3>Agentic Payment Open Protocol — April 2026</h3>
-          <p>China's standards race is now live. The gatekeeper tier is being contested.</p>
-        </div>
-        <div class="card card--accent">
-          <span class="card__label">The Practical Implication</span>
-          <h3 style="color:var(--accent);">If you cannot be discovered by agents, you do not exist.</h3>
-          <p style="color:var(--text-primary);">ADO — Agent Discoverability Optimization — is the new SEO. Ranking factors: discoverability, reliability, capability, performance.</p>
-        </div>
+        <p>For the restaurant owner wanting an alternative to Zomato: she needs open agentic endpoints. If Zomato controls the agent's routing, she pays Zomato's margin regardless of the agent intermediary.</p>
       </div>
     </div>
   </div>
@@ -287,13 +321,12 @@
 </div>
 
 <!-- ============================================================
-     PAGE 5 — Fulfilment is the Deepest Moat
+     PAGE 5 — Fulfilment is the Physics Moat
      ============================================================ -->
 <div class="page bg-p5" id="p5">
-  <div class="part-tag">Talk Point 4</div>
   <div class="split">
     <div class="split__left">
-      <span class="label">The Physics Moat</span>
+      <span class="label">What Agents Cannot Replicate</span>
       <h2>Agents<br>cannot<br>solve<br><em>physics.</em></h2>
       <div class="accent-line"></div>
       <p>Incumbents with heavy, real-world fulfilment capabilities hold a massive, agent-resistant advantage.</p>
@@ -306,19 +339,19 @@
       <span class="label" style="margin-bottom:1.5rem;">Agent-Resistant Evidence</span>
       <div style="display:flex; flex-direction:column; gap:1.5rem;">
         <div class="card">
-          <span class="card__label">Fulfilment</span>
+          <span class="card__label">Fulfilment Infrastructure</span>
           <h3>Amazon Fulfilment Network</h3>
-          <p>1.9 million packages per day through FBA. Agents can route to Amazon but cannot replicate the 2-day physics.</p>
+          <p>Agents can route to Amazon but cannot replicate 2-day fulfilment physics. Amazon becomes the preferred endpoint agents route to.</p>
         </div>
         <div class="card">
           <span class="card__label">Physical Services</span>
           <h3>Urban Company</h3>
-          <p>Platform-profiled, pro-rated, warranty-backed service delivery. Agents route to UC; UC owns the physical execution.</p>
+          <p>Platform-profiled, warranty-backed service delivery. Trust + governance + quality enforcement creates a stack agents cannot arbitrage away.</p>
         </div>
         <div class="card card--accent">
           <span class="card__label">The Asymmetry</span>
-          <h3 style="color:var(--accent);">Bounded disruption vs open survival</h3>
-          <p style="color:var(--text-primary);">Aggregators get disrupted. Fulfilment incumbents get enhanced — their supply becomes the preferred endpoint agents route to.</p>
+          <h3 style="color:var(--accent);">Aggregators get disrupted. Fulfilment incumbents get enhanced.</h3>
+          <p style="color:var(--text-primary);">The businesses that survive agentic commerce are the ones whose supply agents need to reach anyway — because physics.</p>
         </div>
       </div>
     </div>
@@ -327,45 +360,38 @@
 </div>
 
 <!-- ============================================================
-     PAGE 6 — Moat Migration: Breadth to Depth
+     PAGE 6 — Trust Must Be Machine-Readable
      ============================================================ -->
 <div class="page bg-p6" id="p6">
-  <div class="part-tag">Talk Point 5</div>
   <div class="split">
     <div class="split__left">
-      <span class="label">The Central Thesis</span>
-      <h2>The moat<br>has shifted<br>from<br><em>breadth</em><br>to depth.</h2>
+      <span class="label">The Trust Imperative</span>
+      <h2>Trust is no<br>longer a<br>marketing<br><em>promise.</em></h2>
       <div class="accent-line"></div>
-      <p>For two decades, platform power came from capturing breadth — more users, more supply, more transactions.</p>
-      <p>In the agent economy, the competitive moat is depth — how deeply a system understands a user's intent, history, and context, creating an unavoidable dependency that resists commoditisation.</p>
+      <p>If your organisation cannot express its reliability in auditable, data-driven ways, algorithms will structurally filter you out of agentic routing before a human ever knows you exist.</p>
+      <p>Unreliable execution becomes a structural disqualifier, not a competitive weakness.</p>
       <div class="highlight-box" style="margin-top:1.5rem;">
-        <p>The question is no longer "how many eyeballs do we capture?" It is "how deeply are we embedded in outcomes that matter?"</p>
+        <p>Only trust that can be verified scales. The question is not whether to build trust infrastructure — it is whether your trust infrastructure can be read by machines.</p>
       </div>
     </div>
     <div class="split__right" style="justify-content:center; padding-left:6vw; overflow-y:auto;">
-      <span class="label" style="margin-bottom:1.5rem;">Three Futures — Business Classification</span>
-      <div class="diag-grid">
-        <div class="diag-cell diag-cell--casualty">
-          <span class="diag-cell__label">Casualty — Eroding</span>
-          <h3>Aggregation + Discovery</h3>
-          <p>Pure plays. Agent replaces frontend without changing supply.</p>
-          <p style="margin-top:0.4rem; color:var(--text-muted); font-size:0.65rem;">Instamart, Zomato, MakeMyTrip, PolicyBazaar</p>
+      <span class="label" style="margin-bottom:1.5rem;">The Verification Layer</span>
+      <div style="display:flex; flex-direction:column; gap:1.5rem;">
+        <div class="card">
+          <span class="card__label">ADO — Agent Discoverability Optimization</span>
+          <h3>The new SEO</h3>
+          <p>If you cannot be discovered by agents, you do not exist. Ranking factors: discoverability, reliability, capability, performance.</p>
         </div>
-        <div class="diag-cell diag-cell--pivot">
-          <span class="diag-cell__label">Pivot — Compounding</span>
-          <h3>Build depth now</h3>
-          <p>Migrate before routing gets commoditised. ONDC as open rail opportunity.</p>
-          <p style="margin-top:0.4rem; color:var(--text-muted); font-size:0.65rem;">Meesho, ONDC participants</p>
+        <div class="card">
+          <span class="card__label">The Standards Race</span>
+          <h3>Protocol wars have begun</h3>
+          <p>China moved first with Alipay's Agentic Commerce Trust Protocol. The standards gatekeeper tier is now contested territory.</p>
         </div>
-        <div class="diag-cell diag-cell--fortress" style="grid-column:span 2;">
-          <span class="diag-cell__label">Fortress — Resistant</span>
-          <h3>Deep domain depth or physical fulfilment moat</h3>
-          <p>Agents route to you. You become the preferred endpoint. Fulfilment + trust creates unavoidable dependency.</p>
-          <p style="margin-top:0.4rem; color:var(--text-muted); font-size:0.65rem;">Urban Company, Amazon Fulfilment, Credit card networks</p>
+        <div class="card card--accent">
+          <span class="card__label">The Practical Implication</span>
+          <h3 style="color:var(--accent);">Verification is an economic layer, not a brand claim.</h3>
+          <p style="color:var(--text-primary);">Credibility custody moves toward independent verifiers. Verification becomes an explicit transaction layer with cost and certification tiers.</p>
         </div>
-      </div>
-      <div class="highlight-box" style="margin-top:1.5rem;">
-        <p>The pivot window is open but finite. Routing commoditisation accelerates as agentic infrastructure matures.</p>
       </div>
     </div>
   </div>
@@ -376,44 +402,42 @@
      PAGE 7 — Delegation at Scale
      ============================================================ -->
 <div class="page bg-p7" id="p7">
-  <div class="part-tag">Talk Point 6</div>
   <div class="split">
     <div class="split__left">
-      <span class="label">The Delegation Shift</span>
-      <h2>This is not<br>a pilot.<br>It is<br><em>happening.</em></h2>
+      <span class="label">The Delegation Spectrum</span>
+      <h2>Delegation<br>is already<br><em>happening</em><br>at scale.</h2>
       <div class="accent-line"></div>
-      <p>The era of delegated, zero-click purchasing is already operating at staggering scale.</p>
-      <p>Alipay's Agentic Commerce Trust Protocol recently processed 120 million AI-mediated transactions in a single week. This is not a beta test. This is production commerce.</p>
+      <p>The era of delegated, zero-click purchasing is not a future scenario. It is already operating at scale in production commerce systems.</p>
       <div class="highlight-box" style="margin-top:1.5rem;">
-        <p>The question for every business is not whether delegation will happen. It is at what delegation level your business model operates.</p>
+        <p>The question for every business is not whether delegation will happen. It is at what delegation level your business model operates — and who controls that level.</p>
       </div>
     </div>
     <div class="split__right" style="justify-content:center; padding-left:6vw; overflow-y:auto;">
-      <span class="label" style="margin-bottom:1.5rem;">The Delegation Spectrum</span>
-      <div class="delegation-bar">
-        <div class="del-level">
-          <div class="del-level__level">Low</div>
-          <div class="del-level__mode">Instant Payment</div>
-          <div class="del-level__desc">Conversation with AI. User confirms each order. Bounded within ecosystem. Qwen App model.</div>
+      <span class="label" style="margin-bottom:1.5rem;">Four Levels of Delegation</span>
+      <div style="display:flex; flex-direction:column; gap:0;">
+        <div class="del-row">
+          <div class="del-row__lvl">Low</div>
+          <div class="del-row__mode">Human in loop</div>
+          <div class="del-row__desc">Conversation with AI. User confirms each order. The current default.</div>
         </div>
-        <div class="del-level">
-          <div class="del-level__level">Moderate</div>
-          <div class="del-level__mode">Instant + Review</div>
-          <div class="del-level__desc">AI recommends. Human approves. Still bounded within ecosystem trust rails.</div>
+        <div class="del-row">
+          <div class="del-row__lvl">Moderate</div>
+          <div class="del-row__mode">AI recommends</div>
+          <div class="del-row__desc">AI recommends. Human approves. Still bounded within ecosystem trust rails.</div>
         </div>
-        <div class="del-level">
-          <div class="del-level__level">High</div>
-          <div class="del-level__mode">Delegated Auth</div>
-          <div class="del-level__desc">User pre-sets conditions — order times, spending limits, preferred merchants. AI executes automatically.</div>
+        <div class="del-row">
+          <div class="del-row__lvl">High</div>
+          <div class="del-row__mode">AI executes</div>
+          <div class="del-row__desc">User pre-sets conditions — order times, spending limits, preferred merchants. AI acts automatically.</div>
         </div>
-        <div class="del-level">
-          <div class="del-level__level">Full</div>
-          <div class="del-level__mode">Zero Human</div>
-          <div class="del-level__desc">Agent renews subscriptions, buys at optimal price, switches providers. No human involved.</div>
+        <div class="del-row">
+          <div class="del-row__lvl">Full</div>
+          <div class="del-row__mode">Zero human</div>
+          <div class="del-row__desc">Agent renews subscriptions, buys at optimal price, switches providers. No human involved.</div>
         </div>
       </div>
       <div class="highlight-box" style="margin-top:1.5rem;">
-        <p>The practical result: an agent managing a household budget notices a 15% tariff-driven price increase, discovers three local alternatives, requests samples, negotiates volume pricing, and switches. All before the owner's morning workout. No procurement team.</p>
+        <p>An agent managing a household budget notices a price increase, discovers three alternatives, negotiates volume pricing, and switches. All before the owner's morning workout. No procurement team.</p>
       </div>
     </div>
   </div>
@@ -424,37 +448,36 @@
      PAGE 8 — Three Questions
      ============================================================ -->
 <div class="page bg-p8" id="p8">
-  <div class="part-tag">Talk Point 7</div>
   <div class="split">
     <div class="split__left">
       <span class="label">Fiduciary vs Influence Economy</span>
       <h2>Three<br>questions.<br>They<br>determine<br><em>everything.</em></h2>
       <div class="accent-line"></div>
-      <p>These three determine whether you operate in a fiduciary agent economy or an influence agent economy — and the answer shapes every strategic decision you make.</p>
+      <p>These three determine whether you operate in a fiduciary agent economy or an influence agent economy — and the answer shapes every strategic decision.</p>
     </div>
     <div class="split__right" style="justify-content:center; padding-left:6vw; overflow-y:auto;">
-      <span class="label" style="margin-bottom:1.5rem;">The Three Orchestration Control Questions</span>
-      <div style="display:flex; flex-direction:column; gap:1.5rem;">
-        <div class="q-block">
-          <div class="q-block__num">1</div>
-          <div class="q-block__text">What is the objective function — and whose definition dominates?</div>
+      <span class="label" style="margin-bottom:2rem;">The Three Orchestration Control Questions</span>
+      <div style="display:flex; flex-direction:column; gap:2rem;">
+        <div class="q-row">
+          <div class="q-row__num">1</div>
+          <div class="q-row__text">What is the objective function — and whose definition dominates?</div>
         </div>
-        <div class="q-block">
-          <div class="q-block__num">2</div>
-          <div class="q-block__text">What are the governance guardrails — what should the agent never do, and how is that enforced?</div>
+        <div class="q-row">
+          <div class="q-row__num">2</div>
+          <div class="q-row__text">What are the governance guardrails — what should the agent never do, and how is that enforced?</div>
         </div>
-        <div class="q-block">
-          <div class="q-block__num">3</div>
-          <div class="q-block__text">How do learning loops compound — and who owns that accumulation?</div>
+        <div class="q-row">
+          <div class="q-row__num">3</div>
+          <div class="q-row__text">How do learning loops compound — and who owns that accumulation?</div>
         </div>
       </div>
-      <div class="highlight-box" style="margin-top:1.5rem;">
+      <div class="highlight-box" style="margin-top:2rem;">
         <p><strong style="color:var(--text-primary);">Fiduciary:</strong> Agent serves user's interest exclusively. <strong style="color:var(--text-primary);">Influence:</strong> Agent optimises for platform or sponsor. The business model determines which you are.</p>
       </div>
       <div style="display:flex; gap:1rem; margin-top:1.5rem; flex-wrap:wrap;">
         <div class="card" style="flex:1; min-width:12rem;">
           <span class="card__label">Subscription Agent</span>
-          <p style="font-size:0.68rem;">User pays. Agent serves user. Fiduciary model. Highest trust requirement.</p>
+          <p style="font-size:0.68rem;">User pays. Agent serves user. Fiduciary model. Highest trust ceiling.</p>
         </div>
         <div class="card" style="flex:1; min-width:12rem;">
           <span class="card__label">Sponsored Agent</span>
@@ -467,51 +490,41 @@
 </div>
 
 <!-- ============================================================
-     PAGE 9 — Risk-Frequency Diagnostic
+     PAGE 9 — Migration Imperative
      ============================================================ -->
-<div class="page bg-p9" id="p9">
-  <div class="part-tag">Panel Diagnostic</div>
+<div class="page bg-p4" id="p9">
   <div class="split">
     <div class="split__left">
-      <span class="label">The Risk-Frequency Matrix</span>
-      <h2>Where<br>does your<br>business<br><em>sit?</em></h2>
+      <span class="label">The Migration Imperative</span>
+      <h2>Move<br>before<br>routing<br><em> commoditises</em><br>you.</h2>
       <div class="accent-line"></div>
-      <p>Agents gain traction fastest in high-frequency, low-to-moderate risk workflows. The Alibaba Qwen data confirms this: food delivery, local services, travel booking.</p>
-      <p>If you are primarily aggregation and discovery at low risk and high frequency, you are the most exposed to agentic disruption.</p>
+      <p>The pivot window is open but finite. Casualty firms still have a migration path — but only if they build depth before routing gets fully commoditised.</p>
+      <p>The strategic test is migration speed toward Pivot or Fortress before the window closes.</p>
+      <div class="highlight-box" style="margin-top:1.5rem;">
+        <p>From platform heuristics + UI-led ranking → to objective function + governance rules + closed-loop learning. From attention architecture → to alignment architecture.</p>
+      </div>
     </div>
     <div class="split__right" style="justify-content:center; padding-left:6vw; overflow-y:auto;">
-      <span class="label" style="margin-bottom:1.5rem;">Agentic Adoption Curve</span>
-      <table class="comparison-table" style="margin-top:0;">
-        <thead><tr><th></th><th>Frequency</th><th>Adoption</th><th>Implication</th></tr></thead>
-        <tbody>
-          <tr>
-            <td style="color:rgba(255,80,80,0.9); font-family:'Cormorant Garamond',serif; font-size:0.85rem;">Immediate disruption</td>
-            <td>High</td>
-            <td style="color:var(--accent);">Now</td>
-            <td>Aggregation + discovery. Agent replaces your frontend.</td>
-          </tr>
-          <tr>
-            <td style="color:rgba(255,140,50,0.9); font-family:'Cormorant Garamond',serif; font-size:0.85rem;">Accelerating</td>
-            <td>Medium</td>
-            <td style="color:var(--accent);">2026–27</td>
-            <td>Booking, scheduling, in-chat payment.</td>
-          </tr>
-          <tr>
-            <td style="color:rgba(200,150,50,0.9); font-family:'Cormorant Garamond',serif; font-size:0.85rem;">Adoption lags</td>
-            <td>Low</td>
-            <td style="color:var(--accent);">2027–28</td>
-            <td>Trust-dependent categories. High-stakes decisions.</td>
-          </tr>
-          <tr>
-            <td style="color:rgba(80,200,120,0.9); font-family:'Cormorant Garamond',serif; font-size:0.85rem;">Agent-resistant</td>
-            <td>Variable</td>
-            <td style="color:var(--accent);">Protected</td>
-            <td>Fulfilment, physical assets. Physics cannot be arbitraged.</td>
-          </tr>
-        </tbody>
-      </table>
+      <span class="label" style="margin-bottom:1.5rem;">Firm Redesign Principles</span>
+      <div style="display:flex; flex-direction:column; gap:1.5rem;">
+        <div class="card">
+          <span class="card__label">1 — Objective Function Sovereignty</span>
+          <h3>Keep it in-house</h3>
+          <p>Who decides what the system optimises for. If this is outsourced, the firm becomes a replaceable supplier in someone else's decision stack.</p>
+        </div>
+        <div class="card">
+          <span class="card__label">2 — Governance Stack</span>
+          <h3>Keep it in-house</h3>
+          <p>Guardrails, veto rights, escalation rules, liability boundaries. The firm that defines acceptable outcomes controls the architecture.</p>
+        </div>
+        <div class="card card--accent">
+          <span class="card__label">3 — Learning Loops</span>
+          <h3 style="color:var(--accent);">Keep it in-house</h3>
+          <p style="color:var(--text-primary);">Feedback, adaptation cadence, reconfiguration rights. Data portability does not equal intelligence portability. Calibrated inference depth stays sticky.</p>
+        </div>
+      </div>
       <div class="highlight-box" style="margin-top:1.5rem;">
-        <p><strong style="color:var(--text-primary);">The diagnostic question:</strong> Ask your panelists — where does your business sit on this matrix? If you are in the top-left (low risk, high frequency, pure aggregation) — your pivot window is now.</p>
+        <p>Externalise commodity execution. Keep decision infrastructure sovereign. Plug into independent verification rails.</p>
       </div>
     </div>
   </div>
@@ -525,48 +538,30 @@
   <div class="back-cta">
     <div class="mark">
       <div class="mark__circle"><div class="mark__dot"></div></div>
-      <div class="mark__text">The Ken Zero Shot <span>The Great Unbundling</span></div>
+      <div class="mark__text">Muralikrishnan Balakrishnan <span>Executive · Scholar · Advisor · Investor · Athlete</span></div>
     </div>
-    <h2 style="margin-top:1.5rem;">The<br><em>Takeaway.</em></h2>
-    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:1.5rem; width:100%; max-width:60vw; margin:2rem 0; text-align:left;">
-      <div class="card">
-        <span class="card__label">Aggregation</span>
-        <h3 style="font-size:clamp(1rem,1.4vw,1.4rem);">Already disrupted.</h3>
-        <p style="font-size:0.72rem; max-width:22ch;">If your value is discovery and matching, the agent has already eaten your margin.</p>
-      </div>
-      <div class="card">
-        <span class="card__label">Depth</span>
-        <h3 style="font-size:clamp(1rem,1.4vw,1.4rem);">The only moat.</h3>
-        <p style="font-size:0.72rem; max-width:22ch;">Deep personalisation, fulfilment physics, trust infrastructure. Not breadth.</p>
-      </div>
-    </div>
-    <div class="quote" style="max-width:28ch; text-align:center; margin:1rem auto;">
-      The agent that knows you best wins. Not the one with the most users.
-    </div>
+    <h2 style="margin-top:1.5rem;">27 years building<br><em>consumer businesses.</em></h2>
     <div class="accent-line" style="margin:1.5rem auto;"></div>
-    <div style="display:flex; gap:3rem; flex-wrap:wrap; justify-content:center; margin-bottom:1.5rem;">
-      <div>
-        <span class="stat-anchor" style="font-size:clamp(2rem,4vw,4rem);">100M</span>
-        <span class="stat-label">Qwen MAU in 2 months</span>
-      </div>
-      <div>
-        <span class="stat-anchor" style="font-size:clamp(2rem,4vw,4rem);">120M</span>
-        <span class="stat-label">Alipay AI txns / week</span>
-      </div>
-      <div>
-        <span class="stat-anchor" style="font-size:clamp(2rem,4vw,4rem);">Jan 15</span>
-        <span class="stat-label">Alipay protocol launch 2026</span>
+    <div style="max-width:42ch; text-align:center; margin:0 auto;">
+      <p style="font-size:clamp(0.75rem,1vw,0.95rem); color:var(--text-secondary); max-width:42ch; text-align:center; margin:0 auto; line-height:1.8;">
+        Now scholar, advisor, and investor — bridging theory and practice to help organisations scale through the agent economy transition.
+      </p>
+    </div>
+    <div style="margin-top:2rem;">
+      <div class="quote" style="max-width:24ch; text-align:center; margin:0 auto;">
+        The agent that knows you best wins.
       </div>
     </div>
-    <div class="footer-links" style="justify-content:center;">
-      <a href="https://hawkeye.substack.com" target="_blank">Substack</a>
-      <a href="https://muralikrishnan.net" target="_blank">Author Site</a>
-      <a href="https://www.linkedin.com/in/muralikrishnan" target="_blank">LinkedIn</a>
-      <a href="https://calendly.com/muralikrishnan-maf9/catch-up-with-murali" target="_blank">Book a Call</a>
+    <div class="accent-line" style="margin:2rem auto;"></div>
+    <div class="social-row">
+      <a href="https://www.linkedin.com/in/muralikrishnan" target="_blank" class="social-link">LinkedIn</a>
+      <a href="https://hawkeye.substack.com" target="_blank" class="social-link">Substack</a>
+      <a href="https://muralikrishnan.net" target="_blank" class="social-link">Website</a>
+      <a href="https://calendly.com/muralikrishnan-maf9/catch-up-with-murali" target="_blank" class="social-link">Book a Call</a>
     </div>
     <div style="margin-top:auto; padding-top:2rem;">
       <p style="font-size:0.6rem; color:var(--text-muted); letter-spacing:0.15em; text-transform:uppercase; text-align:center;">
-        Dr. Muralikrishnan &nbsp;·&nbsp; ISB EFPM Platform Ecosystems Research &nbsp;·&nbsp; April 2026
+        The Ken Zero Shot &nbsp;·&nbsp; The Great Unbundling &nbsp;·&nbsp; April 2026 &nbsp;·&nbsp; Bengaluru
       </p>
     </div>
   </div>
