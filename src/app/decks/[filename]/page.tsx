@@ -2,16 +2,21 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
 import { deckAccessCookieName, parseDeckAccessCookieValue } from "@/lib/auth";
-import { getManifest } from "@/lib/manifests";
+import { getManifest, isEmailAllowed, normalizeEmail } from "@/lib/manifests";
 
 import { DeckViewerClient } from "./viewer-client";
 
 export default async function DeckViewerPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ filename: string }>;
+  searchParams: Promise<{ owner_access?: string }>;
 }) {
   const { filename } = await params;
+  const { owner_access: ownerAccessParam } = await searchParams;
+  const ownerAccess = ownerAccessParam === "true";
+
   const manifest = await getManifest(filename);
 
   if (!manifest) {
@@ -20,14 +25,19 @@ export default async function DeckViewerPage({
 
   const cookieStore = await cookies();
   const cookieValue = cookieStore.get(deckAccessCookieName(filename))?.value;
-  const access = parseDeckAccessCookieValue(cookieValue);
+  const recipientEmail = parseDeckAccessCookieValue(cookieValue);
+
+  const normalizedRecipient = recipientEmail ? normalizeEmail(recipientEmail) : null;
+  const canShareAsRecipient = normalizedRecipient ? isEmailAllowed(manifest, normalizedRecipient) : false;
+  const canShare = manifest.sharingEnabled && (ownerAccess || canShareAsRecipient);
 
   return (
     <DeckViewerClient
       filename={filename}
       title={manifest.title}
-      email={access?.email ?? "Guest"}
-      sharingEnabled={manifest.sharingEnabled}
+      email={ownerAccess ? "Owner" : recipientEmail ?? "Guest"}
+      canShare={canShare}
+      ownerAccess={ownerAccess}
     />
   );
 }
