@@ -6,8 +6,12 @@ import { LoginForm } from "./login-form";
 import styles from "./page.module.css";
 
 export default async function AdminLoginPage() {
-  if (await hasValidAdminSession()) {
-    redirect("/admin");
+  try {
+    if (await hasValidAdminSession()) {
+      redirect("/admin");
+    }
+  } catch {
+    // KV not available — show login page
   }
 
   return (
