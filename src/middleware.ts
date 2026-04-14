@@ -70,8 +70,8 @@ export const config = {
 };
 
 async function getManifest(filename: string): Promise<DeckManifest | null> {
-  const kvUrl = process.env.KV_REST_API_URL;
-  const kvToken = process.env.KV_REST_API_TOKEN;
+  const kvUrl = process.env.UPSTASH_REDIS_REST_URL;
+  const kvToken = process.env.UPSTASH_REDIS_REST_TOKEN;
 
   if (!kvUrl || !kvToken) {
     return null;
