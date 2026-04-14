@@ -128,9 +128,13 @@
   .q-row__text { font-family: 'Outfit', sans-serif; font-size: clamp(0.78rem, 1.1vw, 1.05rem); color: var(--text-primary); max-width: 36ch; padding-top: 0.5rem; }
   /* back cover */
   .back-cta { display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; height: 100%; padding: 8vh 10vw; }
-  .back-cta .mark { margin-bottom: 2rem; }
-  .back-cta h2 { font-size: clamp(2.5rem, 5vw, 5rem); }
+  .back-cta .mark { margin-bottom: 1.5rem; }
+  .back-cta h2 { display: none; }
   .back-cta .accent-line { margin: 1.5rem auto; }
+  .hero-quote { font-family: 'Cormorant Garamond', serif; font-size: clamp(2.5rem, 5.5vw, 5.5rem); font-weight: 300; font-style: italic; color: var(--text-primary); line-height: 1.15; max-width: 20ch; text-align: center; margin: 0 auto 2rem; }
+  .hero-quote::before { content: ''; }
+  .back-name { font-family: 'Cormorant Garamond', serif; font-size: clamp(1.2rem, 2vw, 2rem); font-weight: 400; color: var(--text-primary); letter-spacing: 0.05em; margin-bottom: 0.5rem; }
+  .back-tagline { font-family: 'Outfit', sans-serif; font-size: 0.65rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 1.5rem; }
   .footer-links { display: flex; gap: 2rem; flex-wrap: wrap; }
   .footer-links a { font-family: 'Outfit', sans-serif; font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); text-decoration: none; border-bottom: 1px solid var(--border); padding-bottom: 0.2rem; transition: color 0.3s, border-color 0.3s; }
   .footer-links a:hover { color: var(--accent); border-color: var(--accent); }
@@ -538,21 +542,11 @@
   <div class="back-cta">
     <div class="mark">
       <div class="mark__circle"><div class="mark__dot"></div></div>
-      <div class="mark__text">Muralikrishnan Balakrishnan <span>Executive · Scholar · Advisor · Investor · Athlete</span></div>
     </div>
-    <h2 style="margin-top:1.5rem;">27 years building<br><em>consumer businesses.</em></h2>
-    <div class="accent-line" style="margin:1.5rem auto;"></div>
-    <div style="max-width:42ch; text-align:center; margin:0 auto;">
-      <p style="font-size:clamp(0.75rem,1vw,0.95rem); color:var(--text-secondary); max-width:42ch; text-align:center; margin:0 auto; line-height:1.8;">
-        Now scholar, advisor, and investor — bridging theory and practice to help organisations scale through the agent economy transition.
-      </p>
-    </div>
-    <div style="margin-top:2rem;">
-      <div class="quote" style="max-width:24ch; text-align:center; margin:0 auto;">
-        The agent that knows you best wins.
-      </div>
-    </div>
-    <div class="accent-line" style="margin:2rem auto;"></div>
+    <div class="hero-quote">The agent that knows you best wins.</div>
+    <div class="accent-line"></div>
+    <div class="back-name">Muralikrishnan B</div>
+    <div class="back-tagline">Scholar · Advisor · Investor</div>
     <div class="social-row">
       <a href="https://www.linkedin.com/in/muralikrishnan" target="_blank" class="social-link">LinkedIn</a>
       <a href="https://hawkeye.substack.com" target="_blank" class="social-link">Substack</a>
