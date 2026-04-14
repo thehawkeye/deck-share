@@ -32,7 +32,7 @@ export async function GET(
     return gateRedirect(request, filename, "invalid_link");
   }
 
-  const filePath = path.join(process.cwd(), "public", "decks", filename);
+  const filePath = path.join(process.cwd(), "public", "static", filename);
   try {
     const html = await readFile(filePath, "utf8");
     return new NextResponse(html, {
