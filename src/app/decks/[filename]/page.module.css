@@ -1,0 +1,92 @@
+.shell {
+  position: relative;
+  min-height: 100vh;
+  background: #050507;
+}
+
+.frame {
+  border: none;
+  width: 100vw;
+  height: 100vh;
+  display: block;
+}
+
+.overlay {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  z-index: 50;
+  background: rgba(0, 0, 0, 0.7);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 0.7rem 0.9rem;
+  display: grid;
+  gap: 0.2rem;
+}
+
+.title {
+  font-size: 1rem;
+  color: var(--text);
+}
+
+.email {
+  font-size: 0.82rem;
+  color: var(--muted);
+}
+
+.shareButton {
+  margin-top: 0.4rem;
+  border: 1px solid var(--accent);
+  background: transparent;
+  color: var(--accent);
+  border-radius: 8px;
+  padding: 0.35rem 0.55rem;
+  cursor: pointer;
+}
+
+.modalBackdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: grid;
+  place-items: center;
+  z-index: 70;
+}
+
+.modal {
+  width: min(460px, 92vw);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 1.2rem;
+}
+
+.modal h2 {
+  margin-bottom: 0.8rem;
+}
+
+.modal form {
+  display: grid;
+  gap: 0.6rem;
+}
+
+.modal input {
+  padding: 0.6rem 0.7rem;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: #0a0a0c;
+}
+
+.modal button {
+  justify-self: start;
+  border: 1px solid var(--accent);
+  color: var(--accent);
+  background: transparent;
+  border-radius: 8px;
+  padding: 0.48rem 0.8rem;
+}
+
+.modalStatus {
+  margin-top: 0.6rem;
+  color: var(--muted);
+}

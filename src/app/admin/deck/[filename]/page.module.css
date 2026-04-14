@@ -1,0 +1,231 @@
+.page {
+  min-height: 100vh;
+  padding: 1rem;
+  display: grid;
+  gap: 0.9rem;
+}
+
+.back {
+  color: var(--accent);
+  width: fit-content;
+}
+
+.editor {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 1rem;
+  display: grid;
+  gap: 0.9rem;
+}
+
+.top {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.titleGroup {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.titleInput {
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--border);
+  font-size: clamp(1.5rem, 4vw, 2.3rem);
+  font-family: var(--font-heading), serif;
+  min-width: min(540px, 80vw);
+  color: var(--text);
+}
+
+.modeBadge {
+  border: 1px solid var(--accent);
+  border-radius: 999px;
+  color: var(--accent);
+  font-size: 0.8rem;
+  padding: 0.18rem 0.6rem;
+}
+
+.switch {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--muted);
+}
+
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.tabs button {
+  border: 1px solid var(--border);
+  background: #0a0a0c;
+  border-radius: 999px;
+  color: var(--muted);
+  padding: 0.35rem 0.75rem;
+  cursor: pointer;
+}
+
+.tabs button[data-active="true"] {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.panel {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: #0b0b0d;
+  padding: 0.8rem;
+  display: grid;
+  gap: 0.8rem;
+  overflow: auto;
+}
+
+.formRow form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+}
+
+.formRow input,
+.bulkRow textarea,
+.setting select,
+.setting input {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: #050507;
+  color: var(--text);
+  padding: 0.5rem 0.6rem;
+}
+
+.formRow input {
+  min-width: 280px;
+}
+
+.bulkRow {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.bulkRow textarea {
+  min-height: 80px;
+  resize: vertical;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 820px;
+}
+
+.table th,
+.table td {
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+  padding: 0.55rem;
+  font-size: 0.9rem;
+}
+
+.table th {
+  color: var(--muted);
+  font-weight: 500;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.actions button,
+.formRow button,
+.bulkRow button,
+.expiryControls button,
+.dangerZone button {
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text);
+  border-radius: 8px;
+  padding: 0.3rem 0.58rem;
+  cursor: pointer;
+}
+
+.status {
+  border-radius: 999px;
+  padding: 0.12rem 0.45rem;
+  border: 1px solid var(--border);
+  font-size: 0.76rem;
+}
+
+.status[data-status="active"] {
+  color: var(--success);
+  border-color: color-mix(in srgb, var(--success) 35%, transparent);
+}
+
+.status[data-status="pending"] {
+  color: var(--accent);
+  border-color: color-mix(in srgb, var(--accent) 35%, transparent);
+}
+
+.status[data-status="revoked"] {
+  color: var(--error);
+  border-color: color-mix(in srgb, var(--error) 35%, transparent);
+}
+
+.setting {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.setting label {
+  color: var(--muted);
+}
+
+.expiryControls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.dangerZone {
+  border: 1px solid color-mix(in srgb, var(--error) 28%, transparent);
+  border-radius: 10px;
+  padding: 0.7rem;
+  display: grid;
+  gap: 0.4rem;
+}
+
+.dangerZone p {
+  color: var(--muted);
+}
+
+.dangerZone button {
+  border-color: color-mix(in srgb, var(--error) 45%, transparent);
+  color: var(--error);
+  width: fit-content;
+}
+
+.footer {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+@media (max-width: 760px) {
+  .titleInput {
+    min-width: 100%;
+  }
+
+  .footer {
+    flex-direction: column;
+  }
+}
