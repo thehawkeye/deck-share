@@ -78,10 +78,14 @@ async function getManifest(filename: string): Promise<DeckManifest | null> {
   }
 
   const key = `deck:${filename}:manifest`;
-  const response = await fetch(`${kvUrl}/get/${encodeURIComponent(key)}`, {
+  // Upstash uses command-based POST to the root URL
+  const response = await fetch(kvUrl, {
+    method: "POST",
     headers: {
       Authorization: `Bearer ${kvToken}`,
+      "Content-Type": "application/json",
     },
+    body: JSON.stringify(["GET", key]),
     cache: "no-store",
   });
 
@@ -89,20 +93,22 @@ async function getManifest(filename: string): Promise<DeckManifest | null> {
     return null;
   }
 
-  const data = (await response.json()) as { result?: unknown };
-  if (data.result == null) {
+  const data = (await response.json()) as unknown[];
+  // Upstash returns [null] or [value] for GET
+  if (!Array.isArray(data) || data.length === 0 || data[0] === null) {
     return null;
   }
 
-  if (typeof data.result === "string") {
-    try {
-      return JSON.parse(data.result) as DeckManifest;
-    } catch {
-      return null;
-    }
+  const result = data[0];
+  if (typeof result !== "string") {
+    return null;
   }
 
-  return data.result as DeckManifest;
+  try {
+    return JSON.parse(result) as DeckManifest;
+  } catch {
+    return null;
+  }
 }
 
 function gateRedirect(request: NextRequest, filename: string, error: string): NextResponse {
