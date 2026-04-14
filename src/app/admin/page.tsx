@@ -59,11 +59,15 @@ export default async function AdminDashboardPage() {
     decks = [];
   }
 
-  const requestCounts = await Promise.all(
+  const requestCounts = await Promise.allSettled(
     decks.map(async (deck) => ({
       filename: deck.filename,
       count: (await listRequests(deck.filename)).filter((entry) => entry.status === "pending").length,
     })),
+  ).then((results) =>
+    results
+      .filter((r): r is PromiseFulfilledResult<{ filename: string; count: number }> => r.status === "fulfilled")
+      .map((r) => r.value),
   );
 
   const pendingByDeck = new Map(requestCounts.map((item) => [item.filename, item.count]));
