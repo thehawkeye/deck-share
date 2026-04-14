@@ -66,7 +66,10 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/decks/:path*"],
+  matcher: [
+    "/admin/:path*",
+    "/api/decks/admin/:path*",
+  ],
 };
 
 async function getManifest(filename: string): Promise<DeckManifest | null> {
