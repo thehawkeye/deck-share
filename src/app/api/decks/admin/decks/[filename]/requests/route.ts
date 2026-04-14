@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
-import { requireAdminSessionOrThrow, parseDeckAccessCookieValue, deckAccessCookieName } from "@/lib/auth";
+import { adminOrThrow as adminOrThrow, parseDeckAccessCookieValue, deckAccessCookieName } from "@/lib/auth";
 import { createRequest, listRequests, normalizeEmail } from "@/lib/manifests";
 
 export async function GET(
@@ -8,7 +8,7 @@ export async function GET(
   context: { params: Promise<{ filename: string }> },
 ) {
   try {
-    await requireAdminSessionOrThrow();
+    await adminOrThrow(request);
   } catch {
     return NextResponse.json({ error: "unauthorized" }, { status: 401 });
   }

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
-import { requireAdminSessionOrThrow } from "@/lib/auth";
+import { adminOrThrow as adminOrThrow } from "@/lib/auth";
 import {
   addEmailsToManifest,
   issueMagicLink,
@@ -14,7 +14,7 @@ export async function POST(
   context: { params: Promise<{ filename: string }> },
 ) {
   try {
-    await requireAdminSessionOrThrow();
+    await adminOrThrow(request);
   } catch {
     return NextResponse.json({ error: "unauthorized" }, { status: 401 });
   }
@@ -47,7 +47,7 @@ export async function DELETE(
   context: { params: Promise<{ filename: string }> },
 ) {
   try {
-    await requireAdminSessionOrThrow();
+    await adminOrThrow(request);
   } catch {
     return NextResponse.json({ error: "unauthorized" }, { status: 401 });
   }
@@ -68,7 +68,7 @@ export async function PATCH(
   context: { params: Promise<{ filename: string }> },
 ) {
   try {
-    await requireAdminSessionOrThrow();
+    await adminOrThrow(request);
   } catch {
     return NextResponse.json({ error: "unauthorized" }, { status: 401 });
   }

@@ -1,11 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 
-import { requireAdminSessionOrThrow } from "@/lib/auth";
+import { adminOrThrow as adminOrThrow } from "@/lib/auth";
 import { ensureManifest, listDecks } from "@/lib/manifests";
 
 export async function GET() {
   try {
-    await requireAdminSessionOrThrow();
+    await adminOrThrow(request);
   } catch {
     return NextResponse.json({ error: "unauthorized" }, { status: 401 });
   }
@@ -16,7 +16,7 @@ export async function GET() {
 
 export async function PUT(request: NextRequest) {
   try {
-    await requireAdminSessionOrThrow();
+    await adminOrThrow(request);
   } catch {
     return NextResponse.json({ error: "unauthorized" }, { status: 401 });
   }

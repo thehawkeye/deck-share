@@ -1,14 +1,55 @@
 import { NextRequest, NextResponse } from "next/server";
-
-import { requireAdminSessionOrThrow } from "@/lib/auth";
+import { cookies } from "next/headers";
+import { timingSafeEqual } from "node:crypto";
 import { deleteManifest, getManifest, ensureManifest, saveManifest } from "@/lib/manifests";
+
+const ADMIN_COOKIE_NAME = "admin_session";
+const ADMIN_SESSION_MAX_AGE = 7 * 24 * 60 * 60;
+
+async function validateAdmin(): Promise<boolean> {
+  const store = await cookies();
+  const raw = store.get(ADMIN_COOKIE_NAME)?.value;
+  if (!raw) return false;
+  const [encoded] = raw.split(".");
+  if (!encoded) return false;
+  try {
+    const decoded = Buffer.from(encoded, "base64url").toString("utf8");
+    const [token, ts] = decoded.split(":");
+    if (!token || !ts) return false;
+    const expected = process.env.DECKS_ADMIN_TOKEN ?? "";
+    if (!timingSafeEqual(Buffer.from(token), Buffer.from(expected))) return false;
+    const issuedAt = Number(ts);
+    if (!Number.isFinite(issuedAt)) return false;
+    if (Date.now() - issuedAt > ADMIN_SESSION_MAX_AGE * 1000) return false;
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+function hasBearerToken(request: NextRequest): boolean {
+  const authHeader = request.headers.get("authorization") ?? "";
+  if (!authHeader.startsWith("Bearer ")) return false;
+  const provided = authHeader.slice(7).trim();
+  const expected = process.env.DECKS_ADMIN_TOKEN ?? "";
+  return provided === expected;
+}
+
+async function adminOrThrow(request: NextRequest): Promise<void> {
+  if (hasBearerToken(request)) return;
+  if (!(await validateAdmin())) {
+    throw new Error("Unauthorized");
+  }
+}
+
+// ─── PUT: Create or update manifest ───────────────────────────────────────────
 
 export async function PUT(
   request: NextRequest,
   context: { params: Promise<{ filename: string }> },
 ) {
   try {
-    await requireAdminSessionOrThrow();
+    await adminOrThrow(request);
   } catch {
     return NextResponse.json({ error: "unauthorized" }, { status: 401 });
   }
@@ -34,12 +75,14 @@ export async function PUT(
   return NextResponse.json({ manifest });
 }
 
+// ─── GET: Fetch manifest ──────────────────────────────────────────────────────
+
 export async function GET(
-  _request: NextRequest,
+  request: NextRequest,
   context: { params: Promise<{ filename: string }> },
 ) {
   try {
-    await requireAdminSessionOrThrow();
+    await adminOrThrow(request);
   } catch {
     return NextResponse.json({ error: "unauthorized" }, { status: 401 });
   }
@@ -53,12 +96,14 @@ export async function GET(
   return NextResponse.json({ manifest });
 }
 
+// ─── DELETE: Remove manifest ──────────────────────────────────────────────────
+
 export async function DELETE(
-  _request: NextRequest,
+  request: NextRequest,
   context: { params: Promise<{ filename: string }> },
 ) {
   try {
-    await requireAdminSessionOrThrow();
+    await adminOrThrow(request);
   } catch {
     return NextResponse.json({ error: "unauthorized" }, { status: 401 });
   }
@@ -68,12 +113,14 @@ export async function DELETE(
   return NextResponse.json({ deleted: true });
 }
 
+// ─── PATCH: Partial update ────────────────────────────────────────────────────
+
 export async function PATCH(
   request: NextRequest,
   context: { params: Promise<{ filename: string }> },
 ) {
   try {
-    await requireAdminSessionOrThrow();
+    await adminOrThrow(request);
   } catch {
     return NextResponse.json({ error: "unauthorized" }, { status: 401 });
   }

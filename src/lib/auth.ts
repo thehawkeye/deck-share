@@ -1,16 +1,54 @@
 import { cookies } from "next/headers";
+import { NextRequest } from "next/server";
 import { timingSafeEqual } from "node:crypto";
 import { createAdminSessionId } from "@/lib/token";
-import { kvGetJson, kvSetJson, kvDelete } from "@/lib/kv";
+import { kvGetJson, kvSetJson } from "@/lib/kv";
 
 const ADMIN_COOKIE_NAME = "admin_session";
-const DECK_COOKIE_PREFIX = "deck_access_";
 const ADMIN_SESSION_MAX_AGE = 7 * 24 * 60 * 60;
 const DECK_SESSION_MAX_AGE = 30 * 24 * 60 * 60;
 
 export interface AdminSessionRecord {
   createdAt: string;
   expiresAt: string;
+}
+
+async function validateAdminCookie(raw: string | undefined): Promise<boolean> {
+  if (!raw) return false;
+  const [encoded, sessionId] = raw.split(".");
+  if (!encoded || !sessionId) return false;
+  try {
+    const decoded = Buffer.from(encoded, "base64url").toString("utf8");
+    const [token, ts] = decoded.split(":");
+    if (!token || !ts) return false;
+    const expected = process.env.DECKS_ADMIN_TOKEN ?? "";
+    if (!timingSafeEqual(Buffer.from(token), Buffer.from(expected))) return false;
+    const issuedAt = Number(ts);
+    if (!Number.isFinite(issuedAt)) return false;
+    if (Date.now() - issuedAt > ADMIN_SESSION_MAX_AGE * 1000) return false;
+    const session = await kvGetJson<AdminSessionRecord>(`admin:session:${sessionId}`);
+    if (!session) return false;
+    if (new Date(session.expiresAt).getTime() < Date.now()) return false;
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+function hasBearerToken(request: NextRequest): boolean {
+  const authHeader = request.headers.get("authorization") ?? "";
+  if (!authHeader.startsWith("Bearer ")) return false;
+  const provided = authHeader.slice(7).trim();
+  const expected = process.env.DECKS_ADMIN_TOKEN ?? "";
+  return provided === expected;
+}
+
+export async function adminOrThrow(request?: NextRequest): Promise<void> {
+  if (request && hasBearerToken(request)) return;
+  const store = await cookies();
+  if (!(await validateAdminCookie(store.get(ADMIN_COOKIE_NAME)?.value))) {
+    throw new Error("Unauthorized");
+  }
 }
 
 export async function createAdminSessionCookie(adminToken: string): Promise<string> {
@@ -26,27 +64,9 @@ export async function createAdminSessionCookie(adminToken: string): Promise<stri
   return `${encoded}.${sessionId}`;
 }
 
-export async function validateAdminSessionCookie(raw: string | undefined): Promise<boolean> {
-  if (!raw) return false;
-  const [encoded, sessionId] = raw.split(".");
-  if (!encoded || !sessionId) return false;
-  const decoded = Buffer.from(encoded, "base64url").toString("utf8");
-  const [token, ts] = decoded.split(":");
-  if (!token || !ts) return false;
-  const expected = process.env.DECKS_ADMIN_TOKEN ?? "";
-  if (!timingSafeEqual(Buffer.from(token), Buffer.from(expected))) return false;
-  const issuedAt = Number(ts);
-  if (!Number.isFinite(issuedAt)) return false;
-  if (Date.now() - issuedAt > ADMIN_SESSION_MAX_AGE * 1000) return false;
-  const session = await kvGetJson<AdminSessionRecord>(`admin:session:${sessionId}`);
-  if (!session) return false;
-  if (new Date(session.expiresAt).getTime() < Date.now()) return false;
-  return true;
-}
-
 export async function hasValidAdminSession(): Promise<boolean> {
   const store = await cookies();
-  return validateAdminSessionCookie(store.get(ADMIN_COOKIE_NAME)?.value);
+  return validateAdminCookie(store.get(ADMIN_COOKIE_NAME)?.value);
 }
 
 export async function deleteAdminSession(raw: string): Promise<void> {
@@ -56,14 +76,13 @@ export async function deleteAdminSession(raw: string): Promise<void> {
 
 export async function requireAdminSessionOrThrow(): Promise<void> {
   const store = await cookies();
-  const raw = store.get(ADMIN_COOKIE_NAME)?.value;
-  if (!(await validateAdminSessionCookie(raw))) {
+  if (!(await validateAdminCookie(store.get(ADMIN_COOKIE_NAME)?.value))) {
     throw new Error("Unauthorized");
   }
 }
 
 export function deckAccessCookieName(filename: string): string {
-  return `${DECK_COOKIE_PREFIX}${encodeURIComponent(filename)}`;
+  return `deck_access_${encodeURIComponent(filename)}`;
 }
 
 export function deckAccessCookieOptions(maxAge: number) {
@@ -111,4 +130,4 @@ export function adminCookieOptions(maxAge: number) {
   };
 }
 
-export { ADMIN_COOKIE_NAME, DECK_SESSION_MAX_AGE };
+export { ADMIN_COOKIE_NAME, ADMIN_SESSION_MAX_AGE, DECK_SESSION_MAX_AGE, kvDelete };
