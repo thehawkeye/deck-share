@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -27,11 +27,23 @@
     --relic: rgba(120,120,140,0.7);
   }
   * { margin: 0; padding: 0; box-sizing: border-box; }
-  html { scroll-behavior: smooth; scroll-snap-type: x mandatory; overflow-x: scroll; overflow-y: hidden; }
-  body { font-family: 'Outfit', sans-serif; background: var(--bg-deep); color: var(--text-primary); line-height: 1.75; font-weight: 300; letter-spacing: 0.01em; display: flex; width: 1100vw; height: 100vh; }
-  ::-webkit-scrollbar { display: none; }
-  .page { width: 100vw; height: 100vh; flex-shrink: 0; scroll-snap-align: start; position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+  html { scroll-behavior: smooth; }
+  /* Desktop: horizontal magazine */
+  html.desktop { scroll-snap-type: x mandatory; overflow-x: scroll; overflow-y: hidden; }
+  html.mobile { overflow-x: hidden; overflow-y: auto; }
+  body { font-family: 'Outfit', sans-serif; background: var(--bg-deep); color: var(--text-primary); line-height: 1.75; font-weight: 300; letter-spacing: 0.01em; }
+  html.desktop body { display: flex; width: 1100vw; height: 100vh; }
+  html.mobile body { display: block; width: 100%; min-height: 100vh; }
+  ::-webkit-scrollbar { }
+  html.desktop ::-webkit-scrollbar { display: none; }
+  html.mobile ::-webkit-scrollbar { width: 4px; }
+  html.mobile ::-webkit-scrollbar-track { background: var(--bg-deep); }
+  html.mobile ::-webkit-scrollbar-thumb { background: var(--border-light); border-radius: 2px; }
+  .page { position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+  html.desktop .page { width: 100vw; height: 100vh; flex-shrink: 0; scroll-snap-align: start; }
+  html.mobile .page { width: 100vw; min-height: 100vh; padding: 6vh 6vw; }
   .page__inner { width: 100%; height: 100%; position: relative; }
+  html.mobile .page__inner { height: auto; min-height: calc(100vh - 12vh); display: flex; flex-direction: column; justify-content: center; }
   /* backgrounds */
   .bg-cover { background: var(--bg-deep); }
   .bg-cover::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 100% 50% at 50% -10%, rgba(201,169,98,0.22) 0%, transparent 55%); pointer-events: none; }
@@ -56,6 +68,10 @@
   .split__left, .split__right { display: flex; flex-direction: column; justify-content: center; padding: 8vh 6vw; position: relative; }
   .split__left { border-right: 1px solid var(--border); }
   .split--flush-right .split__right { padding-left: 5vw; overflow-y: auto; }
+  /* mobile: stack splits vertically */
+  html.mobile .split { grid-template-columns: 1fr; height: auto; }
+  html.mobile .split__left { border-right: none; border-bottom: 1px solid var(--border); padding: 6vh 6vw 4vh; }
+  html.mobile .split__right { padding: 4vh 6vw 6vh; overflow-y: visible; max-height: none; }
   /* typography */
   .label { font-family: 'Outfit', sans-serif; font-size: 0.6rem; font-weight: 500; letter-spacing: 0.3em; text-transform: uppercase; color: var(--accent); margin-bottom: 1.5rem; display: block; }
   h1 { font-family: 'Cormorant Garamond', serif; font-size: clamp(3.5rem, 7vw, 7rem); font-weight: 300; line-height: 1.0; letter-spacing: -0.01em; color: var(--text-primary); }
@@ -78,6 +94,7 @@
   .mark__text { font-family: 'Cormorant Garamond', serif; font-size: 1rem; font-weight: 400; letter-spacing: 0.1em; color: var(--text-primary); }
   .mark__text span { display: block; font-size: 0.55rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--accent); font-family: 'Outfit', sans-serif; font-weight: 500; }
   .nav-dots { position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%); display: flex; gap: 0.6rem; z-index: 100; }
+  html.mobile .nav-dots { position: static; margin-top: 2rem; transform: none; justify-content: center; }
   .nav-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--text-muted); cursor: pointer; transition: all 0.3s; border: none; padding: 0; }
   .nav-dot.active { background: var(--accent); transform: scale(1.4); }
   .nav-dot:hover { background: var(--accent-soft); }
@@ -146,6 +163,14 @@
   .part-tag { position: absolute; top: 2.5rem; left: 6vw; font-family: 'Outfit', sans-serif; font-size: 0.55rem; letter-spacing: 0.35em; text-transform: uppercase; color: var(--accent); opacity: 0.7; }
   .small-tag { display: inline-block; font-family: 'Outfit', sans-serif; font-size: 0.55rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); border: 1px solid var(--accent-soft); padding: 0.25rem 0.7rem; border-radius: 2rem; margin-bottom: 0.6rem; }
   .ex-tag { display: inline-block; font-family: 'Outfit', sans-serif; font-size: 0.55rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--text-muted); background: var(--bg-card); border: 1px solid var(--border); padding: 0.2rem 0.6rem; border-radius: 2px; margin-right: 0.4rem; margin-bottom: 0.3rem; }
+
+  /* === MOBILE SPECIFIC === */
+  html.mobile .key-hint:first-child { display: none; }
+  html.mobile .page { overflow-x: hidden; }
+  html.mobile .hero-quote { font-size: clamp(2rem, 9vw, 3.5rem); }
+  html.mobile .back-cta { padding: 6vh 8vw; }
+  .matrix-wrap img { max-width: 90%; max-height: 85%; object-fit: contain; border-radius: 4px; }
+  html.mobile .matrix-wrap img { width: 100%; max-height: none; }
 </style>
 </head>
 <body>
@@ -575,12 +600,24 @@
 </nav>
 
 <script>
+  /* === REQUIRED: Viewport detection === */
+  (function() {
+    const isMobile = window.innerWidth < 768 || /Mobi|Android/i.test(navigator.userAgent);
+    document.documentElement.classList.add(isMobile ? 'mobile' : 'desktop');
+  })();
+
   const pages = document.querySelectorAll('.page');
   const dots = document.querySelectorAll('.nav-dot');
   let currentPage = 0;
+
   function scrollToPage(index) {
     if (index < 0 || index >= pages.length) return;
-    pages[index].scrollIntoView({ behavior: 'smooth', inline: 'start' });
+    const isMobile = document.documentElement.classList.contains('mobile');
+    if (isMobile) {
+      pages[index].scrollIntoView({ behavior: 'smooth', block: 'start' });
+    } else {
+      pages[index].scrollIntoView({ behavior: 'smooth', inline: 'start' });
+    }
     currentPage = index;
     updateDots();
   }
