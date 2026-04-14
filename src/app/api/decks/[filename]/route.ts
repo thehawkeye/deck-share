@@ -3,7 +3,7 @@ import path from "node:path";
 
 import { NextRequest, NextResponse } from "next/server";
 
-import { parseDeckAccessCookieValue, deckAccessCookieName } from "@/lib/auth";
+import { deckAccessCookieName, parseDeckAccessCookieValue } from "@/lib/auth";
 import { getManifest, isDeckExpired, isEmailAllowed } from "@/lib/manifests";
 
 export async function GET(
@@ -19,6 +19,33 @@ export async function GET(
 
   if (isDeckExpired(manifest.expiresAt)) {
     return gateRedirect(request, filename, "deck_expired");
+  }
+
+  // Owner access: ?owner_access=true + admin Bearer token
+  const search = request.nextUrl.searchParams;
+  if (search.get("owner_access") === "true") {
+    const authHeader = request.headers.get("authorization") ?? "";
+    if (authHeader.startsWith("Bearer ")) {
+      const token = authHeader.slice(7).trim();
+      if (token === process.env.DECKS_ADMIN_TOKEN) {
+        // Verify owner email is in manifest
+        if (manifest.emails.some((e) => e.email === "muralikrishnan@gmail.com" && e.status !== "revoked")) {
+          const filePath = path.join(process.cwd(), "public", "static", filename);
+          try {
+            const html = await readFile(filePath, "utf8");
+            return new NextResponse(html, {
+              status: 200,
+              headers: {
+                "content-type": "text/html; charset=utf-8",
+                "cache-control": "no-store",
+              },
+            });
+          } catch {
+            return new NextResponse("Deck file not found", { status: 404 });
+          }
+        }
+      }
+    }
   }
 
   const cookieValue = request.cookies.get(deckAccessCookieName(filename))?.value;

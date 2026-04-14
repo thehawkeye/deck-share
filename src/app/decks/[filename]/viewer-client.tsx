@@ -49,7 +49,7 @@ export function DeckViewerClient({ filename, title, email, sharingEnabled }: Pro
     <div className={styles.shell}>
       <iframe
         className={styles.frame}
-        src={`/api/decks/${encodeURIComponent(filename)}`}
+        src={`/api/decks/${encodeURIComponent(filename)}?owner_access=true`}
         title={title}
         sandbox="allow-scripts allow-same-origin"
       />
