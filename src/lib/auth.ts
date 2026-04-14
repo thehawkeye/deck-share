@@ -120,13 +120,13 @@ export function adminCookieName(): string {
   return ADMIN_COOKIE_NAME;
 }
 
-export function adminCookieOptions(maxAge: number) {
+export function adminCookieOptions() {
   return {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "strict" as const,
     path: "/",
-    maxAge,
+    maxAge: ADMIN_SESSION_MAX_AGE,
   };
 }
 
