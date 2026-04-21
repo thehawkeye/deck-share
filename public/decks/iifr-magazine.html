@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IIFR — Practitioner Faculty Pathway</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg-deep: #0b1628;
+    --bg-primary: #0f1f3d;
+    --bg-elevated: #142850;
+    --bg-card: #1a3358;
+    --text-primary: #f4f0e8;
+    --text-secondary: #a8b4cc;
+    --text-muted: #6b7fa3;
+    --accent: #c8a84b;
+    --accent-subtle: rgba(200, 168, 75, 0.12);
+    --accent-soft: rgba(200, 168, 75, 0.40);
+    --border: rgba(255, 255, 255, 0.04);
+    --border-light: rgba(255, 255, 255, 0.08);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  /* === VIEWPORT MODE: DESKTOP (horizontal magazine) === */
+  html.desktop {
+    scroll-snap-type: x mandatory;
+    overflow-x: scroll;
+    overflow-y: hidden;
+  }
+  html.desktop body { display: flex; width: 1000vw; height: 100vh; }
+  html.desktop ::-webkit-scrollbar { display: none; }
+  html.desktop .page { width: 100vw; height: 100vh; flex-shrink: 0; scroll-snap-align: start; }
+  html.desktop .nav-dots { position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%); }
+
+  /* === VIEWPORT MODE: MOBILE (vertical scroll) === */
+  html.mobile {
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+  html.mobile body { display: block; width: 100%; min-height: 100vh; }
+  html.mobile ::-webkit-scrollbar { width: 4px; }
+  html.mobile ::-webkit-scrollbar-track { background: var(--bg-deep); }
+  html.mobile ::-webkit-scrollbar-thumb { background: var(--border-light); border-radius: 2px; }
+  html.mobile .page { width: 100vw; min-height: 100vh; padding: 6vh 6vw; scroll-snap-align: start; }
+  html.mobile .page__inner { height: auto; min-height: calc(100vh - 12vh); display: flex; flex-direction: column; justify-content: center; }
+  html.mobile .nav-dots { position: static; margin-top: 2rem; justify-content: center; }
+
+  /* === BASE RESET === */
+  body { font-family: 'Outfit', sans-serif; background: var(--bg-deep); color: var(--text-primary); line-height: 1.75; font-weight: 300; letter-spacing: 0.01em; }
+  .page { position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+  .page__inner { width: 100%; height: 100%; position: relative; }
+  .bg-cover, .bg-back { background: var(--bg-deep); }
+  .bg-cover::before, .bg-back::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 100% 50% at 50% -10%, rgba(200,168,75,0.18) 0%, transparent 60%); pointer-events: none; }
+  .bg-problem { background: #0d1a2e; }
+  .bg-solution { background: #080d0a; }
+  .bg-features { background: var(--bg-elevated); }
+  .bg-audience { background: var(--bg-deep); }
+  .bg-competition { background: #111111; }
+  .bg-origin { background: #0a0c10; }
+  .bg-launch { background: var(--bg-elevated); }
+  .bg-tech { background: #06080b; }
+  .split { display: grid; grid-template-columns: 1fr 1fr; width: 100%; height: 100%; }
+  .split__left, .split__right { display: flex; flex-direction: column; justify-content: center; padding: 8vh 6vw; position: relative; }
+  .split__left { border-right: 1px solid var(--border); }
+  .quadrant-grid { display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; width: 100%; height: 100%; }
+  .font-display { font-family: 'Cormorant Garamond', serif; }
+  .font-body { font-family: 'Outfit', sans-serif; }
+  .label { font-family: 'Outfit', sans-serif; font-size: 0.6rem; font-weight: 500; letter-spacing: 0.3em; text-transform: uppercase; color: var(--accent); margin-bottom: 1.5rem; display: block; }
+  h1 { font-family: 'Cormorant Garamond', serif; font-size: clamp(3.5rem, 7vw, 7rem); font-weight: 300; line-height: 1.0; letter-spacing: -0.01em; color: var(--text-primary); }
+  h1 em { font-style: italic; color: var(--accent); }
+  h2 { font-family: 'Cormorant Garamond', serif; font-size: clamp(2.2rem, 4vw, 4.5rem); font-weight: 300; line-height: 1.05; color: var(--text-primary); margin-bottom: 1.5rem; }
+  h2 em { font-style: italic; color: var(--accent); }
+  h3 { font-family: 'Cormorant Garamond', serif; font-size: clamp(1.4rem, 2.2vw, 2.4rem); font-weight: 400; color: var(--text-primary); margin-bottom: 0.75rem; }
+  p { font-family: 'Outfit', sans-serif; font-size: clamp(0.8rem, 1.1vw, 1.05rem); font-weight: 300; color: var(--text-secondary); line-height: 1.85; max-width: 42ch; }
+  p + p { margin-top: 1rem; }
+  .stat-anchor { font-family: 'Cormorant Garamond', serif; font-size: clamp(5rem, 12vw, 12rem); font-weight: 300; line-height: 1; color: var(--accent); display: block; }
+  .stat-label { font-family: 'Outfit', sans-serif; font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--text-muted); margin-top: 0.5rem; display: block; }
+  .vstack-centre { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; height: 100%; padding: 8vh 10vw; }
+  .feature-list { list-style: none; padding: 0; margin: 0; }
+  .feature-list li { display: flex; align-items: flex-start; gap: 1.2rem; padding: 1.4rem 0; border-bottom: 1px solid var(--border); font-family: 'Outfit', sans-serif; font-size: clamp(0.78rem, 1vw, 0.95rem); font-weight: 300; color: var(--text-secondary); line-height: 1.7; }
+  .feature-list li:last-child { border-bottom: none; }
+  .feature-list__icon { width: 28px; height: 28px; flex-shrink: 0; margin-top: 0.1rem; color: var(--accent); }
+  .feature-list__title { font-weight: 500; color: var(--text-primary); font-size: 0.85rem; display: block; margin-bottom: 0.2rem; }
+  .step { font-family: 'Cormorant Garamond', serif; font-size: 5rem; font-weight: 300; color: var(--accent); opacity: 0.4; line-height: 1; margin-bottom: 0.5rem; }
+  .step-block { margin-bottom: 3rem; }
+  .step-block h3 { font-size: clamp(1.1rem, 1.8vw, 1.8rem); }
+  .step-block p { font-size: clamp(0.72rem, 0.95vw, 0.9rem); max-width: 32ch; }
+  .audience-grid { display: grid; grid-template-columns: repeat(3, 1fr); width: 100%; height: 100%; }
+  .audience-card { display: flex; flex-direction: column; justify-content: center; padding: 6vh 4vw; border-right: 1px solid var(--border); }
+  .audience-card:last-child { border-right: none; }
+  .audience-card__icon { width: 36px; height: 36px; margin-bottom: 1.5rem; color: var(--accent); }
+  .audience-card h3 { font-size: clamp(1rem, 1.5vw, 1.5rem); margin-bottom: 0.75rem; }
+  .audience-card p { font-size: clamp(0.68rem, 0.9vw, 0.85rem); max-width: 26ch; }
+  .comp-table { width: 100%; border-collapse: collapse; }
+  .comp-table th { font-family: 'Outfit', sans-serif; font-size: 0.58rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--accent); font-weight: 500; text-align: left; padding: 0 2rem 1.2rem 0; border-bottom: 1px solid var(--border); }
+  .comp-table td { font-family: 'Outfit', sans-serif; font-size: clamp(0.72rem, 0.95vw, 0.9rem); font-weight: 300; color: var(--text-secondary); padding: 1.1rem 2rem 1.1rem 0; border-bottom: 1px solid var(--border); vertical-align: top; line-height: 1.6; }
+  .comp-table tr:last-child td { border-bottom: none; }
+  .comp-table .check { color: var(--accent); }
+  .comp-table .cross { color: var(--text-muted); }
+  .comp-table .tagline { font-style: italic; color: var(--text-muted); font-size: 0.7rem; display: block; margin-top: 0.25rem; }
+  .timeline { list-style: none; padding: 0; margin: 0; position: relative; }
+  .timeline::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 2px; background: linear-gradient(180deg, var(--accent) 0%, var(--border) 100%); }
+  .timeline li { padding-left: 2.5rem; padding-bottom: 2.5rem; position: relative; }
+  .timeline li:last-child { padding-bottom: 0; }
+  .timeline li::before { content: ''; position: absolute; left: -4px; top: 0.35rem; width: 10px; height: 10px; border-radius: 50%; background: var(--accent); }
+  .timeline__year { font-family: 'Outfit', sans-serif; font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.3rem; display: block; }
+  .timeline__role { font-family: 'Cormorant Garamond', serif; font-size: clamp(1rem, 1.5vw, 1.5rem); font-weight: 400; color: var(--text-primary); margin-bottom: 0.3rem; }
+  .timeline__company { font-family: 'Outfit', sans-serif; font-size: 0.72rem; color: var(--text-muted); font-weight: 300; }
+  .stats-row { display: flex; gap: 5vw; align-items: flex-end; }
+  .full-bleed { width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: center; padding: 8vh 8vw; }
+  .full-bleed .label { margin-bottom: 1rem; }
+  .mark { display: flex; align-items: center; gap: 0.75rem; margin-bottom: auto; }
+  .mark__circle { width: 40px; height: 40px; border-radius: 50%; border: 1.5px solid var(--accent); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .mark__dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); }
+  .mark__text { font-family: 'Cormorant Garamond', serif; font-size: 1rem; font-weight: 400; letter-spacing: 0.1em; color: var(--text-primary); }
+  .mark__text span { display: block; font-size: 0.55rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--accent); font-family: 'Outfit', sans-serif; font-weight: 500; }
+  .footer-links { display: flex; gap: 2rem; flex-wrap: wrap; margin-top: 2rem; }
+  .footer-links a { font-family: 'Outfit', sans-serif; font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); text-decoration: none; border-bottom: 1px solid var(--border); padding-bottom: 0.2rem; transition: color 0.3s, border-color 0.3s; }
+  .footer-links a:hover { color: var(--accent); border-color: var(--accent); }
+  .nav-dots { position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%); display: flex; gap: 0.6rem; z-index: 100; }
+  .nav-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--text-muted); cursor: pointer; transition: all 0.3s; border: none; padding: 0; }
+  .nav-dot.active { background: var(--accent); transform: scale(1.4); }
+  .nav-dot:hover { background: var(--accent-soft); }
+  .page-num { position: absolute; bottom: 2rem; right: 3vw; font-family: 'Outfit', sans-serif; font-size: 0.6rem; letter-spacing: 0.2em; color: var(--text-muted); text-transform: uppercase; }
+  .accent-line { width: 3rem; height: 1px; background: var(--accent); margin: 1.5rem 0; }
+  .key-hint { font-family: 'Outfit', sans-serif; font-size: 0.55rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--text-muted); margin-top: auto; display: flex; align-items: center; gap: 0.5rem; }
+  .key-hint kbd { background: var(--bg-card); border: 1px solid var(--border-light); border-radius: 3px; padding: 0.15rem 0.4rem; font-family: inherit; color: var(--text-secondary); }
+  .badge { display: inline-block; font-family: 'Outfit', sans-serif; font-size: 0.55rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); border: 1px solid var(--accent-soft); padding: 0.3rem 0.8rem; border-radius: 2rem; margin-bottom: 1.5rem; }
+  .quote { font-family: 'Cormorant Garamond', serif; font-size: clamp(1.4rem, 2.5vw, 2.5rem); font-weight: 300; font-style: italic; color: var(--text-primary); line-height: 1.4; max-width: 22ch; }
+  .quote::before { content: '"'; color: var(--accent); font-size: 1.3em; line-height: 0; vertical-align: -0.3em; margin-right: 0.1em; }
+  .tech-tags { display: flex; flex-wrap: wrap; gap: 0.6rem; margin-top: 1.5rem; }
+  .tech-tag { font-family: 'Outfit', sans-serif; font-size: 0.65rem; letter-spacing: 0.1em; color: var(--text-secondary); border: 1px solid var(--border-light); padding: 0.35rem 0.8rem; border-radius: 2px; transition: all 0.3s; }
+  .tech-tag:hover { border-color: var(--accent); color: var(--accent); }
+  .back-cta { display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; height: 100%; padding: 8vh 10vw; }
+  .back-cta .mark { margin-bottom: 3rem; }
+  .back-cta h2 { font-size: clamp(2.5rem, 5vw, 5rem); }
+  .back-cta .accent-line { margin: 1.5rem auto; }
+  .comparison-badge { display: inline-block; }
+  .comp-row-label { font-family: 'Cormorant Garamond', serif; font-size: clamp(0.9rem, 1.3vw, 1.3rem); font-weight: 400; color: var(--text-primary); margin-bottom: 0.2rem; }
+  .comp-row-desc { font-family: 'Outfit', sans-serif; font-size: clamp(0.65rem, 0.85vw, 0.82rem); color: var(--text-secondary); line-height: 1.5; }
+  .prog-row { display: flex; align-items: center; gap: 1.5rem; padding: 1.5rem 0; border-bottom: 1px solid var(--border); }
+  .prog-row:last-child { border-bottom: none; }
+  .prog-num { font-family: 'Cormorant Garamond', serif; font-size: 3rem; font-weight: 300; color: var(--accent); opacity: 0.5; line-height: 1; min-width: 3.5rem; }
+  .prog-info { flex: 1; }
+  .prog-info h4 { font-family: 'Cormorant Garamond', serif; font-size: clamp(1rem, 1.4vw, 1.4rem); font-weight: 400; color: var(--text-primary); margin-bottom: 0.3rem; }
+  .prog-info p { font-size: clamp(0.65rem, 0.85vw, 0.82rem); max-width: 30ch; color: var(--text-secondary); }
+  .prog-meta { text-align: right; }
+  .prog-meta .badge { margin-bottom: 0.3rem; }
+  .prog-meta span { font-family: 'Outfit', sans-serif; font-size: 0.65rem; color: var(--text-muted); letter-spacing: 0.1em; }
+
+  /* === SPLIT LAYOUTS — stack on mobile === */
+  .split { display: grid; grid-template-columns: 1fr 1fr; width: 100%; height: 100%; }
+  .split__left, .split__right { display: flex; flex-direction: column; justify-content: center; padding: 8vh 6vw; }
+  .split__left { border-right: 1px solid var(--border); }
+  html.mobile .split { grid-template-columns: 1fr; height: auto; }
+  html.mobile .split__left { border-right: none; border-bottom: 1px solid var(--border); padding: 6vh 6vw 4vh; }
+  html.mobile .split__right { padding: 4vh 6vw 6vh; overflow-y: visible; }
+
+  /* === AUDIENCE GRID — 1 col on mobile === */
+  html.mobile .audience-grid { grid-template-columns: 1fr; height: auto; }
+  html.mobile .audience-card { border-right: none; border-bottom: 1px solid var(--border); padding: 6vh 0; }
+  html.mobile .audience-card:last-child { border-bottom: none; }
+
+  /* === COVER — single col on mobile === */
+  html.mobile #p1 .page__inner { display: flex; flex-direction: column; justify-content: center; gap: 2rem; height: auto; min-height: 100vh; padding: 6vh 0; }
+  html.mobile #p1 .mark { margin-bottom: 0; }
+  html.mobile #p1 h1 { font-size: clamp(3rem, 12vw, 6rem); }
+  html.mobile #p1 .key-hint:first-child { display: none; }
+
+  /* === FEATURES PAGE — stack columns on mobile === */
+  html.mobile #p4 > .full-bleed > div[style*="grid-template-columns: 1fr 1fr"] { grid-template-columns: 1fr !important; }
+  html.mobile #p4 > .full-bleed > div[style*="grid-template-columns: 1fr 1fr"] > div:first-child { border-right: none; padding-right: 0; border-bottom: 1px solid var(--border); padding-bottom: 4vh; margin-bottom: 4vh; }
+  html.mobile #p4 > .full-bleed > div[style*="grid-template-columns: 1fr 1fr"] > div:last-child { padding-left: 0; }
+
+  /* === LAUNCH PAGE — stack on mobile === */
+  html.mobile #p8 > .full-bleed > div[style*="grid-template-columns: 1fr 1fr"] { grid-template-columns: 1fr !important; }
+  html.mobile #p8 > .full-bleed > div[style*="grid-template-columns: 1fr 1fr"] > div:first-child { border-right: none; border-bottom: 1px solid var(--border); padding-right: 0; padding-bottom: 4vh; margin-bottom: 4vh; }
+  html.mobile #p8 > .full-bleed > div[style*="grid-template-columns: 1fr 1fr"] > div:last-child { padding-left: 0; }
+
+  /* === STATS ROW — stack on mobile === */
+  html.mobile .stats-row { flex-direction: column; gap: 2rem; align-items: flex-start; }
+
+  /* === FULL BLEED padding fix on mobile === */
+  html.mobile .full-bleed { padding: 6vh 6vw; }
+  html.mobile #p8 > .full-bleed { height: auto; }
+
+  /* === BACK COVER — preserve centering on mobile === */
+  html.mobile #p10 .back-cta { height: auto; min-height: 100vh; }
+</style>
+</head>
+<body>
+
+<!-- PAGE 1: COVER -->
+<div class="page bg-cover" id="p1">
+  <div class="page__inner">
+    <div class="mark">
+      <div class="mark__circle"><div class="mark__dot"></div></div>
+      <div class="mark__text">IIFR &nbsp;<span>bvb institution</span></div>
+    </div>
+    <div style="flex:1"></div>
+    <div>
+      <h1>The Practitioner<br><em>Faculty</em><br>Pathway</h1>
+      <div class="accent-line"></div>
+      <p style="color: var(--text-muted); font-size: 0.75rem; letter-spacing: 0.2em; text-transform: uppercase; max-width: 30ch;">From the boardroom to the lecture hall. A credible, certified route into Indian management education.</p>
+    </div>
+    <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-top:3rem;">
+      <div class="key-hint"><kbd>&#8592;</kbd><kbd>&#8594;</kbd> to navigate &nbsp;&middot;&nbsp; scroll horizontally</div>
+      <div class="key-hint" style="font-size:0.55rem; color: var(--text-muted);">iifr.in &nbsp;&middot;&nbsp; Bharatiya Executive Certification Programme &amp; Fellowship Programme</div>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE 2: PROBLEM -->
+<div class="page bg-problem" id="p2">
+  <div class="split">
+    <div class="split__left">
+      <span class="label">The Problem</span>
+      <h2>Indian B-schools have a faculty crisis. Qualified practitioners have no pathway in.</h2>
+      <div class="accent-line"></div>
+      <p>NEP 2020 mandates industry linkage. B-schools are required to demonstrate practitioner faculty credentials. Yet the formal pathway into teaching for senior executives and domain experts does not exist.</p>
+      <p>Those who want to teach have no credible route. Those who need them cannot find them.</p>
+    </div>
+    <div class="split__right" style="justify-content:center; align-items:flex-start; padding-left:8vw;">
+      <div class="stats-row">
+        <div><span class="stat-anchor">73%</span><span class="stat-label">B-schools report chronic practitioner faculty shortages</span></div>
+        <div><span class="stat-anchor">0</span><span class="stat-label">Formal certified pathways for senior executives entering academia</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="page-num">02 / 10</div>
+</div>
+
+<!-- PAGE 3: SOLUTION -->
+<div class="page bg-solution" id="p3">
+  <div class="split">
+    <div class="split__left" style="border-right:1px solid var(--border); overflow-y:auto;">
+      <span class="label">The Approach</span>
+      <h2>Two programmes. One mission.</h2>
+      <div class="accent-line"></div>
+      <p>IIFR builds the practitioner faculty pathway that Indian management education needs. Two credentials. Two tracks. Grounded in practitioner experience, validated by global certification.</p>
+    </div>
+    <div class="split__right" style="padding-left:5vw; padding-right:5vw; overflow-y:auto; justify-content:center;">
+      <div class="prog-row">
+        <div class="prog-num">01</div>
+        <div class="prog-info">
+          <h4>BECP</h4>
+          <p>Eight-day intensive. The foundation for practitioners entering the classroom. </p>
+        </div>
+        <div class="prog-meta">
+          <span class="badge">Pilot Jul 2026</span><br>
+          <span>Rs 4-6L</span>
+        </div>
+      </div>
+      <div class="prog-row">
+        <div class="prog-num">02</div>
+        <div class="prog-info">
+          <h4>BEFM</h4>
+          <p>Three-year executive fellowship. Deep academic practice and research output.</p>
+        </div>
+        <div class="prog-meta">
+          <span class="badge">Launch Sep 2026</span><br>
+          <span>Rs 25-30L</span>
+        </div>
+      </div>
+      <div style="margin-top:2.5rem; padding-top:1.5rem; border-top:1px solid var(--border);">
+        <span class="badge" style="margin-bottom:1rem;">EFMD Certification</span>
+        <p style="font-size:0.7rem; max-width:28ch;">Both programmes pursue EFMD certification. Global credibility for practitioner-educators. BVB institutional anchoring.</p>
+      </div>
+    </div>
+  </div>
+  <div class="page-num">03 / 10</div>
+</div>
+
+<!-- PAGE 4: FEATURES -->
+<div class="page bg-features" id="p4">
+  <div class="full-bleed">
+    <span class="label">Key Differentiators</span>
+    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:0; width:100%; margin-top:2rem;">
+      <div style="padding-right:4vw; border-right:1px solid var(--border);">
+        <ul class="feature-list">
+          <li>
+            <div class="feature-list__icon">&#9632;</div>
+            <div>
+              <span class="feature-list__title">India-Origin Narrative</span>
+              Built for Indian management education. Not imported. The boardroom-to-lecture-hall story is written from experience, not adapted from a Western model.
+            </div>
+          </li>
+          <li>
+            <div class="feature-list__icon">&#9632;</div>
+            <div>
+              <span class="feature-list__title">Practitioner-Voice Pedagogy</span>
+              Faculty teach from what they have done, not what they have studied. Every session is anchored in real decisions, real consequences, real outcomes.
+            </div>
+          </li>
+          <li>
+            <div class="feature-list__icon">&#9632;</div>
+            <div>
+              <span class="feature-list__title">Dual-Credential Architecture</span>
+              BECP opens the door. BEFM deepens the practice. A coherent progression from first lecture to senior faculty appointment.
+            </div>
+          </li>
+        </ul>
+      </div>
+      <div style="padding-left:4vw;">
+        <ul class="feature-list">
+          <li>
+            <div class="feature-list__icon">&#9632;</div>
+            <div>
+              <span class="feature-list__title">EFMD Global Certification</span>
+              Pursuing EFMD accreditation. A credential recognised by top institutions across forty countries. The hardest moat a competitor cannot replicate in under eighteen months.
+            </div>
+          </li>
+          <li>
+            <div class="feature-list__icon">&#9632;</div>
+            <div>
+              <span class="feature-list__title">BVB Institutional Anchor</span>
+              Founded within the Bharatiya Vidya Bhavan. Legitimacy that a startup or standalone programme cannot manufacture. Regulated, established, credible.
+            </div>
+          </li>
+          <li>
+            <div class="feature-list__icon">&#9632;</div>
+            <div>
+              <span class="feature-list__title">Cohort Community</span>
+              Founding cohorts are small by design. A peer network of senior practitioners who teach, collaborate, and refer. The referral programme is built into the model.
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="page-num">04 / 10</div>
+</div>
+
+<!-- PAGE 5: AUDIENCE -->
+<div class="page bg-audience" id="p5">
+  <div class="audience-grid">
+    <div class="audience-card">
+      <div class="audience-card__icon">&#9632;</div>
+      <span class="badge" style="margin-bottom:1rem;">BECP Primary</span>
+      <h3>Mid-Career Educators</h3>
+      <p>Assistant professors, associate professors, and faculty at new B-schools. Industry experienced but pedagogy-shy. Need the credential and the craft to be taken seriously in the classroom.</p>
+    </div>
+    <div class="audience-card">
+      <div class="audience-card__icon">&#9632;</div>
+      <span class="badge" style="margin-bottom:1rem;">BECP</span>
+      <h3>HR and L&D Professionals</h3>
+      <p>Learning heads, talent directors, corporate trainers. Help people transition careers. Want to model the path they build for others. Credibility in the academic classroom matters.</p>
+    </div>
+    <div class="audience-card">
+      <div class="audience-card__icon">&#9632;</div>
+      <span class="badge" style="margin-bottom:1rem;">BEFM Primary</span>
+      <h3>C-Suite and Senior Execs</h3>
+      <p>CXOs, GCC heads, directors. Post-peak career. Looking for legacy. Want to give back and be recognised for what they know. The boardroom taught them things no PhD can.</p>
+    </div>
+  </div>
+  <div class="page-num">05 / 10</div>
+</div>
+
+<!-- PAGE 6: COMPETITION -->
+<div class="page bg-competition" id="p6">
+  <div class="split">
+    <div class="split__left">
+      <span class="label">Competitive Landscape</span>
+      <h2>No one owns this space yet.</h2>
+      <div class="accent-line"></div>
+      <p>ISB AGTI and IIM Ahmedabad operate in adjacent territory. None has positioned practitioner-faculty as a formal academic credential. None has EFMD certification in process. The category is open.</p>
+    </div>
+    <div class="split__right" style="overflow-y:auto; justify-content:center;">
+      <table class="comp-table">
+        <thead><tr><th>Programme</th><th>Practitioner Voice</th><th>EFMD Certification</th><th>India-Origin</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><span class="comp-row-label">ISB AGTI</span><span class="tagline">Executive education model</span></td>
+            <td class="check">&#10003;</td>
+            <td class="cross">&#10007;</td>
+            <td class="cross">&#10007;</td>
+          </tr>
+          <tr>
+            <td><span class="comp-row-label">IIM Ahmedabad Exec Ed</span><span class="tagline">Certificate of attendance</span></td>
+            <td class="check">&#10003;</td>
+            <td class="cross">&#10007;</td>
+            <td class="cross">&#10007;</td>
+          </tr>
+          <tr>
+            <td><span class="comp-row-label">Harvard Business School</span><span class="tagline">Global exec education</span></td>
+            <td class="check">&#10003;</td>
+            <td class="cross">&#10007;</td>
+            <td class="cross">&#10007;</td>
+          </tr>
+          <tr>
+            <td><span class="comp-row-label">Domestic certifiers</span><span class="tagline">Rs 50K-2L train-the-trainer</span></td>
+            <td class="cross">&#10007;</td>
+            <td class="cross">&#10007;</td>
+            <td class="cross">&#10007;</td>
+          </tr>
+          <tr>
+            <td><span class="comp-row-label" style="color:var(--accent);">IIFR BECP / BEFM</span><span class="tagline" style="color:var(--accent);">Practitioner Faculty Pathway</span></td>
+            <td class="check" style="color:var(--accent);">&#10003;</td>
+            <td class="check" style="color:var(--accent);">&#10003;</td>
+            <td class="check" style="color:var(--accent);">&#10003;</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="page-num">06 / 10</div>
+</div>
+
+<!-- PAGE 7: ORIGIN -->
+<div class="page bg-origin" id="p7">
+  <div class="split">
+    <div class="split__left">
+      <span class="label">The Narrative Threads</span>
+      <h2>Three threads. One mission.</h2>
+      <div class="accent-line"></div>
+      <p style="font-size:clamp(0.75rem,1vw,0.95rem);">Every piece of content IIFR produces speaks to one of three threads. They run through all channels: webinars, podcasts, articles, Demo Days, and peer conversations.</p>
+    </div>
+    <div class="split__right" style="overflow-y:auto; justify-content:center; padding-left:8vw;">
+      <ul class="timeline">
+        <li>
+          <span class="timeline__year">Thread One</span>
+          <span class="timeline__role">Boardroom to Lecture Hall</span>
+          <span class="timeline__company">Your experience is your qualification. The boardroom taught you things no PhD programme can. Now teach the next generation of leaders.</span>
+        </li>
+        <li>
+          <span class="timeline__year">Thread Two</span>
+          <span class="timeline__role">Pracademic Credentials</span>
+          <span class="timeline__company">Not a hobby. A recognised academic pathway. EFMD certification means global credibility for your faculty practice.</span>
+        </li>
+        <li>
+          <span class="timeline__year">Thread Three</span>
+          <span class="timeline__role">Learning to Teach</span>
+          <span class="timeline__company">Teaching is a craft. Learn it deliberately. Your first class — and your hundredth — will be better for it.</span>
+        </li>
+      </ul>
+    </div>
+  </div>
+ <div class="page-num">07 / 10</div>
+</div>
+
+<!-- PAGE 8: LAUNCH -->
+<div class="page bg-launch" id="p8">
+  <div class="full-bleed" style="padding: 8vh 8vw;">
+    <span class="label">Launch Plan</span>
+    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:0; width:100%; margin-top:1rem; height:calc(100% - 8rem);">
+      <div style="border-right:1px solid var(--border); padding-right:5vw; display:flex; flex-direction:column; justify-content:center;">
+        <div style="display:flex; flex-direction:column; gap:3rem;">
+          <div>
+            <span class="stat-anchor" style="font-size:clamp(3rem,8vw,8rem);">Jul</span>
+            <span class="stat-label">BECP Cohort 1 begins</span>
+          </div>
+          <div>
+            <span class="stat-anchor" style="font-size:clamp(3rem,8vw,8rem);">Sep</span>
+            <span class="stat-label">BEFM Cohort 1 begins</span>
+          </div>
+        </div>
+      </div>
+      <div style="padding-left:5vw; display:flex; flex-direction:column; justify-content:center;">
+        <ul class="feature-list" style="border-top:1px solid var(--border);">
+          <li style="padding:1rem 0; border-bottom:1px solid var(--border);">
+            <div class="feature-list__icon" style="font-size:0.8rem;">&#8594;</div>
+            <div>
+              <span class="feature-list__title">Apr-Jun: Awareness Engine</span>
+              Content, webinars, Learning Tables. Demo Day. Peer referral programme activation.
+            </div>
+          </li>
+          <li style="padding:1rem 0; border-bottom:1px solid var(--border);">
+            <div class="feature-list__icon" style="font-size:0.8rem;">&#8594;</div>
+            <div>
+              <span class="feature-list__title">Jul: BECP Pilot Enrolment</span>
+              Founding cohort enrolled. Live 25-minute module Demo Day as primary conversion mechanism.
+            </div>
+          </li>
+          <li style="padding:1rem 0; border-bottom:1px solid var(--border);">
+            <div class="feature-list__icon" style="font-size:0.8rem;">&#8594;</div>
+            <div>
+              <span class="feature-list__title">Jul-Sep: BEFM Pipeline</span>
+              C-Suite outreach via peer referral from BECP graduates. 1:1 discovery calls. September cohort confirmation.
+            </div>
+          </li>
+          <li style="padding:1rem 0;">
+            <div class="feature-list__icon" style="font-size:0.8rem;">&#8594;</div>
+            <div>
+              <span class="feature-list__title">B-school Institutional Channel</span>
+              Post-pilot: direct outreach to B-school deans and academic heads. 10-15 institutional enrolments possible.
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="page-num">08 / 10</div>
+</div>
+
+<!-- PAGE 9: METHODOLOGY -->
+<div class="page bg-tech" id="p9">
+  <div class="split">
+    <div class="split__left">
+      <span class="label">Methodology</span>
+      <h2>The Demo Day is the product, not the event.</h2>
+      <div class="accent-line"></div>
+      <p>Every Demo Day is structured around a live twenty-five minute module segment. The attendee experiences what it feels like to be taught by a practitioner-educator. That experience converts.</p>
+      <div class="tech-tags" style="margin-top:2rem;">
+        <span class="tech-tag">Webinars</span>
+        <span class="tech-tag">Learning Tables</span>
+        <span class="tech-tag">Podcasts</span>
+        <span class="tech-tag">Thought Leadership</span>
+        <span class="tech-tag">Peer Referral</span>
+        <span class="tech-tag">Demo Days</span>
+        <span class="tech-tag">Email Nurture</span>
+        <span class="tech-tag">LinkedIn</span>
+      </div>
+    </div>
+    <div class="split__right" style="justify-content:center; align-items:flex-start; padding-left:8vw;">
+      <ul class="timeline" style="margin-top:0;">
+        <li>
+          <span class="timeline__year">0-10 min</span>
+          <span class="timeline__role">The Problem We Solve</span>
+          <span class="timeline__company">Short talk with practitioner data. Why the practitioner faculty gap exists and what it costs B-schools.</span>
+        </li>
+        <li>
+          <span class="timeline__year">10-35 min</span>
+          <span class="timeline__role">The Live Module Demo</span>
+          <span class="timeline__company">A real twenty-five minute segment from the BECP curriculum. The actual experience of being a participant.</span>
+        </li>
+        <li>
+          <span class="timeline__year">35-45 min</span>
+          <span class="timeline__role">The Credential</span>
+          <span class="timeline__company">EFMD Candidate Institution. What it means and what it enables for your academic practice.</span>
+        </li>
+        <li>
+          <span class="timeline__year">45-75 min</span>
+          <span class="timeline__role">Peer Story and Open Q&A</span>
+          <span class="timeline__company">BECP graduate conversation. Open questions. 1:1 interest form. Module demo recording captured as content asset.</span>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <div class="page-num">09 / 10</div>
+</div>
+
+<!-- PAGE 10: BACK COVER -->
+<div class="page bg-back" id="p10">
+  <div class="back-cta">
+    <div class="mark">
+      <div class="mark__circle"><div class="mark__dot"></div></div>
+      <div class="mark__text">IIFR &nbsp;<span>Join the founding cohort</span></div>
+    </div>
+    <div class="quote" style="max-width:20ch; text-align:center;">Become the practitioner-faculty Indian management education needs.</div>
+    <div class="accent-line"></div>
+    <h2 style="text-align:center; font-size:clamp(1.5rem, 3vw, 3rem); max-width:18ch; line-height:1.2;">BECP Pilot begins July 2026</h2>
+    <div class="footer-links" style="justify-content:center; margin-top:2.5rem;">
+      <a href="https://iifr.in">iifr.in</a>
+      <a href="mailto:enquiries@iifr.in">enquiries@iifr.in</a>
+      <a href="https://www.linkedin.com/company/iifr">LinkedIn</a>
+    </div>
+    <div style="margin-top:auto; padding-top:3rem;">
+      <p style="font-size:0.62rem; color:var(--text-muted); letter-spacing:0.15em; text-transform:uppercase; text-align:center;">IIFR &middot; Bharatiya Vidya Bhavan &middot; EFMD Candidate Institution &middot; 2026</p>
+    </div>
+  </div>
+</div>
+
+<!-- NAV DOTS -->
+<nav class="nav-dots" aria-label="Page navigation">
+  <button class="nav-dot active" data-page="1" aria-label="Page 1"></button>
+  <button class="nav-dot" data-page="2" aria-label="Page 2"></button>
+  <button class="nav-dot" data-page="3" aria-label="Page 3"></button>
+  <button class="nav-dot" data-page="4" aria-label="Page 4"></button>
+  <button class="nav-dot" data-page="5" aria-label="Page 5"></button>
+  <button class="nav-dot" data-page="6" aria-label="Page 6"></button>
+  <button class="nav-dot" data-page="7" aria-label="Page 7"></button>
+  <button class="nav-dot" data-page="8" aria-label="Page 8"></button>
+  <button class="nav-dot" data-page="9" aria-label="Page 9"></button>
+  <button class="nav-dot" data-page="10" aria-label="Page 10"></button>
+</nav>
+
+<script>
+  // === REQUIRED: Viewport detection on load + resize ===
+  (function() {
+    const isMobile = window.innerWidth < 768 || /Mobi|Android/i.test(navigator.userAgent);
+    document.documentElement.classList.add(isMobile ? 'mobile' : 'desktop');
+  })();
+
+  // === NAVIGATION ===
+  const pages = document.querySelectorAll('.page');
+  const dots = document.querySelectorAll('.nav-dot');
+  let currentPage = 0;
+
+  function scrollToPage(index) {
+    if (index < 0 || index >= pages.length) return;
+    const isMobile = document.documentElement.classList.contains('mobile');
+    pages[index].scrollIntoView({
+      inline: 'start',
+      block: isMobile ? 'start' : 'nearest'
+    });
+    currentPage = index;
+    updateDots();
+  }
+
+  function updateDots() {
+    dots.forEach((d, i) => d.classList.toggle('active', i === currentPage));
+  }
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') scrollToPage(currentPage + 1);
+    if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')   scrollToPage(currentPage - 1);
+  });
+
+  dots.forEach(dot => dot.addEventListener('click', () => scrollToPage(parseInt(dot.dataset.page) - 1)));
+
+  // === INTERSECTION OBSERVER — update dots on scroll ===
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const idx = Array.from(pages).indexOf(entry.target);
+        if (idx !== -1) { currentPage = idx; updateDots(); }
+      }
+    });
+  }, { threshold: 0.5, root: null });
+
+  // Re-observe when viewport mode changes
+  function observePages() {
+    pages.forEach(p => observer.observe(p));
+  }
+  observePages();
+
+  // Re-detect on resize
+  window.addEventListener('resize', () => {
+    const isMobile = window.innerWidth < 768 || /Mobi|Android/i.test(navigator.userAgent);
+    const html = document.documentElement;
+    const wasDesktop = html.classList.contains('desktop');
+    const wasMobile = html.classList.contains('mobile');
+
+    if (isMobile && wasDesktop) {
+      html.classList.remove('desktop');
+      html.classList.add('mobile');
+    } else if (!isMobile && wasMobile) {
+      html.classList.remove('mobile');
+      html.classList.add('desktop');
+    }
+  });
+</script>
+</body>
+</html>

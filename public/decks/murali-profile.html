@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Muralikrishnan B | Scholar • Practitioner • Investor</title>
+    <style>
+        :root {
+            --navy: #1F3864;
+            --blue: #2F5496;
+            --light-gray: #f5f7fa;
+            --gray: #6c757d;
+            --white: #ffffff;
+            --border: #e9ecef;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.6; color: #333; background: var(--white); }
+        .container { max-width: 900px; margin: 0 auto; padding: 0 24px; }
+        .hero { padding: 60px 0 40px; border-bottom: 1px solid var(--border); }
+        .hero-content { display: flex; gap: 32px; align-items: flex-start; }
+        .hero-image { width: 180px; height: 180px; border-radius: 50%; object-fit: cover; border: 4px solid var(--white); box-shadow: 0 4px 20px rgba(0,0,0,0.15); }
+        .hero-text { flex: 1; }
+        .hero h1 { font-size: 42px; font-weight: 700; color: var(--navy); margin-bottom: 8px; letter-spacing: -1px; }
+        .tagline { font-size: 20px; color: var(--gray); margin-bottom: 20px; }
+        .contact-info { display: flex; flex-wrap: wrap; gap: 16px; font-size: 14px; }
+        .contact-info a { color: var(--blue); text-decoration: none; display: flex; align-items: center; gap: 6px; }
+        .contact-info a:hover { text-decoration: underline; }
+        .location { color: var(--gray); display: flex; align-items: center; gap: 6px; }
+        section { padding: 40px 0; border-bottom: 1px solid var(--border); }
+        section:last-child { border-bottom: none; }
+        h2 { font-size: 18px; font-weight: 600; color: var(--navy); margin-bottom: 20px; text-transform: uppercase; letter-spacing: 1px; }
+        .about p { font-size: 16px; color: #444; max-width: 700px; }
+        .academics-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; }
+        @media (max-width: 640px) { .academics-grid { grid-template-columns: 1fr; } .hero-image { width: 120px; height: 120px; } }
+        .subsection h3 { font-size: 14px; font-weight: 600; color: var(--navy); margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .pub-list, .teach-list { list-style: none; }
+        .pub-list li { margin-bottom: 16px; padding-left: 16px; border-left: 3px solid var(--blue); }
+        .pub-list .title { font-weight: 500; color: #333; display: block; }
+        .pub-list .meta { font-size: 13px; color: var(--gray); }
+        .teach-list li { margin-bottom: 12px; display: flex; justify-content: space-between; }
+        .teach-list .course { font-weight: 500; }
+        .teach-list .institution { color: var(--gray); font-size: 14px; }
+        .invest-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 16px; }
+        .invest-card { padding: 16px; background: var(--light-gray); border-radius: 8px; border-left: 3px solid var(--blue); }
+        .invest-card .name { font-weight: 600; color: var(--navy); margin-bottom: 4px; }
+        .invest-card .desc { font-size: 13px; color: #555; }
+        .invest-card .status { font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 8px; display: inline-block; padding: 2px 8px; border-radius: 4px; }
+        .status-active { background: #d4edda; color: #155724; }
+        .status-acquired { background: #cce5ff; color: #004085; }
+        .status-exited { background: #f8d7da; color: #721c24; }
+        .advisory-list { list-style: none; }
+        .advisory-list li { margin-bottom: 12px; padding: 12px 16px; background: var(--light-gray); border-radius: 6px; display: flex; justify-content: space-between; align-items: center; }
+        .advisory-list .role { font-weight: 500; }
+        .advisory-list .org { color: var(--blue); }
+        .advisory-list .period { font-size: 13px; color: var(--gray); }
+        .timeline { position: relative; padding-left: 24px; }
+        .timeline::before { content: ''; position: absolute; left: 0; top: 8px; bottom: 8px; width: 2px; background: var(--border); }
+        .timeline-item { position: relative; margin-bottom: 24px; }
+        .timeline-item::before { content: ''; position: absolute; left: -28px; top: 6px; width: 10px; height: 10px; background: var(--navy); border-radius: 50%; }
+        .timeline-item .period { font-size: 13px; color: var(--gray); margin-bottom: 4px; }
+        .timeline-item .title { font-weight: 600; color: var(--navy); }
+        .timeline-item .company { color: var(--blue); margin-bottom: 8px; }
+        .timeline-item .points { font-size: 14px; color: #555; padding-left: 16px; }
+        .timeline-item .points li { margin-bottom: 4px; }
+        .edu-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; }
+        .edu-card { padding: 20px; background: var(--light-gray); border-radius: 8px; }
+        .edu-card .degree { font-weight: 600; color: var(--navy); margin-bottom: 4px; }
+        .edu-card .school { color: var(--blue); margin-bottom: 4px; }
+        .edu-card .year { font-size: 13px; color: var(--gray); }
+        .dissertation h3 { font-size: 20px; font-weight: 600; color: var(--navy); margin-bottom: 16px; }
+        .dissertation .abstract { font-size: 14px; color: #555; margin-bottom: 12px; line-height: 1.7; }
+        .dissertation strong { color: var(--blue); }
+        .dissertation .findings { margin-top: 20px; padding: 20px; background: var(--light-gray); border-radius: 8px; }
+        .dissertation .findings h4 { font-size: 16px; margin-bottom: 16px; color: var(--navy); }
+        .dissertation .finding { margin-bottom: 12px; padding: 12px; background: var(--white); border-radius: 6px; border-left: 3px solid var(--blue); font-size: 14px; }
+        .dissertation .finding:last-child { margin-bottom: 0; }
+        footer { padding: 32px 0; text-align: center; color: var(--gray); font-size: 13px; }
+        footer a { color: var(--blue); text-decoration: none; }
+    </style>
+</head>
+<body>
+    <div class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <img src="murali-portrait-square.jpg" alt="Muralikrishnan B" class="hero-image">
+                <div class="hero-text">
+                    <h1>Muralikrishnan B</h1>
+                    <p class="tagline">Scholar • Practitioner • Investor</p>
+                    <div class="contact-info">
+                        <span class="location">📍 Bangalore, India</span>
+                        <a href="https://linkedin.com/in/muralikrishnan" target="_blank">💼 LinkedIn</a>
+                        <a href="https://x.com/hawkeye" target="_blank">𝕏 X</a>
+                        <a href="https://www.instagram.com/murali/" target="_blank">📷 Instagram</a>
+                        <a href="https://substack.com/@hawkeye" target="_blank">✍️ Substack</a>
+                        <a href="https://medium.com/@hawkeye" target="_blank">📝 Medium</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <section class="about">
+        <div class="container">
+            <h2>About</h2>
+            <p>A senior consumer technology expert and corporate executive with 27+ years of experience across consumer tech, e-commerce, retail, and digital platforms. Former President of Xiaomi India, ex-Country Manager of eBay India, and COO of Jabong. Now an independent academic, advisor, and investor, focusing on technology platforms, consumer behavior, and ecosystem strategy.</p>
+        </div>
+    </section>
+    <section>
+        <div class="container">
+            <h2>Academics & Teaching</h2>
+            <div class="academics-grid">
+                <div class="subsection">
+                    <h3>Papers & Case Studies</h3>
+                    <ul class="pub-list">
+                        <li><span class="title">BigBasket and Quick Commerce: The Basket is big, but can it get Quicker?</span><span class="meta">Harvard Business School Case (ISB473) • 2025</span></li>
+                        <li><span class="title">An Exploratory Analyses of Consumers' Digital Focus on Bitcoin Price and Activity</span><span class="meta">Workshop on e-Business • 2023</span></li>
+                        <li><span class="title">Industry Speak: Consumer Electronics Retail by Xiaomi</span><span class="meta">Future of Retail Management (Book Chapter) • 2023</span></li>
+                    </ul>
+                </div>
+                <div class="subsection">
+                    <h3>Teaching</h3>
+                    <ul class="teach-list">
+                        <li><span class="course">Leadership at Scale & Organisation Culture</span><span class="institution">IIT Kanpur</span></li>
+                        <li><span class="course">Disruptive Innovation</span><span class="institution">ISB (Latitude GCC Program)</span></li>
+                        <li><span class="course">Platforms & Ecosystems</span><span class="institution">ISB (Strategic for Digital Economy)</span></li>
+                        <li><span class="course">Product Management</span><span class="institution">SP Jain</span></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section>
+        <div class="container">
+            <h2>Dissertation</h2>
+            <div class="dissertation">
+                <h3>The Ecosystem Vortex: Understanding Portfolio Diffusion and Lock-in in Platform Ecosystems</h3>
+                <p class="abstract"><strong>Abstract:</strong> Digital platform ecosystems are dynamic entities featuring mediated interactions that generate network effects, modular architectures that enable co-creation, and multi-product portfolios that deeply embed users. This study proposes and validates <strong>The Ecosystem Vortex</strong>, a socio-technical model integrating architectural and behavioral dynamics explaining lock-in as emerging through three sequential stages: <strong>Entry, Engagement, and Entrapment</strong>.</p>
+                <p class="abstract">Results show that Entry is driven by functional and brand triggers amplified by social influence; Engagement is sustained by ecosystem synergies and network effects; and Entrapment emerges from behavioral inertia and switching costs. The model explains 61 percent of engagement variance and 37 percent of lock-in variance.</p>
+                <div class="findings">
+                    <h4>Four Findings That Matter</h4>
+                    <div class="finding"><strong>01 — Lock-in is engineered, not emergent</strong><br>A three-stage process — Entry, Engagement, Entrenchment — each compounding the next.</div>
+                    <div class="finding"><strong>02 — Ecosystem engagement is the decisive variable</strong><br>Full mediation (β=0.69): no direct path from adoption to lock-in exists without engagement.</div>
+                    <div class="finding"><strong>03 — Habit beats switching costs 2.6× to 1</strong><br>Behavioral inertia (w=0.79) dominates cognitive friction (w=0.30). The moat is automaticity, not architecture.</div>
+                    <div class="finding"><strong>04 — Social influence is the ignition mechanism</strong><br>Mimetic desire precedes network externalities — amplifying both adoption and network effects simultaneously.</div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section>
+        <div class="container">
+            <h2>Investments</h2>
+            <div class="invest-grid">
+                <div class="invest-card"><div class="name">Fitso</div><div class="desc">Sports booking platform. Acquired by Curefit.</div><span class="status status-acquired">Acquired</span></div>
+                <div class="invest-card"><div class="name">PointAI</div><div class="desc">AI virtual try-on platform. 70+ patents. Noida.</div><span class="status status-active">Active</span></div>
+                <div class="invest-card"><div class="name">Yoska</div><div class="desc">IRONMAN India licensee. Triathlon events.</div><span class="status status-active">Active</span></div>
+                <div class="invest-card"><div class="name">Almo</div><div class="desc">D2C premium men's essentials. Gurugram.</div><span class="status status-active">Active</span></div>
+                <div class="invest-card"><div class="name">Bodhi</div><div class="desc">Online astrology consultation.</div><span class="status status-active">Active</span></div>
+                <div class="invest-card"><div class="name">Filli & Me</div><div class="desc">Kids' school backpacks (HugBags).</div><span class="status status-active">Active</span></div>
+                <div class="invest-card"><div class="name">Gubbachhi</div><div class="desc">Wooden toys with Indian themes. Bangalore.</div><span class="status status-active">Active</span></div>
+                <div class="invest-card"><div class="name">Zoomies Petcare</div><div class="desc">Pet care products. thezoomiesstore.in</div><span class="status status-active">Active</span></div>
+                <div class="invest-card"><div class="name">GOAT Life</div><div class="desc">D2C protein oatmeal. D2C Super Angels backed.</div><span class="status status-active">Active</span></div>
+                <div class="invest-card"><div class="name">Dobra</div><div class="desc">Nostalgic F&B brand. Oxbow Brands.</div><span class="status status-active">Active</span></div>
+                <div class="invest-card"><div class="name">GramFactory</div><div class="desc">B2B marketplace for kirana stores.</div><span class="status status-exited">Deadpooled</span></div>
+            </div>
+        </div>
+    </section>
+    <section>
+        <div class="container">
+            <h2>Advisory & Academic Roles</h2>
+            <ul class="advisory-list">
+                <li><div><span class="role">Investment Committee Member</span><span class="org"> • <a href="https://superangels.d2cinsider.com/" target="_blank">D2C Super Angels Fund</a></span></div><span class="period">Jul 2025 – Present</span></li>
+                <li><div><span class="role">Advisory Board Member</span><span class="org"> • Code to Enhance Learning</span></div><span class="period">Dec 2025 – Present</span></li>
+                <li><div><span class="role">Executive Fellow</span><span class="org"> • Indian School of Business</span></div><span class="period">2022 – Present</span></li>
+                <li><div><span class="role">Curator</span><span class="org"> • the hawkeye project</span></div><span class="period">Jan 2025 – Present</span></li>
+            </ul>
+        </div>
+    </section>
+    <section>
+        <div class="container">
+            <h2>Experience</h2>
+            <div class="timeline">
+                <div class="timeline-item"><div class="period">Jul 2018 – Dec 2024</div><div class="title">President (India Business)</div><div class="company">Xiaomi India</div><ul class="points"><li>Led operations, services, offline sales, retail, public affairs</li><li>Scaled market share and doubled distribution reach</li></ul></div>
+                <div class="timeline-item"><div class="period">Mar 2016 – May 2018</div><div class="title">Chief Operating Officer</div><div class="company">Jabong / Myntra (Flipkart Group)</div><ul class="points"><li>Led 400+ member team across Technology, Product, Supply Chain, CX</li></ul></div>
+                <div class="timeline-item"><div class="period">Aug 2005 – June 2013</div><div class="title">Country Manager – India, Philippines & Malaysia</div><div class="company">eBay Inc</div><ul class="points"><li>Full P&L ownership of India marketplaces business</li></ul></div>
+            </div>
+        </div>
+    </section>
+    <section>
+        <div class="container">
+            <h2>Education</h2>
+            <div class="edu-grid">
+                <div class="edu-card"><div class="degree">Executive Fellow Program (DBA)</div><div class="school">Indian School of Business</div><div class="year">2022 – 2025</div></div>
+                <div class="edu-card"><div class="degree">PGDM (Marketing, Economics, Behavioral Sciences)</div><div class="school">IIM Calcutta</div><div class="year">1995 – 1997</div></div>
+                <div class="edu-card"><div class="degree">BE (Mechanical)</div><div class="school">Osmania University, Hyderabad</div><div class="year">1991 – 1995</div></div>
+            </div>
+        </div>
+    </section>
+    <footer><div class="container"><p>© 2026 Muralikrishnan B • <a href="https://linkedin.com/in/muralikrishnan">LinkedIn</a></p></div></footer>
+</body>
+</html>
