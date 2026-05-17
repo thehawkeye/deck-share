@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="en" class="desktop">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hermes Self-Evolution — Executive Recommendation • Murali's AI Infrastructure</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Outfit:wght@300;400;500;600&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg-deep: #0b1628;
+  --bg-primary: #0f1f3d;
+  --bg-elevated: #142850;
+  --bg-card: #1a3358;
+  --text-primary: #f4f0e8;
+  --text-secondary: #a8b4cc;
+  --text-muted: #6b7fa3;
+  --accent: #c8a84b;
+  --accent-soft: rgba(200,168,75,0.40);
+  --accent-glow: rgba(200,168,75,0.15);
+  --green: #4ade80;
+  --green-soft: rgba(74,222,128,0.15);
+  --red: #f87171;
+  --amber: #fbbf24;
+  --border: rgba(255,255,255,0.04);
+  --border-light: rgba(255,255,255,0.08);
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+body { background:var(--bg-deep); color:var(--text-primary); font-family:'Outfit',sans-serif; overflow-x:hidden; }
+
+/* Desktop: horizontal magazine */
+html.desktop { scroll-snap-type: x mandatory; overflow-x: scroll; overflow-y: hidden; }
+html.desktop body { display:flex; width:1000vw; height:100vh; }
+html.desktop ::-webkit-scrollbar { display:none; }
+html.desktop .page { width:100vw; height:100vh; flex-shrink:0; scroll-snap-align:start; display:flex; align-items:center; justify-content:center; padding:6vh 8vw; position:relative; }
+html.desktop .page__inner { width:100%; max-width:1100px; }
+
+/* Mobile: vertical scroll */
+html.mobile { overflow-x:hidden; overflow-y:auto; }
+html.mobile body { display:block; width:100%; min-height:100vh; }
+html.mobile .page { width:100vw; min-height:100vh; padding:6vh 6vw; scroll-snap-align:start; display:flex; align-items:center; justify-content:center; }
+html.mobile .page__inner { height:auto; min-height:calc(100vh - 12vh); display:flex; flex-direction:column; justify-content:center; width:100%; max-width:600px; }
+html.mobile .split { grid-template-columns:1fr; height:auto; }
+html.mobile .split__left { border-right:none; border-bottom:1px solid var(--border); }
+html.mobile .matrix-grid { grid-template-columns:1fr; }
+html.mobile .card-row { flex-direction:column; gap:1.5rem; }
+html.mobile h1 { font-size:2.4rem !important; }
+html.mobile h2 { font-size:1.8rem !important; }
+html.mobile .stat-big { font-size:2.8rem !important; }
+
+/* Typography */
+h1 { font-family:'Cormorant Garamond',serif; font-size:4.2rem; font-weight:700; line-height:1.1; letter-spacing:-0.02em; color:var(--text-primary); }
+h1 .accent { color:var(--accent); }
+h2 { font-family:'Cormorant Garamond',serif; font-size:2.6rem; font-weight:600; line-height:1.2; color:var(--text-primary); margin-bottom:2rem; }
+h3 { font-family:'Outfit',sans-serif; font-size:1.1rem; font-weight:500; text-transform:uppercase; letter-spacing:0.12em; color:var(--accent); margin-bottom:0.8rem; }
+p, li { font-size:1.05rem; line-height:1.7; color:var(--text-secondary); }
+.lead { font-size:1.25rem; line-height:1.6; color:var(--text-primary); font-weight:300; }
+.mono { font-family:'JetBrains Mono',monospace; font-size:0.85rem; color:var(--text-muted); }
+.label { font-size:0.75rem; text-transform:uppercase; letter-spacing:0.1em; color:var(--text-muted); }
+
+/* Components */
+.tag { display:inline-block; padding:0.3em 0.9em; border-radius:20px; font-size:0.8rem; font-weight:500; margin-right:0.5rem; margin-bottom:0.5rem; }
+.tag-green { background:var(--green-soft); color:var(--green); }
+.tag-amber { background:rgba(251,191,36,0.15); color:var(--amber); }
+.tag-accent { background:var(--accent-soft); color:var(--accent); }
+
+.verdict-badge { display:inline-flex; align-items:center; gap:0.6rem; padding:0.8rem 1.8rem; background:var(--green-soft); border:1px solid rgba(74,222,128,0.25); border-radius:12px; margin:1.5rem 0; }
+.verdict-badge .icon { font-size:1.8rem; }
+.verdict-badge .text { font-size:1.15rem; font-weight:600; color:var(--green); }
+.verdict-badge .sub { font-size:0.85rem; color:var(--text-secondary); }
+
+.stat-row { display:flex; gap:3rem; margin:1.5rem 0; flex-wrap:wrap; }
+.stat-card { background:var(--bg-card); border:1px solid var(--border); border-radius:12px; padding:1.5rem 2rem; min-width:160px; text-align:center; }
+.stat-big { font-family:'Cormorant Garamond',serif; font-size:3.2rem; font-weight:700; color:var(--accent); line-height:1; }
+.stat-label { font-size:0.8rem; color:var(--text-muted); margin-top:0.5rem; text-transform:uppercase; letter-spacing:0.08em; }
+
+.matrix-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:1rem; margin:1.5rem 0; }
+.matrix-card { background:var(--bg-card); border:1px solid var(--border); border-radius:10px; padding:1.3rem; }
+.matrix-card .title { font-weight:600; font-size:0.95rem; margin-bottom:0.4rem; }
+.matrix-card .desc { font-size:0.85rem; color:var(--text-muted); line-height:1.5; }
+.matrix-card .stars { color:var(--accent); letter-spacing:0.1em; }
+
+.split { display:grid; grid-template-columns:1fr 1fr; gap:0; margin:1.5rem 0; border:1px solid var(--border); border-radius:12px; overflow:hidden; }
+.split__left, .split__right { padding:2rem; }
+.split__left { background:var(--bg-elevated); border-right:1px solid var(--border); }
+.split__right { background:var(--bg-primary); }
+
+.timeline { margin:2rem 0; }
+.timeline-item { display:flex; gap:1.5rem; padding:1.2rem 0; border-bottom:1px solid var(--border); }
+.timeline-phase { min-width:140px; }
+.timeline-phase .num { font-family:'Cormorant Garamond',serif; font-size:1.8rem; font-weight:700; color:var(--accent); }
+.timeline-phase .label { display:block; margin-top:0.2rem; }
+.timeline-body h4 { font-size:1rem; font-weight:600; margin-bottom:0.3rem; }
+.timeline-body p { font-size:0.9rem; }
+
+.quote-block { border-left:3px solid var(--accent); padding:1.2rem 1.8rem; margin:2rem 0; background:var(--accent-glow); border-radius:0 8px 8px 0; }
+.quote-block p { font-family:'Cormorant Garamond',serif; font-size:1.3rem; font-style:italic; color:var(--text-primary); line-height:1.5; }
+
+.checklist { list-style:none; margin:1.5rem 0; }
+.checklist li { padding:0.7rem 0; border-bottom:1px solid var(--border); display:flex; gap:0.8rem; align-items:flex-start; }
+.checklist .check { color:var(--green); font-weight:700; min-width:1.4rem; }
+.checklist .pending { color:var(--amber); font-weight:700; min-width:1.4rem; }
+
+.code-block { background:#0d1b2e; border:1px solid var(--border); border-radius:8px; padding:1.2rem; margin:1rem 0; overflow-x:auto; }
+.code-block pre { font-family:'JetBrains Mono',monospace; font-size:0.8rem; line-height:1.6; color:var(--text-secondary); }
+
+.page-num { position:absolute; bottom:3vh; right:5vw; font-size:0.75rem; color:var(--text-muted); }
+.page-subtitle { position:absolute; top:3vh; left:5vw; font-size:0.75rem; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.1em; }
+
+/* Nav dots */
+.nav-dots { position:fixed; bottom:3vh; left:50%; transform:translateX(-50%); display:flex; gap:0.6rem; z-index:100; }
+.nav-dot { width:8px; height:8px; border-radius:50%; background:var(--text-muted); cursor:pointer; transition:0.3s; border:none; }
+.nav-dot:hover, .nav-dot.active { background:var(--accent); transform:scale(1.4); }
+
+@media (max-width:768px) {
+  .nav-dots { display:none; }
+}
+</style>
+</head>
+<body>
+
+<!-- PAGE 1: COVER -->
+<div class="page" style="background:linear-gradient(135deg, var(--bg-deep) 0%, #0d1b35 40%, #111d3d 100%);">
+  <div class="page__inner" style="text-align:center;">
+    <p class="label" style="margin-bottom:1rem;">Executive Recommendation · May 2026</p>
+    <h1 style="font-size:5rem; margin-bottom:1rem;"><span class="accent">Hermes</span> Agent<br>Self-Evolution</h1>
+    <p class="lead" style="max-width:650px; margin:1.5rem auto;">Evaluation &amp; implementation plan for NousResearch's DSPy+GEPA skill optimization framework — assessed for Muralikrishnan's multi-agent AI infrastructure</p>
+    <div class="verdict-badge" style="margin:2rem auto; display:inline-flex;">
+      <span class="icon">✅</span>
+      <div style="text-align:left;">
+        <span class="text">RECOMMENDED — Install This Week</span><br>
+        <span class="sub">High-value, low-risk complement to existing self-evolution pipeline</span>
+      </div>
+    </div>
+    <div style="margin-top:2rem;">
+      <span class="tag tag-accent">DSPy + GEPA</span>
+      <span class="tag tag-green">MIT License</span>
+      <span class="tag tag-amber">$2–10/run</span>
+    </div>
+    <p class="mono" style="margin-top:2rem;">github.com/NousResearch/hermes-agent-self-evolution · 3.3k ★</p>
+  </div>
+  <span class="page-num">1 / 10</span>
+  <span class="page-subtitle">Hermes Self-Evolution Evaluation</span>
+</div>
+
+<!-- PAGE 2: THE VERDICT -->
+<div class="page">
+  <div class="page__inner">
+    <h3>ONE-LINE VERDICT</h3>
+    <div class="quote-block">
+      <p>"Install it. Run it on your top 5 skills this week. Wire it into your error-to-goal pipeline next week. Your existing system catches problems; NR-HSE prevents them at the source."</p>
+    </div>
+
+    <div class="stat-row">
+      <div class="stat-card">
+        <div class="stat-big">232</div>
+        <div class="stat-label">skills to optimize</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-big">$2–10</div>
+        <div class="stat-label">per evolution run</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-big">23+</div>
+        <div class="stat-label">constraint tests</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-big">0</div>
+        <div class="stat-label">workflow disruptions</div>
+      </div>
+    </div>
+
+    <div class="split">
+      <div class="split__left">
+        <h3 style="margin-bottom:1rem;">What It Does</h3>
+        <p style="margin-bottom:0.6rem;"><strong>Reads</strong> your SKILL.md files</p>
+        <p style="margin-bottom:0.6rem;"><strong>Evolves</strong> them using DSPy + GEPA</p>
+        <p style="margin-bottom:0.6rem;"><strong>Gates</strong> results through 5 guardrails</p>
+        <p><strong>Produces</strong> PR-ready improved skills</p>
+      </div>
+      <div class="split__right">
+        <h3 style="margin-bottom:1rem;">What It Doesn't Do</h3>
+        <p style="margin-bottom:0.6rem;">❌ Train models or modify weights</p>
+        <p style="margin-bottom:0.6rem;">❌ Auto-deploy without review</p>
+        <p style="margin-bottom:0.6rem;">❌ Replace your error pipeline</p>
+        <p>❌ Require GPU or expensive infra</p>
+      </div>
+    </div>
+  </div>
+  <span class="page-num">2 / 10</span>
+</div>
+
+<!-- PAGE 3: HOW IT WORKS -->
+<div class="page">
+  <div class="page__inner">
+    <h3>The Evolution Pipeline</h3>
+    <h2>10-Step Optimization Loop</h2>
+
+    <div class="timeline">
+      <div class="timeline-item">
+        <div class="timeline-phase"><span class="num">1–2</span><span class="label">SELECT + BUILD</span></div>
+        <div class="timeline-body"><h4>Pick a skill, build eval dataset</h4><p>Three data sources: synthetic generation, golden examples, or real session traces from ~/.hermes/sessions/*.json</p></div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-phase"><span class="num">3–4</span><span class="label">WRAP + CONFIGURE</span></div>
+        <div class="timeline-body"><h4>Wrap as DSPy module, set up GEPA</h4><p>Skill text becomes a DSPy Signature; GEPA optimizer configured with fitness metric</p></div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-phase"><span class="num">5</span><span class="label">EVOLVE</span></div>
+        <div class="timeline-body"><h4>GEPA optimization — 10 iterations</h4><p>Reads execution traces to understand WHY things fail; proposes targeted mutations; evaluates against metric</p></div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-phase"><span class="num">6–9</span><span class="label">VALIDATE + REPORT</span></div>
+        <div class="timeline-body"><h4>Constraint gates + holdout evaluation</h4><p>Test suite, size limits, caching compat, semantic preservation, PR review — all must pass</p></div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-phase"><span class="num">10</span><span class="label">DEPLOY</span></div>
+        <div class="timeline-body"><h4>Save evolved skill + metrics.json</h4><p>Before/after scores, size delta, constraints passed. Human reviews before merge to hermes-agent repo.</p></div>
+      </div>
+    </div>
+
+    <p style="margin-top:1.5rem; font-style:italic; color:var(--accent);">"GEPA reads execution traces to understand why things fail, works with as few as 3 examples, outperforms both RL and previous DSPy optimizers." — ICLR 2026 Oral</p>
+  </div>
+  <span class="page-num">3 / 10</span>
+</div>
+
+<!-- PAGE 4: YOUR EXISTING SETUP -->
+<div class="page">
+  <div class="page__inner">
+    <h3>Your Infrastructure</h3>
+    <h2>Where NR-HSE Fits</h2>
+
+    <div class="split">
+      <div class="split__left">
+        <h3 style="margin-bottom:0.8rem;">Your Existing Pipeline</h3>
+        <p style="margin-bottom:0.5rem;"><strong>Phase 1:</strong> Error Collector<br><span style="color:var(--text-muted);">Scans logs, collects anomalies</span></p>
+        <p style="margin-bottom:0.5rem;"><strong>Phase 2:</strong> Review Prioritizer<br><span style="color:var(--text-muted);">Ranks by impact × feasibility</span></p>
+        <p style="margin-bottom:0.5rem;"><strong>Phase 3:</strong> Goal Orchestrator<br><span style="color:var(--text-muted);">Generates fix goals + test cases</span></p>
+        <p><strong>Phase 4:</strong> Verifier<br><span style="color:var(--text-muted);">Confirms fixes pass tests</span></p>
+      </div>
+      <div class="split__right">
+        <h3 style="margin-bottom:0.8rem;">What NR-HSE Adds</h3>
+        <p style="margin-bottom:0.5rem;"><strong>Phase 5:</strong> Skill Evolver 🆕<br><span style="color:var(--green);">Evolves the SKILL.md itself</span></p>
+        <p style="margin-bottom:0.5rem;"><strong>Proactive:</strong> Fix before errors<br><span style="color:var(--green);">Prevention, not just detection</span></p>
+        <p style="margin-bottom:0.5rem;"><strong>Measurable:</strong> Before/after scores<br><span style="color:var(--green);">Data-driven quality metrics</span></p>
+        <p><strong>Compound:</strong> Each run builds on last<br><span style="color:var(--green);">Continuous improvement</span></p>
+      </div>
+    </div>
+
+    <div class="quote-block" style="margin-top:1.5rem;">
+      <p>"Your infrastructure knows when it breaks. NR-HSE lets it learn how not to break in the first place."</p>
+    </div>
+  </div>
+  <span class="page-num">4 / 10</span>
+</div>
+
+<!-- PAGE 5: SUITABILITY MATRIX -->
+<div class="page">
+  <div class="page__inner">
+    <h3>Suitability Assessment</h3>
+    <h2>Your Assets × NR-HSE Compatibility</h2>
+
+    <div class="matrix-grid">
+      <div class="matrix-card">
+        <div class="title">232 Skills Across 25 Categories</div>
+        <div class="stars">★★★★★</div>
+        <div class="desc">NR-HSE Phase 1 specifically evolves SKILL.md — a direct, perfect fit for your extensive skill library.</div>
+      </div>
+      <div class="matrix-card">
+        <div class="title">Hermes Session Data</div>
+        <div class="stars">★★★★★</div>
+        <div class="desc">Native HermesSessionImporter mines ~/.hermes/sessions/*.json — richer signal than Claude Code or Copilot importers.</div>
+      </div>
+      <div class="matrix-card">
+        <div class="title">Existing Self-Evolution Pipeline</div>
+        <div class="stars">★★★★☆</div>
+        <div class="desc">Can be wired as Phase 5: error detected → evolve the offending skill. Closes the reactive+proactive loop.</div>
+      </div>
+      <div class="matrix-card">
+        <div class="title">Multi-Profile Architecture</div>
+        <div class="stars">★★★★★</div>
+        <div class="desc">Each profile (admin, research, teaching) has independent skills that can be evolved separately.</div>
+      </div>
+      <div class="matrix-card">
+        <div class="title">Cron Automation on Mac Mini</div>
+        <div class="stars">★★★★☆</div>
+        <div class="desc">CLI tool, easily cron-wired like existing scripts. Bi-weekly optimization runs fit naturally.</div>
+      </div>
+      <div class="matrix-card">
+        <div class="title">gbrain Knowledge Graph</div>
+        <div class="stars">★★★☆☆</div>
+        <div class="desc">Not directly integrated, but fitness functions could be extended with graph-based evaluation.</div>
+      </div>
+    </div>
+  </div>
+  <span class="page-num">5 / 10</span>
+</div>
+
+<!-- PAGE 6: TOP CANDIDATE SKILLS -->
+<div class="page">
+  <div class="page__inner">
+    <h3>First Evolution Targets</h3>
+    <h2>Top 5 Skills to Optimize</h2>
+
+    <div class="timeline">
+      <div class="timeline-item">
+        <div class="timeline-phase"><span class="num">#1</span><span class="label">HIGHEST IMPACT</span></div>
+        <div class="timeline-body">
+          <h4>knowledge-partner</h4>
+          <p>5 SKILL.md files across profiles; complex content routing; frequent edge cases with URL detection and format handling. Expected: better ingestion accuracy, fewer missed formats.</p>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-phase"><span class="num">#2</span><span class="label">MOST COMPLEX</span></div>
+        <div class="timeline-body">
+          <h4>admin-self-improvement-loop</h4>
+          <p>19 reference files; intricate decision trees; drift/pitfall handling. Expected: crisper error detection, fewer false positives in reliability scoring.</p>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-phase"><span class="num">#3</span><span class="label">OPERATIONAL</span></div>
+        <div class="timeline-body">
+          <h4>gbrain-ops</h4>
+          <p>8 reference files; recurring auth/sync issues; PostgreSQL patterns. Expected: more reliable sync, fewer timeout escalations.</p>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-phase"><span class="num">#4</span><span class="label">PIPELINE</span></div>
+        <div class="timeline-body">
+          <h4>email-collector-pipeline</h4>
+          <p>OAuth complexity; digest/import edge cases. Expected: better deduplication, fewer silent email drops.</p>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-phase"><span class="num">#5</span><span class="label">INFRASTRUCTURE</span></div>
+        <div class="timeline-body">
+          <h4>hermes-ops</h4>
+          <p>Core operational skill; diverse operations. Expected: cleaner error handling, better gateway debugging patterns.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <span class="page-num">6 / 10</span>
+</div>
+
+<!-- PAGE 7: RISK ASSESSMENT -->
+<div class="page">
+  <div class="page__inner">
+    <h3>Risk Assessment</h3>
+    <h2>Guardrails &amp; Mitigations</h2>
+
+    <div class="matrix-grid">
+      <div class="matrix-card" style="border-left:3px solid var(--green);">
+        <div class="title">Evolved skill performs worse</div>
+        <div class="desc"><strong>Risk: Low.</strong> Constraint gates catch regressions. Holdout evaluation compares before/after scores. Human reviews evolved output before merge.</div>
+      </div>
+      <div class="matrix-card" style="border-left:3px solid var(--green);">
+        <div class="title">API cost overrun</div>
+        <div class="desc"><strong>Risk: Low.</strong> Hard-capped iterations (default 10). ~$2–10 per run. Occasional use only. Well within ₹2k/month target.</div>
+      </div>
+      <div class="matrix-card" style="border-left:3px solid var(--green);">
+        <div class="title">Dependency conflicts</div>
+        <div class="desc"><strong>Risk: Low.</strong> Isolated Python venv. pip install -e "[dev]" in dedicated directory. No impact on hermes-agent venv.</div>
+      </div>
+      <div class="matrix-card" style="border-left:3px solid var(--amber);">
+        <div class="title">Semantic drift in critical skill</div>
+        <div class="desc"><strong>Risk: Medium.</strong> Gate #4 enforces semantic preservation. Always review critical skills manually. Start with non-critical skills first.</div>
+      </div>
+      <div class="matrix-card" style="border-left:3px solid var(--green);">
+        <div class="title">Session data leak into training</div>
+        <div class="desc"><strong>Risk: Very Low.</strong> Built-in secret detection filters API keys, tokens, and PII from session data before it enters training.</div>
+      </div>
+      <div class="matrix-card" style="border-left:3px solid var(--green);">
+        <div class="title">Darwinian Evolver (AGPL v3)</div>
+        <div class="desc"><strong>Risk: None.</strong> Only Phase 4 (code evolution, not yet implemented). Separate external CLI. Not needed for Phase 1 skill evolution.</div>
+      </div>
+    </div>
+
+    <h3 style="margin-top:2rem;">5 Guardrails Every Variant Must Pass</h3>
+    <ul class="checklist">
+      <li><span class="check">1</span> Full test suite — pytest tests/ -q must pass 100%</li>
+      <li><span class="check">2</span> Size limits — Skills ≤15KB, tool descriptions ≤500 chars</li>
+      <li><span class="check">3</span> Caching compatibility — No mid-conversation changes</li>
+      <li><span class="check">4</span> Semantic preservation — Must not drift from original purpose</li>
+      <li><span class="check">5</span> PR review — All changes go through human review, never direct commit</li>
+    </ul>
+  </div>
+  <span class="page-num">7 / 10</span>
+</div>
+
+<!-- PAGE 8: IMPLEMENTATION PLAN -->
+<div class="page">
+  <div class="page__inner">
+    <h3>Implementation Roadmap</h3>
+    <h2>4-Phase Execution Plan</h2>
+
+    <div class="timeline">
+      <div class="timeline-item">
+        <div class="timeline-phase"><span class="num">PHASE 1</span><span class="label">THIS WEEK · 30 MIN</span></div>
+        <div class="timeline-body">
+          <h4>Install &amp; Validate</h4>
+          <p>Clone repo, create venv, pip install, dry-run on hermes-ops. Success: all dependencies resolve; no import errors.</p>
+          <div class="code-block"><pre>git clone https://github.com/NousResearch/hermes-agent-self-evolution.git ~/Documents/Codex/hermes-agent-self-evolution
+cd ~/Documents/Codex/hermes-agent-self-evolution
+python3.11 -m venv .venv && source .venv/bin/activate
+pip install -e ".[dev]"
+export HERMES_AGENT_REPO=~/.hermes/hermes-agent
+python -m evolution.skills.evolve_skill --skill hermes-ops --iterations 3 --dry-run</pre></div>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-phase"><span class="num">PHASE 2</span><span class="label">THIS WEEK · 2 HOURS</span></div>
+        <div class="timeline-body">
+          <h4>First Evolution Runs</h4>
+          <p>Evolve 1–2 non-critical skills. Compare before/after. Review for semantic drift. Deploy if scores improve.</p>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-phase"><span class="num">PHASE 3</span><span class="label">NEXT WEEK · 3 HOURS</span></div>
+        <div class="timeline-body">
+          <h4>Wire Into Self-Evolution Pipeline</h4>
+          <p>Add "evolve_skill" action to cron_orchestrator.py. Error → goal → evolve the offending skill → deploy fix.</p>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-phase"><span class="num">PHASE 4</span><span class="label">ONGOING</span></div>
+        <div class="timeline-body">
+          <h4>Scheduled Optimization</h4>
+          <p>Bi-weekly cron: identify top-3 skills by error frequency, evolve each, post diff to #admin for review.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <span class="page-num">8 / 10</span>
+</div>
+
+<!-- PAGE 9: VALUE PROJECTION -->
+<div class="page">
+  <div class="page__inner">
+    <h3>Value Projection</h3>
+    <h2>What This Means For You</h2>
+
+    <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:1.5rem; margin:2rem 0;">
+      <div style="background:var(--bg-card); border:1px solid var(--border); border-radius:12px; padding:1.8rem; text-align:center;">
+        <div style="font-size:2.5rem; margin-bottom:0.5rem;">⚡</div>
+        <h4 style="font-size:0.9rem; text-transform:uppercase; letter-spacing:0.08em; color:var(--accent); margin-bottom:0.8rem;">Immediate (Week 1–2)</h4>
+        <p style="font-size:0.9rem; line-height:1.5;">~5 skills measurably improved<br>~$20–50 total API cost<br>0 workflow disruption<br>PR-reviewed before deploy</p>
+      </div>
+      <div style="background:var(--bg-card); border:1px solid var(--border); border-radius:12px; padding:1.8rem; text-align:center;">
+        <div style="font-size:2.5rem; margin-bottom:0.5rem;">🔄</div>
+        <h4 style="font-size:0.9rem; text-transform:uppercase; letter-spacing:0.08em; color:var(--accent); margin-bottom:0.8rem;">Medium-Term (Month 1–2)</h4>
+        <p style="font-size:0.9rem; line-height:1.5;">Self-healing skills<br>Error triggers evolution<br>Compound improvement<br>Data-driven skill quality</p>
+      </div>
+      <div style="background:var(--bg-card); border:1px solid var(--border); border-radius:12px; padding:1.8rem; text-align:center;">
+        <div style="font-size:2.5rem; margin-bottom:0.5rem;">🚀</div>
+        <h4 style="font-size:0.9rem; text-transform:uppercase; letter-spacing:0.08em; color:var(--accent); margin-bottom:0.8rem;">Long-Term (Quarter 1+)</h4>
+        <p style="font-size:0.9rem; line-height:1.5;">Autonomous skill maintenance<br>Cross-profile learning<br>Competitive advantage<br>Literally self-improving AI</p>
+      </div>
+    </div>
+
+    <div class="split" style="margin-top:1.5rem;">
+      <div class="split__left">
+        <h3 style="margin-bottom:0.8rem;">DIY Approach (ME-SE only)</h3>
+        <p style="color:var(--amber);">Reactive only. Catches errors but doesn't prevent them. Skill content stays static. Sufficient, but suboptimal.</p>
+      </div>
+      <div class="split__right">
+        <h3 style="margin-bottom:0.8rem;">Integrated (ME-SE + NR-HSE)</h3>
+        <p style="color:var(--green);">Reactive + Proactive. Catches AND prevents errors. Closed loop. Compound improvement. Recommended.</p>
+      </div>
+    </div>
+
+    <div class="quote-block">
+      <p>"Few Hermes users have this. The combination of error-to-goal pipeline + skill evolution creates a genuinely self-improving agent infrastructure."</p>
+    </div>
+  </div>
+  <span class="page-num">9 / 10</span>
+</div>
+
+<!-- PAGE 10: DECISION + NEXT STEPS -->
+<div class="page" style="background:linear-gradient(135deg, #0d1b35 0%, var(--bg-deep) 60%, #0a1525 100%);">
+  <div class="page__inner" style="text-align:center;">
+    <h3>Decision Checklist</h3>
+    <h2 style="margin-bottom:2rem;">Ready to Proceed?</h2>
+
+    <ul class="checklist" style="max-width:600px; margin:0 auto 2rem auto;">
+      <li><span class="check">✓</span> MIT licensed — no legal risk</li>
+      <li><span class="check">✓</span> Phase 1 implemented + tested (23+ tests)</li>
+      <li><span class="check">✓</span> Native Hermes session importer</li>
+      <li><span class="check">✓</span> API costs within ₹2k/month target</li>
+      <li><span class="check">✓</span> 5 guardrails prevent unsafe deploys</li>
+      <li><span class="check">✓</span> Complements existing pipeline</li>
+      <li><span class="check">✓</span> Low disk footprint (~100MB)</li>
+      <li><span class="check">✓</span> Isolated venv — no conflicts</li>
+      <li><span class="pending">◻</span> Murali approval — <strong>AWAITING</strong></li>
+    </ul>
+
+    <div class="verdict-badge" style="margin:2rem auto; display:inline-flex;">
+      <span class="icon">✅</span>
+      <div style="text-align:left;">
+        <span class="text">INSTALL — This Week</span><br>
+        <span class="sub">Start with Phase 1 (clone + dry run). Evolve hermes-ops as proof of concept.</span>
+      </div>
+    </div>
+
+    <div style="margin-top:2rem;">
+      <span class="tag tag-accent">30 min install</span>
+      <span class="tag tag-green">$2–10 first run</span>
+      <span class="tag tag-amber">0 workflow risk</span>
+    </div>
+
+    <p class="mono" style="margin-top:2rem;">Evaluation by Admin/Hermes · deepseek-v4-pro · 2026-05-17<br>github.com/NousResearch/hermes-agent-self-evolution</p>
+  </div>
+  <span class="page-num">10 / 10</span>
+  <span class="page-subtitle">Hermes Self-Evolution Evaluation</span>
+</div>
+
+<!-- Navigation -->
+<div class="nav-dots" id="navDots"></div>
+
+<script>
+(function(){
+  const isMobile = window.innerWidth < 768 || /Mobi|Android/i.test(navigator.userAgent);
+  document.documentElement.classList.add(isMobile ? 'mobile' : 'desktop');
+  document.documentElement.classList.remove(isMobile ? 'desktop' : 'mobile');
+
+  const pages = document.querySelectorAll('.page');
+  const dotsContainer = document.getElementById('navDots');
+  for(let i=0; i<pages.length; i++){
+    const dot = document.createElement('button');
+    dot.className = 'nav-dot';
+    dot.setAttribute('aria-label','Page '+(i+1));
+    dot.dataset.page = i+1;
+    dot.addEventListener('click', ()=>{
+      const isMob = document.documentElement.classList.contains('mobile');
+      pages[i].scrollIntoView({inline:'start', block:isMob?'start':'nearest', behavior:'smooth'});
+    });
+    dotsContainer.appendChild(dot);
+  }
+
+  // Active dot tracking
+  const observer = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){
+        const idx = Array.from(pages).indexOf(e.target);
+        document.querySelectorAll('.nav-dot').forEach((d,j)=>d.classList.toggle('active',j===idx));
+      }
+    });
+  }, {threshold:0.5});
+  pages.forEach(p=>observer.observe(p));
+
+  window.addEventListener('resize',()=>{
+    const isMob = window.innerWidth < 768 || /Mobi|Android/i.test(navigator.userAgent);
+    const html = document.documentElement;
+    if(isMob && html.classList.contains('desktop')){html.classList.remove('desktop');html.classList.add('mobile');}
+    else if(!isMob && html.classList.contains('mobile')){html.classList.remove('mobile');html.classList.add('desktop');}
+  });
+})();
+</script>
+
+</body>
+</html>
