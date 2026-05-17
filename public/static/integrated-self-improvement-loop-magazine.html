@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en" class="desktop">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Self-Improvement Loop — Integrated Architecture • Murali's AI Infrastructure</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Outfit:wght@300;400;500;600&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg-deep: #0b1628;
+  --bg-primary: #0f1f3d;
+  --bg-elevated: #142850;
+  --bg-card: #1a3358;
+  --text-primary: #f4f0e8;
+  --text-secondary: #a8b4cc;
+  --text-muted: #6b7fa3;
+  --accent: #c8a84b;
+  --accent-soft: rgba(200,168,75,0.40);
+  --accent-glow: rgba(200,168,75,0.15);
+  --green: #4ade80;
+  --green-soft: rgba(74,222,128,0.15);
+  --blue: #60a5fa;
+  --blue-soft: rgba(96,165,250,0.12);
+  --amber: #fbbf24;
+  --border: rgba(255,255,255,0.04);
+  --border-light: rgba(255,255,255,0.08);
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+body { background:var(--bg-deep); color:var(--text-primary); font-family:'Outfit',sans-serif; }
+
+html.desktop { scroll-snap-type: x mandatory; overflow-x: scroll; overflow-y: hidden; }
+html.desktop body { display:flex; width:800vw; height:100vh; }
+html.desktop ::-webkit-scrollbar { display:none; }
+html.desktop .page { width:100vw; height:100vh; flex-shrink:0; scroll-snap-align:start; display:flex; align-items:center; justify-content:center; padding:6vh 8vw; position:relative; }
+html.desktop .page__inner { width:100%; max-width:1100px; }
+
+html.mobile { overflow-x:hidden; overflow-y:auto; }
+html.mobile body { display:block; width:100%; min-height:100vh; }
+html.mobile .page { width:100vw; min-height:100vh; padding:6vh 6vw; display:flex; align-items:center; justify-content:center; }
+html.mobile .page__inner { height:auto; min-height:calc(100vh-12vh); width:100%; max-width:600px; }
+html.mobile .split { grid-template-columns:1fr; }
+html.mobile h1 { font-size:2.4rem !important; }
+html.mobile h2 { font-size:1.8rem !important; }
+html.mobile .card-row { flex-direction:column; gap:1.5rem; }
+
+h1 { font-family:'Cormorant Garamond',serif; font-size:4rem; font-weight:700; line-height:1.1; letter-spacing:-0.02em; }
+h1 .accent { color:var(--accent); }
+h2 { font-family:'Cormorant Garamond',serif; font-size:2.4rem; font-weight:600; line-height:1.2; margin-bottom:1.8rem; }
+h3 { font-family:'Outfit',sans-serif; font-size:1rem; font-weight:500; text-transform:uppercase; letter-spacing:0.12em; color:var(--accent); margin-bottom:0.8rem; }
+p, li { font-size:1.05rem; line-height:1.7; color:var(--text-secondary); }
+.lead { font-size:1.2rem; line-height:1.6; color:var(--text-primary); font-weight:300; }
+.mono { font-family:'JetBrains Mono',monospace; font-size:0.82rem; color:var(--text-muted); }
+.label { font-size:0.72rem; text-transform:uppercase; letter-spacing:0.1em; color:var(--text-muted); }
+
+.tag { display:inline-block; padding:0.3em 0.9em; border-radius:20px; font-size:0.8rem; font-weight:500; margin:0.3rem; }
+.tag-green { background:var(--green-soft); color:var(--green); }
+.tag-blue { background:var(--blue-soft); color:var(--blue); }
+.tag-accent { background:var(--accent-soft); color:var(--accent); }
+
+.verdict-badge { display:inline-flex; align-items:center; gap:0.6rem; padding:0.8rem 1.8rem; background:var(--green-soft); border:1px solid rgba(74,222,128,0.25); border-radius:12px; margin:1.5rem 0; }
+.verdict-badge .icon { font-size:1.8rem; }
+.verdict-badge .text { font-size:1.1rem; font-weight:600; color:var(--green); }
+
+.card-row { display:flex; gap:1.5rem; margin:1.5rem 0; }
+.card { background:var(--bg-card); border:1px solid var(--border); border-radius:12px; padding:1.5rem; flex:1; }
+.card h4 { font-size:1rem; font-weight:600; margin-bottom:0.6rem; }
+.card .num { font-family:'Cormorant Garamond',serif; font-size:2.5rem; font-weight:700; color:var(--accent); line-height:1; margin-bottom:0.3rem; }
+.card p { font-size:0.9rem; line-height:1.5; }
+
+.engine-box { background:var(--bg-elevated); border:2px solid var(--border-light); border-radius:16px; padding:1.8rem; margin:1rem 0; }
+.engine-box.reactive { border-left:4px solid var(--amber); }
+.engine-box.proactive { border-left:4px solid var(--green); }
+
+.split { display:grid; grid-template-columns:1fr 1fr; gap:0; margin:1.5rem 0; border:1px solid var(--border); border-radius:12px; overflow:hidden; }
+.split__left, .split__right { padding:2rem; }
+.split__left { background:var(--bg-elevated); border-right:1px solid var(--border); }
+.split__right { background:var(--bg-primary); }
+
+.flo { display:flex; align-items:flex-start; gap:2rem; margin:2rem 0; }
+.flo-steps { flex:1; }
+.flo-step { display:flex; gap:1rem; padding:1rem 0; border-bottom:1px solid var(--border); align-items:flex-start; }
+.flo-step .icon-box { width:44px; height:44px; border-radius:10px; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:1.1rem; flex-shrink:0; }
+.flo-step .icon-box.amber { background:rgba(251,191,36,0.2); color:var(--amber); }
+.flo-step .icon-box.green { background:var(--green-soft); color:var(--green); }
+.flo-step .icon-box.blue { background:var(--blue-soft); color:var(--blue); }
+.flo-step h5 { font-size:0.95rem; font-weight:600; margin-bottom:0.2rem; }
+.flo-step p { font-size:0.85rem; line-height:1.5; }
+.flo-diagram { flex:1; background:var(--bg-card); border:1px solid var(--border); border-radius:12px; padding:2rem; font-family:'JetBrains Mono',monospace; font-size:0.7rem; line-height:1.8; color:var(--text-secondary); white-space:pre; overflow-x:auto; }
+
+.checklist { list-style:none; margin:1.5rem 0; }
+.checklist li { padding:0.7rem 0; border-bottom:1px solid var(--border); display:flex; gap:0.8rem; align-items:flex-start; }
+.checklist .check { color:var(--green); font-weight:700; min-width:1.4rem; }
+.checklist .pend { color:var(--amber); font-weight:700; min-width:1.4rem; }
+
+.code-block { background:#0d1b2e; border:1px solid var(--border); border-radius:8px; padding:1.2rem; margin:1rem 0; overflow-x:auto; }
+.code-block pre { font-family:'JetBrains Mono',monospace; font-size:0.78rem; line-height:1.6; color:var(--text-secondary); }
+
+.table-wrap { overflow-x:auto; margin:1.5rem 0; }
+table { width:100%; border-collapse:collapse; font-size:0.9rem; }
+th { text-align:left; padding:0.6rem 0.8rem; border-bottom:2px solid var(--border); color:var(--accent); font-weight:600; font-size:0.8rem; text-transform:uppercase; letter-spacing:0.05em; }
+td { padding:0.6rem 0.8rem; border-bottom:1px solid var(--border); color:var(--text-secondary); }
+
+.quote-block { border-left:3px solid var(--accent); padding:1.2rem 1.8rem; margin:2rem 0; background:var(--accent-glow); border-radius:0 8px 8px 0; }
+.quote-block p { font-family:'Cormorant Garamond',serif; font-size:1.3rem; font-style:italic; color:var(--text-primary); }
+
+.page-num { position:absolute; bottom:3vh; right:5vw; font-size:0.75rem; color:var(--text-muted); }
+.page-subtitle { position:absolute; top:3vh; left:5vw; font-size:0.75rem; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.1em; }
+
+.nav-dots { position:fixed; bottom:3vh; left:50%; transform:translateX(-50%); display:flex; gap:0.6rem; z-index:100; }
+.nav-dot { width:8px; height:8px; border-radius:50%; background:var(--text-muted); cursor:pointer; transition:0.3s; border:none; }
+.nav-dot:hover, .nav-dot.active { background:var(--accent); transform:scale(1.4); }
+@media (max-width:768px) { .nav-dots { display:none; } }
+
+.metric-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:1rem; margin:1.5rem 0; }
+.metric-card { background:var(--bg-card); border:1px solid var(--border); border-radius:10px; padding:1.3rem; text-align:center; }
+.metric-card .val { font-family:'Cormorant Garamond',serif; font-size:2rem; font-weight:700; color:var(--accent); }
+.metric-card .lbl { font-size:0.75rem; color:var(--text-muted); margin-top:0.3rem; }
+</style>
+</head>
+<body>
+
+<!-- PAGE 1: COVER -->
+<div class="page" style="background:linear-gradient(135deg, var(--bg-deep) 0%, #0d1b35 40%, #111d3d 100%);">
+  <div class="page__inner" style="text-align:center;">
+    <p class="label" style="margin-bottom:1rem;">Implementation Plan · May 2026</p>
+    <h1 style="font-size:4.5rem; margin-bottom:1rem;">Integrated<br><span class="accent">Self-Improvement</span><br>Loop</h1>
+    <p class="lead" style="max-width:650px; margin:1.5rem auto;">ME-SE + NR-HSE — reactive error detection meets proactive skill evolution. A closed-loop system that catches problems AND prevents them.</p>
+    <div class="verdict-badge" style="margin:2rem auto; display:inline-flex;">
+      <span class="icon">⚡</span>
+      <div style="text-align:left;">
+        <span class="text">Phase 1 COMPLETE — Ready for Phase 2</span><br>
+        <span class="sub">NR-HSE installed · 299 skills indexed · Dry runs passed</span>
+      </div>
+    </div>
+    <span class="tag tag-green">Installed</span> <span class="tag tag-blue">299 skills</span> <span class="tag tag-accent">$2-5/run</span>
+  </div>
+  <span class="page-num">1 / 8</span>
+  <span class="page-subtitle">Integrated Self-Improvement Loop</span>
+</div>
+
+<!-- PAGE 2: TWO ENGINES -->
+<div class="page">
+  <div class="page__inner">
+    <h3>System Architecture</h3>
+    <h2>Two Engines, One Loop</h2>
+
+    <div class="engine-box reactive">
+      <h4 style="color:var(--amber); margin-bottom:0.5rem;">🟡 Engine A: ME-SE (Reactive)</h4>
+      <p style="margin-bottom:0.3rem;"><strong>Location:</strong> <span class="mono">~/.hermes/scripts/self_evolution/</span></p>
+      <p style="margin-bottom:0.3rem;"><strong>Schedule:</strong> Hourly collect → 6h review → 2× daily orchestrate</p>
+      <p><strong>Function:</strong> Detects errors in logs → Ranks by impact × feasibility → Generates fix goals → Verifies fixes</p>
+    </div>
+
+    <div class="engine-box proactive" style="margin-top:1.2rem;">
+      <h4 style="color:var(--green); margin-bottom:0.5rem;">🟢 Engine B: NR-HSE (Proactive)</h4>
+      <p style="margin-bottom:0.3rem;"><strong>Location:</strong> <span class="mono">~/Documents/Codex/hermes-agent-self-evolution/</span></p>
+      <p style="margin-bottom:0.3rem;"><strong>Schedule:</strong> On-demand / triggered by ME-SE goals</p>
+      <p><strong>Function:</strong> Reads SKILL.md → Generates eval dataset → Evolves via DSPy+GEPA → Gates through constraints → Outputs improved skill</p>
+    </div>
+
+    <div class="quote-block">
+      <p>"ME-SE catches problems after they occur. NR-HSE evolves skills to prevent problems at the source. Together, they create a genuinely self-improving agent."</p>
+    </div>
+  </div>
+  <span class="page-num">2 / 8</span>
+</div>
+
+<!-- PAGE 3: THE LOOP -->
+<div class="page">
+  <div class="page__inner">
+    <h3>Integrated Loop</h3>
+    <h2>From Error to Evolution</h2>
+
+    <div class="flo">
+      <div class="flo-steps">
+        <div class="flo-step"><div class="icon-box amber">1</div><div><h5>COLLECT</h5><p>Hourly error scan from all log sources. ME-SE Phase 1.</p></div></div>
+        <div class="flo-step"><div class="icon-box amber">2</div><div><h5>PRIORITIZE</h5><p>Rank by impact, feasibility, frequency. ME-SE Phase 2.</p></div></div>
+        <div class="flo-step"><div class="icon-box amber">3</div><div><h5>GENERATE GOAL</h5><p>Structured fix goal with test cases. ME-SE Phase 3.</p></div></div>
+        <div class="flo-step"><div class="icon-box green">4</div><div><h5>ROUTE</h5><p>NEW: Route to fix OR evolve based on goal type.</p></div></div>
+        <div class="flo-step"><div class="icon-box blue">5</div><div><h5>EVOLVE SKILL</h5><p>NR-HSE optimizes SKILL.md via GEPA. 10 iterations.</p></div></div>
+        <div class="flo-step"><div class="icon-box green">6</div><div><h5>REVIEW + DEPLOY</h5><p>Human approval gate → deploy to profile → verify.</p></div></div>
+      </div>
+      <div class="flo-diagram">
+┌──────────────────────┐
+│   ERROR COLLECTOR    │ ← logs, cron
+│   (hourly · P1)      │   failures
+└────────┬─────────────┘
+         ▼
+┌──────────────────────┐
+│   REVIEW PRIORITIZER │ ← rank by
+│   (every 6h · P2)    │   impact×feas
+└────────┬─────────────┘
+         ▼
+┌──────────────────────┐
+│   GOAL ORCHESTRATOR  │ ← generate
+│   (2× daily · P3)    │   goals+tests
+└────────┬─────────────┘
+         ▼
+    ╔══════════╗
+    ║  ROUTER  ║ NEW
+    ╚═══╤══╤═══╝
+   fix  │  │ evolve
+        ▼  ▼
+┌────────┐ ┌──────────┐
+│ MANUAL │ │ NR-HSE   │
+│  FIX   │ │ EVOLVER  │
+│        │ │ GEPA×10  │
+└────────┘ └────┬─────┘
+                ▼
+         ┌──────────┐
+         │  HUMAN   │
+         │  REVIEW  │
+         └────┬─────┘
+              ▼
+         ┌──────────┐
+         │  DEPLOY  │
+         │  +VERIFY │
+         └──────────┘</div>
+    </div>
+  </div>
+  <span class="page-num">3 / 8</span>
+</div>
+
+<!-- PAGE 4: TOP 5 SKILLS -->
+<div class="page">
+  <div class="page__inner">
+    <h3>Prioritized Targets</h3>
+    <h2>Top 5 Skills for First Evolution</h2>
+
+    <div class="table-wrap">
+    <table>
+      <tr><th>#</th><th>Skill</th><th>Size</th><th>Refs</th><th>Why Priority #1</th><th>Expected Δ</th></tr>
+      <tr><td style="color:var(--accent);font-weight:700;">1</td><td><strong>hermes-agent</strong></td><td>45KB</td><td>5</td><td>Core skill loaded by every profile. 175+ session references. Foundation for all agent behavior.</td><td>Better CLI guidance, crisper setup instructions</td></tr>
+      <tr><td style="color:var(--accent);font-weight:700;">2</td><td><strong>gbrain-ops</strong></td><td>96KB</td><td>20</td><td>Largest operational skill. 3 cron jobs. Most complex maintenance surface.</td><td>Fewer PSQL errors, better sync patterns</td></tr>
+      <tr><td style="color:var(--accent);font-weight:700;">3</td><td><strong>admin-self-improvement-loop</strong></td><td>18KB</td><td>13</td><td>Our own pipeline. Self-referential — improving the improver.</td><td>Meta-benefit: better error detection</td></tr>
+      <tr><td style="color:var(--accent);font-weight:700;">4</td><td><strong>email-collector-cron-pipeline</strong></td><td>43KB</td><td>15</td><td>Known edge cases with digest/import/OAuth.</td><td>Better dedup, fewer silent drops</td></tr>
+      <tr><td style="color:var(--accent);font-weight:700;">5</td><td><strong>discord-post-from-cron</strong></td><td>5KB</td><td>2</td><td>7 cron jobs reference it — highest cron linkage. Small, high-leverage.</td><td>More reliable Discord delivery</td></tr>
+    </table>
+    </div>
+
+    <h3 style="margin-top:1.5rem;">Skill Registry</h3>
+    <div class="card-row">
+      <div class="card"><div class="num">299</div><p>unique skills indexed</p></div>
+      <div class="card"><div class="num">586</div><p>SKILL.md files in registry</p></div>
+      <div class="card"><div class="num">4</div><p>profiles covered</p></div>
+      <div class="card"><div class="num">$15</div><p>est. first batch cost</p></div>
+    </div>
+  </div>
+  <span class="page-num">4 / 8</span>
+</div>
+
+<!-- PAGE 5: INSTALL STATUS -->
+<div class="page">
+  <div class="page__inner">
+    <h3>Phase 1 Status</h3>
+    <h2>Installation — COMPLETE ✅</h2>
+
+    <ul class="checklist">
+      <li><span class="check">✓</span> <strong>Repo cloned</strong> — <span class="mono">~/Documents/Codex/hermes-agent-self-evolution</span></li>
+      <li><span class="check">✓</span> <strong>Python 3.11 venv</strong> — dspy-3.2.1, gepa-0.0.27, litellm, OpenAI</li>
+      <li><span class="check">✓</span> <strong>Skill registry</strong> — 299 skills, 586 SKILL.md files copied to <span class="mono">~/.hermes/hermes-agent/skills/</span></li>
+      <li><span class="check">✓</span> <strong>Dry run passed</strong> — hermes-agent, discord-channel-routing both validated</li>
+      <li><span class="check">✓</span> <strong>HERMES_AGENT_REPO</strong> — env var pointing to <span class="mono">~/.hermes/hermes-agent</span></li>
+    </ul>
+
+    <h3 style="margin-top:2rem;">Ready for Phase 2 — First Evolution Run</h3>
+    <div class="code-block"><pre>cd ~/Documents/Codex/hermes-agent-self-evolution
+source .venv/bin/activate
+export HERMES_AGENT_REPO=~/.hermes/hermes-agent
+
+python -m evolution.skills.evolve_skill \
+  --skill admin-self-improvement-loop \
+  --iterations 10 \
+  --eval-source synthetic</pre></div>
+
+    <div class="metric-grid" style="margin-top:1.5rem;">
+      <div class="metric-card"><div class="val">$2-5</div><div class="lbl">per skill evolution</div></div>
+      <div class="metric-card"><div class="val">~10min</div><div class="lbl">per evolution run</div></div>
+      <div class="metric-card"><div class="val">5</div><div class="lbl">guardrails enforced</div></div>
+      <div class="metric-card"><div class="val">0</div><div class="lbl">auto-deploy risk</div></div>
+    </div>
+  </div>
+  <span class="page-num">5 / 8</span>
+</div>
+
+<!-- PAGE 6: SCHEDULE -->
+<div class="page">
+  <div class="page__inner">
+    <h3>Operational Cadence</h3>
+    <h2>Weekly Optimization Schedule</h2>
+
+    <div class="flo">
+      <div class="flo-steps">
+        <div class="flo-step"><div class="icon-box blue">M</div><div><h5>MONDAY 8AM</h5><p>Weekly skill optimizer runs. Reads last week's error report. Identifies top-3 error-prone skills. Evolves each via NR-HSE.</p></div></div>
+        <div class="flo-step"><div class="icon-box amber">H</div><div><h5>HOURLY</h5><p>ME-SE error collector scans all logs. Collects anomalies into errors_collected.jsonl.</p></div></div>
+        <div class="flo-step"><div class="icon-box amber">6H</div><div><h5>EVERY 6 HOURS</h5><p>ME-SE review prioritizer ranks errors. Generates fix goals for top issues.</p></div></div>
+        <div class="flo-step"><div class="icon-box amber">2×</div><div><h5>TWICE DAILY</h5><p>ME-SE goal orchestrator executes goals. Routes to evolve_skill or manual fix.</p></div></div>
+        <div class="flo-step"><div class="icon-box green">PR</div><div><h5>ON EVOLUTION</h5><p>Evolved skills posted to #admin. Human reviews diff + metrics. Approves or rejects.</p></div></div>
+      </div>
+      <div class="flo-diagram" style="font-size:0.68rem;">
+WEEKLY CYCLE
+─────────────────
+MON 08:00  skill-optimizer
+           ├─ read week's errors
+           ├─ rank skills by freq
+           ├─ evolve top 3
+           └─ post to #admin
+
+DAILY CYCLE
+─────────────────
+09:12  goal-orchestrator
+       ├─ execute pending goals
+       ├─ route evolve_skill
+       └─ verify/manual fix
+
+21:12  goal-orchestrator
+       (same as morning)
+
+6H CYCLE
+─────────────────
+:47  review-prioritizer
+      ├─ score collected errors
+      ├─ rank by composite
+      └─ write goals
+
+HOURLY CYCLE
+─────────────────
+:17  error-collector
+      ├─ scan gateway logs
+      ├─ scan cron outputs
+      ├─ scan system logs
+      └─ write errors.jsonl</div>
+    </div>
+  </div>
+  <span class="page-num">6 / 8</span>
+</div>
+
+<!-- PAGE 7: GUARDRAILS -->
+<div class="page">
+  <div class="page__inner">
+    <h3>Safety</h3>
+    <h2>Guardrails &amp; Success Metrics</h2>
+
+    <div class="split">
+      <div class="split__left">
+        <h3 style="margin-bottom:1rem;">Never Cross These Lines</h3>
+        <ul class="checklist">
+          <li><span class="check">🛡</span> Never auto-deploy — always human review gate</li>
+          <li><span class="check">🛡</span> Constraint gates must ALL pass</li>
+          <li><span class="check">🛡</span> Rollback ready — baseline preserved</li>
+          <li><span class="check">🛡</span> Cost cap: $25/week max</li>
+          <li><span class="check">🛡</span> Dry run first on new skill types</li>
+          <li><span class="check">🛡</span> Secret detection active on session data</li>
+          <li><span class="check">🛡</span> Profile isolation — admin first</li>
+        </ul>
+      </div>
+      <div class="split__right">
+        <h3 style="margin-bottom:1rem;">30-Day Success Targets</h3>
+        <ul class="checklist">
+          <li><span class="check">📊</span> ≥10 skills evolved</li>
+          <li><span class="check">📊</span> ≥70% show improvement >0%</li>
+          <li><span class="check">📊</span> -20% errors per evolved skill</li>
+          <li><span class="check">📊</span> Human intervention rate ↓</li>
+          <li><span class="check">📊</span> ROI: <$5 per meaningful improvement</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="metric-grid" style="margin-top:1.5rem;">
+      <div class="metric-card"><div class="val">$25</div><div class="lbl">weekly cost cap</div></div>
+      <div class="metric-card"><div class="val">5</div><div class="lbl">constraint gates</div></div>
+      <div class="metric-card"><div class="val">100%</div><div class="lbl">human-reviewed</div></div>
+      <div class="metric-card"><div class="val">0</div><div class="lbl">auto-deploys</div></div>
+    </div>
+  </div>
+  <span class="page-num">7 / 8</span>
+</div>
+
+<!-- PAGE 8: NEXT STEPS -->
+<div class="page" style="background:linear-gradient(135deg, #0d1b35 0%, var(--bg-deep) 60%, #0a1525 100%);">
+  <div class="page__inner" style="text-align:center;">
+    <h3>Execution</h3>
+    <h2>Next Steps — Right Now</h2>
+
+    <div class="card-row" style="max-width:900px; margin:2rem auto;">
+      <div class="card" style="text-align:center;">
+        <div style="font-size:2.5rem; margin-bottom:0.5rem;">1</div>
+        <h4>Run First Evolution</h4>
+        <p style="font-size:0.9rem;">Evolve admin-self-improvement-loop with 10 iterations. Review output.</p>
+      </div>
+      <div class="card" style="text-align:center;">
+        <div style="font-size:2.5rem; margin-bottom:0.5rem;">2</div>
+        <h4>Wire Into Pipeline</h4>
+        <p style="font-size:0.9rem;">Add evolve_skill action to cron_orchestrator.py. Test with a real goal.</p>
+      </div>
+      <div class="card" style="text-align:center;">
+        <div style="font-size:2.5rem; margin-bottom:0.5rem;">3</div>
+        <h4>Register Cron Job</h4>
+        <p style="font-size:0.9rem;">Weekly skill optimizer every Monday 8 AM. Fully automated.</p>
+      </div>
+    </div>
+
+    <div class="verdict-badge" style="margin:2rem auto; display:inline-flex;">
+      <span class="icon">🚀</span>
+      <div style="text-align:left;">
+        <span class="text">System is LIVE — Phase 1 Complete</span><br>
+        <span class="sub">NR-HSE installed on Mac Mini. Ready for first evolution run.</span>
+      </div>
+    </div>
+
+    <p class="mono" style="margin-top:2rem;">Plan v1.0 — 2026-05-17 — Admin/Hermes<br>NR-HSE: github.com/NousResearch/hermes-agent-self-evolution</p>
+  </div>
+  <span class="page-num">8 / 8</span>
+  <span class="page-subtitle">Integrated Self-Improvement Loop</span>
+</div>
+
+<div class="nav-dots" id="navDots"></div>
+
+<script>
+(function(){
+  const isMobile = window.innerWidth < 768 || /Mobi|Android/i.test(navigator.userAgent);
+  document.documentElement.classList.add(isMobile ? 'mobile' : 'desktop');
+  document.documentElement.classList.remove(isMobile ? 'desktop' : 'mobile');
+  const pages = document.querySelectorAll('.page');
+  const dotsContainer = document.getElementById('navDots');
+  for(let i=0; i<pages.length; i++){
+    const dot = document.createElement('button');
+    dot.className = 'nav-dot';
+    dot.setAttribute('aria-label','Page '+(i+1));
+    dot.dataset.page = i+1;
+    dot.addEventListener('click', ()=>{
+      const isMob = document.documentElement.classList.contains('mobile');
+      pages[i].scrollIntoView({inline:'start', block:isMob?'start':'nearest', behavior:'smooth'});
+    });
+    dotsContainer.appendChild(dot);
+  }
+  const observer = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){
+        const idx = Array.from(pages).indexOf(e.target);
+        document.querySelectorAll('.nav-dot').forEach((d,j)=>d.classList.toggle('active',j===idx));
+      }
+    });
+  }, {threshold:0.5});
+  pages.forEach(p=>observer.observe(p));
+  window.addEventListener('resize',()=>{
+    const isMob = window.innerWidth < 768 || /Mobi|Android/i.test(navigator.userAgent);
+    const html = document.documentElement;
+    if(isMob && html.classList.contains('desktop')){html.classList.remove('desktop');html.classList.add('mobile');}
+    else if(!isMob && html.classList.contains('mobile')){html.classList.remove('mobile');html.classList.add('desktop');}
+  });
+})();
+</script>
+
+</body>
+</html>
