@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>15 AI Accounts · Daily Digest · Monday, May 18, 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Outfit:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+    --bg-deep: #0a0e17;
+    --bg-primary: #0f1624;
+    --bg-elevated: #141d30;
+    --bg-card: #182438;
+    --bg-card-hover: #1d2c44;
+    --text-primary: #f0ece4;
+    --text-secondary: #adb9d1;
+    --text-muted: #6b7fa3;
+    --accent: #60a5fa;
+    --accent-soft: rgba(96, 165, 250, 0.15);
+    --accent-glow: rgba(96, 165, 250, 0.05);
+    --border: rgba(255, 255, 255, 0.06);
+    --border-light: rgba(255, 255, 255, 0.10);
+    --green: #34d399;
+    --green-soft: rgba(52, 211, 153, 0.12);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    font-family: 'Outfit', system-ui, sans-serif;
+    background: var(--bg-deep);
+    color: var(--text-primary);
+    min-height: 100vh;
+    line-height: 1.6;
+}
+
+/* Header */
+.hero {
+    background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-elevated) 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 3rem 2rem 2rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.hero::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle at 30% 50%, var(--accent-glow), transparent 60%);
+    pointer-events: none;
+}
+
+.hero h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    color: var(--text-primary);
+    margin-bottom: 0.5rem;
+    position: relative;
+}
+
+.hero .subtitle {
+    font-size: 1.1rem;
+    color: var(--accent);
+    font-weight: 400;
+    margin-bottom: 0.25rem;
+    position: relative;
+}
+
+.hero .date {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    position: relative;
+}
+
+.hero .stats {
+    margin-top: 1.5rem;
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    flex-wrap: wrap;
+    position: relative;
+}
+
+.stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 0.75rem 1.5rem;
+    min-width: 100px;
+}
+
+.stat-value {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--accent);
+}
+
+.stat-label {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+/* Container */
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem 4rem;
+}
+
+/* Account chips */
+.account-roster {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    justify-content: center;
+    margin-bottom: 2rem;
+}
+
+.chip {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 0.3rem 0.9rem;
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    font-weight: 400;
+}
+
+/* Tweet cards */
+.tweet-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+    transition: all 0.2s ease;
+    position: relative;
+}
+
+.tweet-card:hover {
+    background: var(--bg-card-hover);
+    border-color: var(--border-light);
+    transform: translateY(-1px);
+}
+
+.tweet-card:first-of-type {
+    border-color: var(--accent-soft);
+    box-shadow: 0 0 30px var(--accent-glow);
+}
+
+.tweet-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.75rem;
+}
+
+.avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 2px solid var(--border-light);
+    object-fit: cover;
+    flex-shrink: 0;
+}
+
+.tweet-author {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.4rem;
+}
+
+.author-name {
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: var(--text-primary);
+}
+
+.author-handle {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+
+.tweet-time {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin-left: auto;
+}
+
+.tweet-body {
+    font-size: 0.95rem;
+    line-height: 1.7;
+    color: var(--text-secondary);
+    margin-bottom: 0.75rem;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+}
+
+.tweet-body a {
+    color: var(--accent);
+    text-decoration: none;
+    border-bottom: 1px solid var(--accent-soft);
+    transition: border-color 0.2s;
+}
+
+.tweet-body a:hover {
+    border-bottom-color: var(--accent);
+}
+
+.tweet-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--border);
+}
+
+.tweet-metrics {
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.tweet-link {
+    font-size: 0.82rem;
+    color: var(--accent);
+    text-decoration: none;
+    font-weight: 500;
+    transition: opacity 0.2s;
+}
+
+.tweet-link:hover {
+    opacity: 0.8;
+}
+
+/* Footer */
+.footer {
+    text-align: center;
+    padding: 2rem;
+    color: var(--text-muted);
+    font-size: 0.8rem;
+    border-top: 1px solid var(--border);
+}
+
+.footer a {
+    color: var(--accent);
+    text-decoration: none;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+    .hero { padding: 2rem 1rem 1.5rem; }
+    .hero .stats { gap: 0.75rem; }
+    .stat { padding: 0.5rem 1rem; min-width: 80px; }
+    .stat-value { font-size: 1.4rem; }
+    .container { padding: 1rem 0.75rem 2rem; }
+    .tweet-card { padding: 1rem; border-radius: 12px; }
+    .tweet-body { font-size: 0.9rem; }
+}
+
+/* Print */
+@media print {
+    body { background: white; color: #111; }
+    .tweet-card { border: 1px solid #ddd; break-inside: avoid; }
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+    <div class="subtitle">Daily Digest</div>
+    <h1>15 AI Accounts</h1>
+    <div class="date">Monday, May 18, 2026 · 05:30 AM IST</div>
+    <div class="stats">
+        <div class="stat">
+            <span class="stat-value">14</span>
+            <span class="stat-label">Posts</span>
+        </div>
+        <div class="stat">
+            <span class="stat-value">6/15</span>
+            <span class="stat-label">Accounts Active</span>
+        </div>
+    </div>
+</header>
+
+<main class="container">
+    <div class="account-roster"><span class="chip">Andrej Karpathy</span><span class="chip">François Chollet</span><span class="chip">Yann LeCun</span><span class="chip">Andrew Ng</span><span class="chip">Sebastian Raschka</span><span class="chip">DAIR.AI</span><span class="chip">Lilian Weng</span><span class="chip">Jeremy Howard</span><span class="chip">Simon Willison</span><span class="chip">AK</span><span class="chip">John Carmack</span><span class="chip">Gwern Branwen</span><span class="chip">Riley Goodside</span><span class="chip">Fei-Fei Li</span><span class="chip">Demis Hassabis</span></div>
+    
+        <div class="tweet-card">
+            <div class="tweet-header">
+                <img class="avatar" src="https://unavatar.io/x/ylecun" alt="ylecun" loading="lazy" 
+                     onerror="this.style.display='none'">
+                <div class="tweet-author">
+                    <span class="author-name">Yann LeCun</span>
+                    <span class="author-handle">@ylecun</span>
+                    <span class="tweet-time">May 16 · 09:36 PM</span>
+                </div>
+            </div>
+            <div class="tweet-body">Tired of winning <a href="https://t.co/3ht4cWUHNR" target="_blank" rel="noopener">https://t.co/3ht4cWUHNR</a></div>
+            <div class="tweet-footer">
+                <span class="tweet-metrics">♥ 2.4K · ↻ 157 · 👁 215K · 🔖 218 · 💬 89</span>
+                <a class="tweet-link" href="https://x.com/ylecun/status/2055681177994813522" target="_blank" rel="noopener">View on X ↗</a>
+            </div>
+        </div>
+        <div class="tweet-card">
+            <div class="tweet-header">
+                <img class="avatar" src="https://unavatar.io/x/rasbt" alt="rasbt" loading="lazy" 
+                     onerror="this.style.display='none'">
+                <div class="tweet-author">
+                    <span class="author-name">Sebastian Raschka</span>
+                    <span class="author-handle">@rasbt</span>
+                    <span class="tweet-time">May 16 · 06:40 PM</span>
+                </div>
+            </div>
+            <div class="tweet-body">New article: a visual tour of recent LLM architecture advances, from Gemma 4 to DeepSeek V4.<br><br>I focus on long-context efficiency tweaks like KV sharing, per-layer embeddings, layer-wise attention budgets, compressed attention, and mHC.<br><br>Link: <a href="https://t.co/KO81y3kTH7" target="_blank" rel="noopener">https://t.co/KO81y3kTH7</a> <a href="https://t.co/wTx51QpQu4" target="_blank" rel="noopener">https://t.co/wTx51QpQu4</a></div>
+            <div class="tweet-footer">
+                <span class="tweet-metrics">♥ 2.1K · ↻ 372 · 👁 102K · 🔖 1711 · 💬 38</span>
+                <a class="tweet-link" href="https://x.com/rasbt/status/2055637086380650538" target="_blank" rel="noopener">View on X ↗</a>
+            </div>
+        </div>
+        <div class="tweet-card">
+            <div class="tweet-header">
+                <img class="avatar" src="https://unavatar.io/x/fchollet" alt="fchollet" loading="lazy" 
+                     onerror="this.style.display='none'">
+                <div class="tweet-author">
+                    <span class="author-name">François Chollet</span>
+                    <span class="author-handle">@fchollet</span>
+                    <span class="tweet-time">May 16 · 10:33 PM</span>
+                </div>
+            </div>
+            <div class="tweet-body">If you're not obsessed with the research problem you're working on, for its own sake, you're unlikely to succeed. Intrinsic motivation is far more powerful than external rewards. <a href="https://t.co/0UmIdUmEAY" target="_blank" rel="noopener">https://t.co/0UmIdUmEAY</a></div>
+            <div class="tweet-footer">
+                <span class="tweet-metrics">♥ 1.0K · ↻ 80 · 👁 77K · 🔖 352 · 💬 32</span>
+                <a class="tweet-link" href="https://x.com/fchollet/status/2055695549186425067" target="_blank" rel="noopener">View on X ↗</a>
+            </div>
+        </div>
+        <div class="tweet-card">
+            <div class="tweet-header">
+                <img class="avatar" src="https://unavatar.io/x/fchollet" alt="fchollet" loading="lazy" 
+                     onerror="this.style.display='none'">
+                <div class="tweet-author">
+                    <span class="author-name">François Chollet</span>
+                    <span class="author-handle">@fchollet</span>
+                    <span class="tweet-time">May 18 · 05:34 AM</span>
+                </div>
+            </div>
+            <div class="tweet-body">Decision making was the bottleneck all along. Productivity is the rate at which you make open-ended decisions, the rate at which you reduce future paths.</div>
+            <div class="tweet-footer">
+                <span class="tweet-metrics">♥ 605 · ↻ 52 · 👁 29K · 🔖 197 · 💬 50</span>
+                <a class="tweet-link" href="https://x.com/fchollet/status/2056164095913828503" target="_blank" rel="noopener">View on X ↗</a>
+            </div>
+        </div>
+        <div class="tweet-card">
+            <div class="tweet-header">
+                <img class="avatar" src="https://unavatar.io/x/ylecun" alt="ylecun" loading="lazy" 
+                     onerror="this.style.display='none'">
+                <div class="tweet-author">
+                    <span class="author-name">Yann LeCun</span>
+                    <span class="author-handle">@ylecun</span>
+                    <span class="tweet-time">May 16 · 11:02 PM</span>
+                </div>
+            </div>
+            <div class="tweet-body">Tired of winning <a href="https://t.co/a5Htorpbl0" target="_blank" rel="noopener">https://t.co/a5Htorpbl0</a></div>
+            <div class="tweet-footer">
+                <span class="tweet-metrics">♥ 549 · ↻ 62 · 👁 68K · 🔖 43 · 💬 46</span>
+                <a class="tweet-link" href="https://x.com/ylecun/status/2055702985578025041" target="_blank" rel="noopener">View on X ↗</a>
+            </div>
+        </div>
+        <div class="tweet-card">
+            <div class="tweet-header">
+                <img class="avatar" src="https://unavatar.io/x/fchollet" alt="fchollet" loading="lazy" 
+                     onerror="this.style.display='none'">
+                <div class="tweet-author">
+                    <span class="author-name">François Chollet</span>
+                    <span class="author-handle">@fchollet</span>
+                    <span class="tweet-time">May 17 · 09:15 AM</span>
+                </div>
+            </div>
+            <div class="tweet-body">Every Pixar movie hits way harder when you're an unc than when you're a kid</div>
+            <div class="tweet-footer">
+                <span class="tweet-metrics">♥ 329 · ↻ 7 · 👁 29K · 🔖 22 · 💬 23</span>
+                <a class="tweet-link" href="https://x.com/fchollet/status/2055857151818825881" target="_blank" rel="noopener">View on X ↗</a>
+            </div>
+        </div>
+        <div class="tweet-card">
+            <div class="tweet-header">
+                <img class="avatar" src="https://unavatar.io/x/dair_ai" alt="dair_ai" loading="lazy" 
+                     onerror="this.style.display='none'">
+                <div class="tweet-author">
+                    <span class="author-name">DAIR.AI</span>
+                    <span class="author-handle">@dair_ai</span>
+                    <span class="tweet-time">May 17 · 07:57 PM</span>
+                </div>
+            </div>
+            <div class="tweet-body">The Top AI Papers of the Week (May 11 - May 17)<br><br>- AEvo<br>- δ-mem<br>- AutoTTS<br>- AI Co-Mathematician<br>- Lighthouse Attention<br>- Is Grep All You Need?<br>- A Geometric Calculator Inside a Neural Network<br><br>Read on for more: <a href="https://t.co/B7aOyDHpS9" target="_blank" rel="noopener">https://t.co/B7aOyDHpS9</a></div>
+            <div class="tweet-footer">
+                <span class="tweet-metrics">♥ 184 · ↻ 36 · 👁 30K · 🔖 162 · 💬 6</span>
+                <a class="tweet-link" href="https://x.com/dair_ai/status/2056018679981109731" target="_blank" rel="noopener">View on X ↗</a>
+            </div>
+        </div>
+        <div class="tweet-card">
+            <div class="tweet-header">
+                <img class="avatar" src="https://unavatar.io/x/lilianweng" alt="lilianweng" loading="lazy" 
+                     onerror="this.style.display='none'">
+                <div class="tweet-author">
+                    <span class="author-name">Lilian Weng</span>
+                    <span class="author-handle">@lilianweng</span>
+                    <span class="tweet-time">May 18 · 06:28 AM</span>
+                </div>
+            </div>
+            <div class="tweet-body">I only recently read more about the concept of system accidents by Charles Perrow, very insightful and relatable.</div>
+            <div class="tweet-footer">
+                <span class="tweet-metrics">♥ 206 · ↻ 3 · 👁 24K · 🔖 140 · 💬 17</span>
+                <a class="tweet-link" href="https://x.com/lilianweng/status/2056177479782658363" target="_blank" rel="noopener">View on X ↗</a>
+            </div>
+        </div>
+        <div class="tweet-card">
+            <div class="tweet-header">
+                <img class="avatar" src="https://unavatar.io/x/ylecun" alt="ylecun" loading="lazy" 
+                     onerror="this.style.display='none'">
+                <div class="tweet-author">
+                    <span class="author-name">Yann LeCun</span>
+                    <span class="author-handle">@ylecun</span>
+                    <span class="tweet-time">May 17 · 11:16 PM</span>
+                </div>
+            </div>
+            <div class="tweet-body">The salvation is Project Tapestry<br><a href="https://t.co/5MOgouVplV" target="_blank" rel="noopener">https://t.co/5MOgouVplV</a> <a href="https://t.co/SVfutU8Psc" target="_blank" rel="noopener">https://t.co/SVfutU8Psc</a></div>
+            <div class="tweet-footer">
+                <span class="tweet-metrics">♥ 176 · ↻ 22 · 👁 41K · 🔖 63 · 💬 30</span>
+                <a class="tweet-link" href="https://x.com/ylecun/status/2056068940825030965" target="_blank" rel="noopener">View on X ↗</a>
+            </div>
+        </div>
+        <div class="tweet-card">
+            <div class="tweet-header">
+                <img class="avatar" src="https://unavatar.io/x/dair_ai" alt="dair_ai" loading="lazy" 
+                     onerror="this.style.display='none'">
+                <div class="tweet-author">
+                    <span class="author-name">DAIR.AI</span>
+                    <span class="author-handle">@dair_ai</span>
+                    <span class="tweet-time">May 17 · 07:56 PM</span>
+                </div>
+            </div>
+            <div class="tweet-body"><a href="https://t.co/pKxGfYoFdZ" target="_blank" rel="noopener">https://t.co/pKxGfYoFdZ</a></div>
+            <div class="tweet-footer">
+                <span class="tweet-metrics">♥ 96 · ↻ 20 · 👁 40K · 🔖 120</span>
+                <a class="tweet-link" href="https://x.com/dair_ai/status/2056018543850754283" target="_blank" rel="noopener">View on X ↗</a>
+            </div>
+        </div>
+        <div class="tweet-card">
+            <div class="tweet-header">
+                <img class="avatar" src="https://unavatar.io/x/simonw" alt="simonw" loading="lazy" 
+                     onerror="this.style.display='none'">
+                <div class="tweet-author">
+                    <span class="author-name">Simon Willison</span>
+                    <span class="author-handle">@simonw</span>
+                    <span class="tweet-time">May 17 · 08:12 PM</span>
+                </div>
+            </div>
+            <div class="tweet-body">Also a great example of positive contribution to open source by wanderingmeow - you don't need to contribute code to have a positive impact, just providing detailed feedback and confirmation that something like this works is enormously useful <a href="https://t.co/yBuamQFf34" target="_blank" rel="noopener">https://t.co/yBuamQFf34</a></div>
+            <div class="tweet-footer">
+                <span class="tweet-metrics">♥ 101 · ↻ 5 · 👁 20K · 🔖 14 · 💬 16</span>
+                <a class="tweet-link" href="https://x.com/simonw/status/2056022578528182369" target="_blank" rel="noopener">View on X ↗</a>
+            </div>
+        </div>
+        <div class="tweet-card">
+            <div class="tweet-header">
+                <img class="avatar" src="https://unavatar.io/x/dair_ai" alt="dair_ai" loading="lazy" 
+                     onerror="this.style.display='none'">
+                <div class="tweet-author">
+                    <span class="author-name">DAIR.AI</span>
+                    <span class="author-handle">@dair_ai</span>
+                    <span class="tweet-time">May 17 · 02:00 AM</span>
+                </div>
+            </div>
+            <div class="tweet-body">Are your benchmarks actually measuring the capability you think they measure?<br><br>New paper says they probably not.<br><br>Coined the "The Evaluation Trap", it provides a vocabulary for auditing whether your eval discriminates the underlying capability or just proxies behaviors that <a href="https://t.co/lHchRqvV3s" target="_blank" rel="noopener">https://t.co/lHchRqvV3s</a></div>
+            <div class="tweet-footer">
+                <span class="tweet-metrics">♥ 80 · ↻ 14 · 👁 8K · 🔖 71 · 💬 6</span>
+                <a class="tweet-link" href="https://x.com/dair_ai/status/2055747638381920342" target="_blank" rel="noopener">View on X ↗</a>
+            </div>
+        </div>
+        <div class="tweet-card">
+            <div class="tweet-header">
+                <img class="avatar" src="https://unavatar.io/x/simonw" alt="simonw" loading="lazy" 
+                     onerror="this.style.display='none'">
+                <div class="tweet-author">
+                    <span class="author-name">Simon Willison</span>
+                    <span class="author-handle">@simonw</span>
+                    <span class="tweet-time">May 17 · 03:03 AM</span>
+                </div>
+            </div>
+            <div class="tweet-body">To prepare for my #PyConUS lightning talk this afternoon I decided to track down ALL of the names that @openclaw has used since November, using a script against its GitHub repo<br><br>Warelay → CLAWDIS → CLAWDBOT → Clawdbot → Moltbot →🦞 OpenClaw <a href="https://t.co/DptEoztCQZ" target="_blank" rel="noopener">https://t.co/DptEoztCQZ</a></div>
+            <div class="tweet-footer">
+                <span class="tweet-metrics">♥ 87 · ↻ 7 · 👁 14K · 🔖 6 · 💬 16</span>
+                <a class="tweet-link" href="https://x.com/simonw/status/2055763661525024891" target="_blank" rel="noopener">View on X ↗</a>
+            </div>
+        </div>
+        <div class="tweet-card">
+            <div class="tweet-header">
+                <img class="avatar" src="https://unavatar.io/x/simonw" alt="simonw" loading="lazy" 
+                     onerror="this.style.display='none'">
+                <div class="tweet-author">
+                    <span class="author-name">Simon Willison</span>
+                    <span class="author-handle">@simonw</span>
+                    <span class="tweet-time">May 17 · 03:03 AM</span>
+                </div>
+            </div>
+            <div class="tweet-body">Notes and script are here <a href="https://t.co/eNbmtBQHKM" target="_blank" rel="noopener">https://t.co/eNbmtBQHKM</a></div>
+            <div class="tweet-footer">
+                <span class="tweet-metrics">♥ 24 · ↻ 2 · 👁 8K · 🔖 2 · 💬 2</span>
+                <a class="tweet-link" href="https://x.com/simonw/status/2055763702566306274" target="_blank" rel="noopener">View on X ↗</a>
+            </div>
+        </div>
+</main>
+
+<footer class="footer">
+    <p>Curated from <a href="https://x.com/vivoplt/status/2055972586044133453">@vivoplt's list</a> · Generated daily at 11:00 AM IST</p>
+</footer>
+
+</body>
+</html>
