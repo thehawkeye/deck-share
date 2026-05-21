@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>IIFR ECP — Slide 04</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #22223b;
+      --bg-mid: #2d2a45;
+      --surface: #4a4e69;
+      --accent: #9a8c98;
+      --highlight: #c9ada7;
+      --text: #f2e9e4;
+      --text-dim: rgba(242,233,228,0.55);
+      --border: rgba(255,255,255,0.07);
+      --border-light: rgba(255,255,255,0.12);
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { width: 1080px; height: 1080px; overflow: hidden; background: var(--bg); }
+    body { font-family: 'IBM Plex Sans', sans-serif; color: var(--text); }
+    .slide {
+      width: 1080px; height: 1080px; position: relative; overflow: hidden; background: var(--bg);
+    }
+    .slide > * { position: relative; z-index: 1; }
+    .slide::before {
+      content: ''; position: absolute; width: 360px; height: 360px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(201,173,167,0.09) 0%, transparent 70%);
+      filter: blur(36px); right: -120px; top: 60px; pointer-events: none; z-index: 0;
+    }
+    .logo-mark { display: flex; align-items: center; gap: 14px; padding: 52px 72px 0; }
+    .logo-mark__circle {
+      width: 52px; height: 52px; border-radius: 50%; border: 1.5px solid var(--accent);
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .logo-mark__dot { width: 10px; height: 10px; border-radius: 50%; background: var(--accent); }
+    .logo-mark__text {
+      font-family: 'Cormorant Garamond', serif; font-size: 20px; font-weight: 400;
+      letter-spacing: 0.08em; color: var(--text);
+    }
+    .logo-mark__text span {
+      display: block; font-size: 10px; letter-spacing: 0.30em; text-transform: uppercase;
+      color: var(--accent); font-family: 'IBM Plex Sans', sans-serif; font-weight: 500; margin-top: 3px;
+    }
+    .efmd-badge {
+      position: absolute; top: 58px; right: 72px;
+      font-family: 'IBM Plex Sans', sans-serif; font-size: 10px;
+      letter-spacing: 0.20em; text-transform: uppercase; color: var(--text-dim);
+      border: 1px solid var(--border-light); padding: 8px 14px; text-align: center; line-height: 1.6;
+    }
+    .slide-inner { padding: 0 72px; }
+    .slide-header { padding-top: 48px; padding-bottom: 44px; border-bottom: 1px solid var(--border); }
+    .slide-header h2 {
+      font-family: 'Cormorant Garamond', serif; font-size: 64px; font-weight: 300;
+      line-height: 1.0; letter-spacing: -0.01em; color: var(--text);
+    }
+    .slide-header h2 em { font-style: italic; color: var(--highlight); }
+    .reasons-list { margin-top: 40px; display: flex; flex-direction: column; gap: 16px; }
+    .reason-row { display: flex; align-items: flex-start; gap: 24px; }
+    .reason-num {
+      font-family: 'Cormorant Garamond', serif; font-size: 28px; font-weight: 300;
+      color: var(--accent); width: 40px; flex-shrink: 0; padding-top: 2px; letter-spacing: 0.04em;
+    }
+    .reason-content { flex: 1; border-top: 1px solid var(--border); padding: 18px 0; }
+    .reason-content h3 {
+      font-size: 17px; font-weight: 500; color: var(--text); margin-bottom: 6px; letter-spacing: 0.01em;
+    }
+    .reason-content p { font-size: 13px; color: var(--text-dim); line-height: 1.6; }
+    .footer-url {
+      position: absolute; bottom: 44px; left: 72px;
+      font-family: 'IBM Plex Sans', sans-serif; font-size: 11px;
+      letter-spacing: 0.18em; color: rgba(242,233,228,0.28); text-transform: uppercase; z-index: 2;
+    }
+    .page-num {
+      position: absolute; bottom: 44px; right: 72px;
+      font-family: 'IBM Plex Sans', sans-serif; font-size: 11px;
+      letter-spacing: 0.20em; color: rgba(242,233,228,0.22); text-transform: uppercase; z-index: 2;
+    }
+  </style>
+</head>
+<body>
+  <div class="slide">
+    <div class="logo-mark">
+      <div class="logo-mark__circle"><div class="logo-mark__dot"></div></div>
+      <div class="logo-mark__text">IIFR <span>Educators' Certificate Programme</span></div>
+    </div>
+    <div class="efmd-badge">EFMD Global<br>Certified</div>
+    <div class="slide-inner">
+      <header class="slide-header">
+        <h2>5 Reasons to <em>Choose</em> ECP</h2>
+      </header>
+      <div class="reasons-list">
+        <div class="reason-row">
+          <div class="reason-num">01</div>
+          <div class="reason-content">
+            <h3>EFMD Global Certification — A Mark of Quality</h3>
+            <p>Accredited by EFMD Global, one of the world's most respected business education networks — lending your certificate international weight.</p>
+          </div>
+        </div>
+        <div class="reason-row">
+          <div class="reason-num">02</div>
+          <div class="reason-content">
+            <h3>8-Credit IIFR Module — Formal Academic Recognition</h3>
+            <p>Earn 8 credits from IIFR toward a full Master's or PhD programme. Your investment in this programme counts toward a longer degree.</p>
+          </div>
+        </div>
+        <div class="reason-row">
+          <div class="reason-num">03</div>
+          <div class="reason-content">
+            <h3> Bharatiya Bhavan Legacy — 67 Years of Educational Trust</h3>
+            <p>Backed by Bharatiya Bhavan's seven decades of institutional credibility in Indian education and publishing.</p>
+          </div>
+        </div>
+        <div class="reason-row">
+          <div class="reason-num">04</div>
+          <div class="reason-content">
+            <h3>On-Campus Immersion — Deep, Not Distributed</h3>
+            <p>8 concentrated learning days in New Delhi. No commute from a laptop. Real cohort interaction with practitioners from diverse sectors.</p>
+          </div>
+        </div>
+        <div class="reason-row">
+          <div class="reason-num">05</div>
+          <div class="reason-content">
+            <h3>Network of Pracademic Educators — For Life</h3>
+            <p>Join a community of scholars who bridge theory and practice — and stay connected long after the programme ends.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="footer-url">admissions.iifr.global/ecp</div>
+    <div class="page-num">04 / 06</div>
+  </div>
+</body>
+</html>

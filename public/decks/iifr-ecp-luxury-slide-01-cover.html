@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>IIFR ECP — Slide 01</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #22223b;
+      --bg-mid: #2d2a45;
+      --surface: #4a4e69;
+      --accent: #9a8c98;
+      --highlight: #c9ada7;
+      --text: #f2e9e4;
+      --text-dim: rgba(242,233,228,0.55);
+      --border: rgba(255,255,255,0.07);
+      --border-light: rgba(255,255,255,0.12);
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { width: 1080px; height: 1080px; overflow: hidden; background: var(--bg); }
+    body { font-family: 'IBM Plex Sans', sans-serif; color: var(--text); }
+    .slide {
+      width: 1080px; height: 1080px; position: relative; overflow: hidden; background: var(--bg);
+    }
+    .slide > * { position: relative; z-index: 1; }
+    .slide::after {
+      content: ''; position: absolute; width: 480px; height: 480px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(154,140,152,0.14) 0%, rgba(201,173,167,0.06) 40%, transparent 70%);
+      filter: blur(40px); right: -180px; bottom: -200px; pointer-events: none; z-index: 0;
+    }
+    .bg-cover { background: var(--bg); }
+    .bg-cover::before {
+      content: ''; position: absolute; inset: 0;
+      background: radial-gradient(ellipse 90% 50% at 50% -10%, rgba(154,140,152,0.20) 0%, transparent 60%);
+      pointer-events: none; z-index: 0;
+    }
+    .logo-mark { display: flex; align-items: center; gap: 14px; }
+    .logo-mark__circle {
+      width: 52px; height: 52px; border-radius: 50%; border: 1.5px solid var(--accent);
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .logo-mark__dot { width: 10px; height: 10px; border-radius: 50%; background: var(--accent); }
+    .logo-mark__text {
+      font-family: 'Cormorant Garamond', serif; font-size: 20px; font-weight: 400;
+      letter-spacing: 0.08em; color: var(--text);
+    }
+    .logo-mark__text span {
+      display: block; font-size: 10px; letter-spacing: 0.30em; text-transform: uppercase;
+      color: var(--accent); font-family: 'IBM Plex Sans', sans-serif; font-weight: 500; margin-top: 3px;
+    }
+    .efmd-badge {
+      position: absolute; top: 58px; right: 72px;
+      font-family: 'IBM Plex Sans', sans-serif; font-size: 10px;
+      letter-spacing: 0.20em; text-transform: uppercase; color: var(--text-dim);
+      border: 1px solid var(--border-light); padding: 8px 14px; text-align: center; line-height: 1.6;
+    }
+    .cover-inner { width: 100%; height: 100%; padding: 76px 86px 72px; display: flex; flex-direction: column; }
+    .cover-main { margin-top: auto; margin-bottom: 120px; max-width: 780px; }
+    .cover-kicker {
+      font-family: 'IBM Plex Sans', sans-serif; font-size: 12px; font-weight: 500;
+      letter-spacing: 0.32em; text-transform: uppercase; color: var(--accent); margin-bottom: 28px;
+    }
+    .cover-meta {
+      color: var(--text-dim); font-size: 15px; letter-spacing: 0.14em;
+      text-transform: uppercase; max-width: 680px; line-height: 1.8;
+    }
+    .cover-main h1 {
+      font-family: 'Cormorant Garamond', serif; font-size: 102px; font-weight: 300;
+      line-height: 0.95; letter-spacing: -0.01em; color: var(--text); margin-bottom: 36px;
+    }
+    .cover-main h1 em { font-style: italic; color: var(--highlight); }
+    .accent-line { width: 64px; height: 1px; background: var(--accent); margin: 0; }
+    .footer-url {
+      position: absolute; bottom: 44px; left: 72px;
+      font-family: 'IBM Plex Sans', sans-serif; font-size: 11px;
+      letter-spacing: 0.18em; color: rgba(242,233,228,0.28); text-transform: uppercase; z-index: 2;
+    }
+    .page-num {
+      position: absolute; bottom: 44px; right: 72px;
+      font-family: 'IBM Plex Sans', sans-serif; font-size: 11px;
+      letter-spacing: 0.20em; color: rgba(242,233,228,0.22); text-transform: uppercase; z-index: 2;
+    }
+  </style>
+</head>
+<body>
+  <div class="slide bg-cover">
+    <div class="logo-mark">
+      <div class="logo-mark__circle"><div class="logo-mark__dot"></div></div>
+      <div class="logo-mark__text">IIFR <span>Educators' Certificate Programme</span></div>
+    </div>
+    <div class="efmd-badge">EFMD Global<br>Certified</div>
+    <main class="cover-main">
+      <div class="cover-kicker">New Programme &nbsp;·&nbsp; 2026</div>
+      <h1>Educators'<br><em>Certificate</em><br>Programme</h1>
+      <div class="accent-line"></div>
+      <div class="cover-meta">8 Learning Days &nbsp;·&nbsp; On Campus, New Delhi &nbsp;·&nbsp; Starts 14 August 2026</div>
+    </main>
+    <div class="footer-url">admissions.iifr.global/ecp</div>
+    <div class="page-num">01 / 06</div>
+  </div>
+</body>
+</html>
