@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>IIFR ECP — Slide 05</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0f0f0f;
+      --gold: #d4a574;
+      --white: #e8e4df;
+      --text-secondary: #9a9590;
+      --border: rgba(255,255,255,0.06);
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { width: 1080px; height: 1080px; overflow: hidden; background: #0f0f0f; }
+    body { font-family: 'IBM Plex Sans', sans-serif; color: var(--white); }
+    .slide { width: 1080px; height: 1080px; position: relative; overflow: hidden; }
+    .slide > * { position: relative; z-index: 1; }
+    .slide::after {
+      content: ''; position: absolute; width: 370px; height: 370px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(212,165,116,0.11), rgba(232,180,184,0.045) 45%, transparent 70%);
+      filter: blur(28px); right: -130px; bottom: -150px; pointer-events: none; z-index: 0;
+    }
+    .bg-curriculum { background: var(--bg); }
+    .bg-curriculum::before {
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(180deg, rgba(212,165,116,0.03) 0%, transparent 50%);
+      pointer-events: none; z-index: 0;
+    }
+    .curriculum-inner { width: 100%; height: 100%; padding: 72px 66px 88px; display: flex; flex-direction: column; }
+    .label {
+      font-family: 'IBM Plex Sans', sans-serif; font-size: 11px; font-weight: 500;
+      letter-spacing: 0.35em; text-transform: uppercase; color: var(--gold); margin-bottom: 18px; display: block;
+    }
+    h2 {
+      font-family: 'Cormorant Garamond', serif; font-size: 60px; font-weight: 300;
+      line-height: 1.06; letter-spacing: -0.01em; color: var(--white); margin-bottom: 34px;
+    }
+    h2 em { font-style: italic; color: var(--gold); }
+    .curriculum-grid {
+      display: grid; grid-template-columns: repeat(4, 1fr);
+      grid-template-rows: repeat(2, 1fr); gap: 0; flex: 1;
+      border-top: 1px solid var(--border); border-left: 1px solid var(--border);
+    }
+    .curriculum-cell {
+      display: flex; flex-direction: column; justify-content: flex-start;
+      padding: 26px 20px; border-right: 1px solid var(--border); border-bottom: 1px solid var(--border); min-width: 0;
+    }
+    .curriculum-cell__num {
+      font-family: 'IBM Plex Sans', sans-serif; font-size: 10px; font-weight: 500;
+      letter-spacing: 0.22em; text-transform: uppercase; color: var(--gold); margin-bottom: 14px;
+    }
+    .curriculum-cell h4 {
+      font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 400;
+      line-height: 1.14; color: var(--white); margin-bottom: 10px; min-height: 50px;
+    }
+    .curriculum-cell p { font-size: 12px; line-height: 1.55; color: var(--text-secondary); max-width: none; }
+    .footer-url {
+      position: absolute; bottom: 44px; left: 72px;
+      font-family: 'IBM Plex Sans', sans-serif; font-size: 11px;
+      letter-spacing: 0.18em; color: rgba(255,255,255,0.24); text-transform: uppercase; z-index: 2;
+    }
+    .page-num {
+      position: absolute; bottom: 44px; right: 72px;
+      font-family: 'IBM Plex Sans', sans-serif; font-size: 11px;
+      letter-spacing: 0.20em; color: rgba(255,255,255,0.22); text-transform: uppercase; z-index: 2;
+    }
+  </style>
+</head>
+<body>
+  <div class="slide bg-curriculum">
+    <div class="curriculum-inner">
+      <span class="label">Curriculum</span>
+      <h2>Built for the<br><em>AI-enabled educator.</em></h2>
+      <div class="curriculum-grid">
+        <div class="curriculum-cell">
+          <div class="curriculum-cell__num">Module 1</div>
+          <h4>Curriculum &amp; Course Design</h4>
+          <p>Design curricula for BBA, MBA, eMBA, executive education and custom programmes with AI-enabled learning pathways.</p>
+        </div>
+        <div class="curriculum-cell">
+          <div class="curriculum-cell__num">Module 2</div>
+          <h4>Academic Writing &amp; Case Development</h4>
+          <p>Develop contemporary cases, applied research articles and AI/LLM-assisted pracademic writing techniques.</p>
+        </div>
+        <div class="curriculum-cell">
+          <div class="curriculum-cell__num">Module 3</div>
+          <h4>Teaching Methods</h4>
+          <p>Facilitate live cases, experiential learning, gamification and discussion-led classroom experiences.</p>
+        </div>
+        <div class="curriculum-cell">
+          <div class="curriculum-cell__num">Module 4</div>
+          <h4>Framework of Frameworks</h4>
+          <p>Apply multidisciplinary frameworks to strategic problem solving and issue-based business learning.</p>
+        </div>
+        <div class="curriculum-cell">
+          <div class="curriculum-cell__num">Module 5</div>
+          <h4>Enhancing Corporate Impact</h4>
+          <p>Translate market dynamics, governance and industry realities into classroom and executive learning.</p>
+        </div>
+        <div class="curriculum-cell">
+          <div class="curriculum-cell__num">Module 6</div>
+          <h4>Academic Leadership</h4>
+          <p>Build perspective on managing institutions, faculty engagement, research productivity and teaching excellence.</p>
+        </div>
+        <div class="curriculum-cell">
+          <div class="curriculum-cell__num">Module 7</div>
+          <h4>Academia–Industry–Policy Interchange</h4>
+          <p>Connect business and policy dialogues, issue-based research and academia–industry collaboration.</p>
+        </div>
+        <div class="curriculum-cell">
+          <div class="curriculum-cell__num">Module 8</div>
+          <h4>Building Your Pracademic Brand</h4>
+          <p>Create credibility through practitioner journals, working papers, thought leadership and a distinctive pracademic identity.</p>
+        </div>
+      </div>
+    </div>
+    <div class="footer-url">8 Modules &nbsp;·&nbsp; 8 Learning Days &nbsp;·&nbsp; 3 Weeks</div>
+    <div class="page-num">05 / 06</div>
+  </div>
+</body>
+</html>

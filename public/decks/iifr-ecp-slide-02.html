@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>IIFR ECP — Slide 02</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0f0f0f;
+      --bg-mid: #181613;
+      --bg-blueblack: #080f20;
+      --bg-deepblue: #060d1a;
+      --gold: #d4a574;
+      --gold-soft: rgba(212, 165, 116, 0.38);
+      --gold-subtle: rgba(212, 165, 116, 0.12);
+      --rose: #e8b4b8;
+      --white: #e8e4df;
+      --off-white: #f3eee7;
+      --text-secondary: #9a9590;
+      --border: rgba(255,255,255,0.06);
+      --border-light: rgba(255,255,255,0.10);
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { width: 1080px; height: 1080px; overflow: hidden; background: #0f0f0f; }
+    body { font-family: 'IBM Plex Sans', sans-serif; color: var(--white); }
+    .slide { width: 1080px; height: 1080px; position: relative; overflow: hidden; }
+    .slide > * { position: relative; z-index: 1; }
+    .slide::after {
+      content: ''; position: absolute; width: 370px; height: 370px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(212,165,116,0.11), rgba(232,180,184,0.045) 45%, transparent 70%);
+      filter: blur(28px); right: -130px; bottom: -150px; pointer-events: none; z-index: 0;
+    }
+    .bg-problem { background: var(--bg-deepblue); }
+    .bg-problem::before {
+      content: ''; position: absolute; inset: 0;
+      background: radial-gradient(ellipse 60% 80% at 80% 50%, rgba(212,165,116,0.06) 0%, transparent 70%);
+      pointer-events: none; z-index: 0;
+    }
+    .label {
+      font-family: 'IBM Plex Sans', sans-serif; font-size: 11px; font-weight: 500;
+      letter-spacing: 0.35em; text-transform: uppercase; color: var(--gold); margin-bottom: 20px; display: block;
+    }
+    h2 {
+      font-family: 'Cormorant Garamond', serif; font-size: 64px; font-weight: 300;
+      line-height: 1.04; letter-spacing: -0.01em; color: var(--white); margin-bottom: 28px;
+    }
+    h2 em { font-style: italic; color: var(--gold); }
+    p { font-family: 'IBM Plex Sans', sans-serif; font-size: 16px; font-weight: 300; color: var(--text-secondary); line-height: 1.72; }
+    .split { display: grid; grid-template-columns: 1fr 1fr; width: 100%; height: 100%; }
+    .split__left { display: flex; flex-direction: column; justify-content: center; padding: 96px 72px; border-right: 1px solid var(--border); }
+    .split__right { display: flex; flex-direction: column; justify-content: center; padding: 96px 72px; }
+    .stat-block + .stat-block { margin-top: 62px; }
+    .stat-anchor {
+      font-family: 'Cormorant Garamond', serif; font-size: 130px; font-weight: 300;
+      line-height: 0.88; color: var(--gold); display: block;
+    }
+    .stat-anchor.secondary { opacity: 0.45; }
+    .stat-label { font-family: 'IBM Plex Sans', sans-serif; font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--text-secondary); margin-top: 14px; display: block; }
+    .stat-copy { margin-top: 14px; max-width: 330px; font-size: 16px; line-height: 1.65; }
+    .source-note { margin-top: 34px; max-width: 360px; font-size: 10px; line-height: 1.6; color: rgba(255,255,255,0.25); }
+    .nep-callout { margin-top: 34px; border-left: 1px solid var(--gold); padding-left: 22px; max-width: 430px; }
+    .nep-callout p { font-size: 17px; line-height: 1.75; }
+    .nep-callout strong { color: var(--white); font-weight: 500; }
+    .footer-url {
+      position: absolute; bottom: 44px; left: 72px;
+      font-family: 'IBM Plex Sans', sans-serif; font-size: 11px;
+      letter-spacing: 0.18em; color: rgba(255,255,255,0.24); text-transform: uppercase; z-index: 2;
+    }
+    .page-num {
+      position: absolute; bottom: 44px; right: 72px;
+      font-family: 'IBM Plex Sans', sans-serif; font-size: 11px;
+      letter-spacing: 0.20em; color: rgba(255,255,255,0.22); text-transform: uppercase; z-index: 2;
+    }
+  </style>
+</head>
+<body>
+  <div class="slide bg-problem">
+    <div class="split">
+      <section class="split__left">
+        <span class="label">The Challenge</span>
+        <h2>The management<br>classroom is<br><em>changing.</em></h2>
+        <p>As industries evolve through emerging technologies, changing consumer behaviour and rapid digital transformation, management education is being challenged to move beyond theory and deliver practice-informed learning.</p>
+        <div class="nep-callout">
+          <p><strong>NEP 2020</strong> recommends that institutions onboard <strong>Professors of Practice</strong> to bring greater industry relevance and contemporary business perspectives into the classroom.</p>
+        </div>
+      </section>
+      <section class="split__right" style="align-items: flex-start; padding-left: 84px; padding-right: 72px; justify-content: center;">
+        <div class="stat-block">
+          <span class="stat-anchor">56%</span>
+          <span class="stat-label">Professor-level posts vacant in India's premier educational institutions</span>
+        </div>
+        <div class="stat-block">
+          <span class="stat-anchor secondary">28%</span>
+          <span class="stat-label">Overall teaching vacancy rate across these institutions</span>
+        </div>
+        <div class="source-note">Source: Detailed Demand for Grants by Department of Higher Education, Parliamentary Standing Committee report.</div>
+      </section>
+    </div>
+    <div class="footer-url">iifr.global</div>
+    <div class="page-num">02 / 06</div>
+  </div>
+</body>
+</html>
