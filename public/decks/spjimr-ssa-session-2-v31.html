@@ -24,11 +24,17 @@
     --soft-3:#2a2a32;
   }
   *{box-sizing:border-box;margin:0;padding:0}
-  /* IMPORTANT: --bg matches the deck-share wrapper's --bg (#050507) so any
-     letterbox bars (when the iframe aspect ratio != 16:9) blend seamlessly
-     instead of appearing as visible bands. */
-  html,body{
-    background:var(--bg);color:#fff;
+  /* CRITICAL: html and body MUST be dark at all times. If the iframe is
+     rendered before CSS loads (FOUC), or if a parent context sets a
+     different default background, this prevents white flashes. Both html
+     and body are set explicitly — don't rely on inheritance. */
+  html{
+    background:#050507 !important;
+    color-scheme:dark;
+  }
+  body{
+    background:#050507 !important;
+    color:#fff;
     font-family:'Outfit',ui-sans-serif,system-ui,sans-serif;
     line-height:1.4;-webkit-font-smoothing:antialiased;
     overflow:hidden;height:100%;width:100%;
@@ -38,7 +44,7 @@
      letterbox area where the slide aspect ratio doesn't match the viewport. */
   .stage{
     position:fixed;inset:0;display:flex;align-items:center;justify-content:center;
-    background:transparent;overflow:hidden;
+    background:#050507;overflow:hidden;
   }
   /* Slide: fixed 16:9, scaled to COVER the stage (use max, not min) so the
      slide always fills the viewport with no letterbox/pillarbox bands.
@@ -286,7 +292,7 @@
   }
 </style>
 </head>
-<body>
+<body style="background:#050507;color:#fff;margin:0;padding:0;overflow:hidden">
 
 <div class="stage" id="stage">
 
@@ -639,14 +645,23 @@
     var total = slides.length;
     var idx = 0;
 
-    // Position slides: stack absolutely at the centre of the stage, scaled to COVER.
-    // Using max (not min) so the slide always fills the viewport — no letterbox bars
-    // appear when the iframe aspect ratio doesn't match 16:9. Symmetric overflow
-    // is hidden by .stage { overflow: hidden }.
+    // Position slides: stack absolutely at the centre of the stage.
+    // Scale mode is viewport-aspect-aware:
+    //   - landscape (wider than 16:9) → scale-to-cover (max). Fills viewport,
+    //     crops top/bottom of the slide. Best for projector / desktop.
+    //   - portrait (taller than 16:9) → scale-to-fit (min). Shrinks slide
+    //     so the WHOLE thing is visible. Best for mobile — the alternative
+    //     (cover) would scale the slide so much that text becomes huge
+    //     and overflows the viewport.
+    //   - exactly 16:9 → either works, pick cover for no bars.
     function placeSlides(){
       var sw = stage.clientWidth, sh = stage.clientHeight;
-      var scale = Math.max(sw / 1600, sh / 900);
-      // Centre the (scaled) slide in the stage
+      var vpRatio = sw / sh;
+      var slideRatio = 16 / 9;  // 1.778
+      // Cover if viewport is wider than slide, fit if taller
+      var scale = (vpRatio > slideRatio)
+        ? Math.max(sw / 1600, sh / 900)   // cover
+        : Math.min(sw / 1600, sh / 900);  // fit
       var scaledW = 1600 * scale;
       var scaledH = 900 * scale;
       var left = (sw - scaledW) / 2;
@@ -659,6 +674,8 @@
         s.style.transform = 'scale(' + scale + ')';
         s.style.transformOrigin = 'center center';
       });
+      // Store mode for the diagnostic
+      stage.dataset.scaleMode = (vpRatio > slideRatio) ? 'cover' : 'fit';
     }
 
     function show(i){
@@ -766,20 +783,29 @@
     function reportViewportState(){
       var sw = stage.clientWidth, sh = stage.clientHeight;
       var stageRatio = sw / sh;
-      var targetRatio = 16 / 9;
-      // Cover-mode scale (max)
-      var scale = Math.max(sw / 1600, sh / 900);
+      var vpRatio = stageRatio;
+      var slideRatio = 16 / 9;
+      var mode = (vpRatio > slideRatio) ? 'cover' : 'fit';
+      var scale = (mode === 'cover')
+        ? Math.max(sw / 1600, sh / 900)
+        : Math.min(sw / 1600, sh / 900);
       var scaledW = 1600 * scale;
       var scaledH = 900 * scale;
-      var overflowX = Math.max(0, (scaledW - sw) / 2);  // px cropped per side (width)
-      var overflowY = Math.max(0, (scaledH - sh) / 2);  // px cropped per side (height)
+      // Crop / fit amount
+      var overflowX = Math.max(0, (scaledW - sw) / 2);
+      var overflowY = Math.max(0, (scaledH - sh) / 2);
+      var fitGapX = Math.max(0, (sw - scaledW) / 2);
+      var fitGapY = Math.max(0, (sh - scaledH) / 2);
       var msg = '[SPJIMR deck] viewport=' + sw + 'x' + sh
         + ' ratio=' + stageRatio.toFixed(3)
-        + ' target=1.778 mode=cover'
+        + ' target=1.778 mode=' + mode
         + ' scale=' + scale.toFixed(3)
         + ' visible=' + Math.round(scaledW) + 'x' + Math.round(scaledH)
-        + ' cropped: ' + (overflowX > 1 ? 'h=' + Math.round(overflowX) + 'px/side ' : '')
-        + (overflowY > 1 ? 'v=' + Math.round(overflowY) + 'px/side' : '(none)');
+        + (overflowX > 1 || overflowY > 1
+            ? ' cropped: h=' + Math.round(overflowX) + 'px v=' + Math.round(overflowY) + 'px/side'
+            : (fitGapX > 1 || fitGapY > 1
+                ? ' bars: h=' + Math.round(fitGapX) + 'px v=' + Math.round(fitGapY) + 'px/side'
+                : ' (perfect 16:9)'));
       if (window.console && console.log) console.log(msg);
       var badge = document.getElementById('__diag_badge');
       if (badge) badge.textContent = msg;
