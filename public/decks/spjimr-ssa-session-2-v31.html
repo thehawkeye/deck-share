@@ -45,9 +45,15 @@
      Overflow is hidden at the stage level, so any 16:9 mismatch crops
      symmetrically on the wider axis — never crops user-facing content
      because slides are designed with generous inner padding. */
+  /* Slide: fixed 16:9, scaled to COVER the stage. When the viewport is wider
+     than 16:9 (e.g. deck-share iframe at 2.02:1), cover-mode crops the top
+     and bottom of the slide. Slides are designed with a generous inner safe
+     area (the .pad div) that stays within the cropped centre band. The
+     slide background is transparent so the body bg (--bg) shows through
+     the cropped area seamlessly. */
   .slide{
     width:1600px;height:900px; /* 16:9 base */
-    background:var(--bg);color:#fff;
+    background:transparent;color:#fff;
     position:absolute;overflow:hidden;
     transform-origin:center center;
     display:flex;flex-direction:column;
@@ -80,11 +86,19 @@
   .theory strong{color:var(--gold);font-style:normal;font-weight:600;letter-spacing:.12em;
     text-transform:uppercase;font-size:13px;display:block;margin-bottom:6px}
   /* === SLIDE 1: COVER === */
-  .s-cover{justify-content:center;background:linear-gradient(135deg,#050507 0%,#1a1a20 100%)}
+  /* The slide is transparent so the body's --bg (#050507, matching
+     deck-share wrapper) shows through the cropped top/bottom of cover-mode.
+     The cover slide draws its own gradient as a child element instead. */
+  .s-cover{justify-content:center}
+  .s-cover::before{
+    content:"";position:absolute;inset:0;z-index:0;
+    background:linear-gradient(135deg,#050507 0%,#1a1a20 100%);
+  }
+  .s-cover > *{position:relative;z-index:1}
   .s-cover h1{font-size:96px;line-height:1.04;max-width:1300px;margin-bottom:24px}
   .s-cover .meta{margin-top:32px;font-size:20px;color:var(--muted);line-height:1.6}
   .s-cover .meta strong{color:var(--gold);font-weight:500}
-  .s-cover .ornament{margin-top:auto;font-size:13px;letter-spacing:.32em;
+  .s-cover .ornament{margin-top:32px;font-size:13px;letter-spacing:.32em;
     color:var(--gold);text-transform:uppercase}
   /* === SLIDE 2: COLD OPEN === */
   .s-cold{background:transparent;justify-content:center;align-items:center;text-align:center}
