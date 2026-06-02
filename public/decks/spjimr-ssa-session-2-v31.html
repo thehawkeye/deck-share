@@ -38,13 +38,17 @@
      letterbox area where the slide aspect ratio doesn't match the viewport. */
   .stage{
     position:fixed;inset:0;display:flex;align-items:center;justify-content:center;
-    background:transparent;
+    background:transparent;overflow:hidden;
   }
-  /* Slide: fixed 16:9, scaled to fit stage. Base width 1600px = 1 design unit. */
+  /* Slide: fixed 16:9, scaled to COVER the stage (use max, not min) so the
+     slide always fills the viewport with no letterbox/pillarbox bands.
+     Overflow is hidden at the stage level, so any 16:9 mismatch crops
+     symmetrically on the wider axis — never crops user-facing content
+     because slides are designed with generous inner padding. */
   .slide{
     width:1600px;height:900px; /* 16:9 base */
     background:var(--bg);color:#fff;
-    position:relative;overflow:hidden;
+    position:absolute;overflow:hidden;
     transform-origin:center center;
     display:flex;flex-direction:column;
   }
@@ -621,20 +625,25 @@
     var total = slides.length;
     var idx = 0;
 
-    // Position slides: stack absolutely at the centre of the stage, scaled to fit.
+    // Position slides: stack absolutely at the centre of the stage, scaled to COVER.
+    // Using max (not min) so the slide always fills the viewport — no letterbox bars
+    // appear when the iframe aspect ratio doesn't match 16:9. Symmetric overflow
+    // is hidden by .stage { overflow: hidden }.
     function placeSlides(){
       var sw = stage.clientWidth, sh = stage.clientHeight;
-      var scale = Math.min(sw / 1600, sh / 900);
-      var left = (sw - 1600 * scale) / 2;
-      var top  = (sh - 900 * scale) / 2;
+      var scale = Math.max(sw / 1600, sh / 900);
+      // Centre the (scaled) slide in the stage
+      var scaledW = 1600 * scale;
+      var scaledH = 900 * scale;
+      var left = (sw - scaledW) / 2;
+      var top  = (sh - scaledH) / 2;
       slides.forEach(function(s){
-        s.style.position = 'absolute';
         s.style.left = left + 'px';
         s.style.top  = top + 'px';
         s.style.width  = '1600px';
         s.style.height = '900px';
         s.style.transform = 'scale(' + scale + ')';
-        s.style.transformOrigin = 'top left';
+        s.style.transformOrigin = 'center center';
       });
     }
 
@@ -735,22 +744,19 @@
       var sw = stage.clientWidth, sh = stage.clientHeight;
       var stageRatio = sw / sh;
       var targetRatio = 16 / 9;
-      var scale = Math.min(sw / 1600, sh / 900);
-      var visibleW = 1600 * scale;
-      var visibleH = 900 * scale;
-      var left = (sw - visibleW) / 2;
-      var top  = (sh - visibleH) / 2;
-      // Letterbox / pillarbox amount in px on each side
-      var hBox = (sw - visibleW) / 2;  // > 0 = pillarbox (bars on left+right)
-      var vBox = (sh - visibleH) / 2;  // > 0 = letterbox (bars on top+bottom)
+      // Cover-mode scale (max)
+      var scale = Math.max(sw / 1600, sh / 900);
+      var scaledW = 1600 * scale;
+      var scaledH = 900 * scale;
+      var overflowX = Math.max(0, (scaledW - sw) / 2);  // px cropped per side (width)
+      var overflowY = Math.max(0, (scaledH - sh) / 2);  // px cropped per side (height)
       var msg = '[SPJIMR deck] viewport=' + sw + 'x' + sh
         + ' ratio=' + stageRatio.toFixed(3)
-        + ' target=1.778'
+        + ' target=1.778 mode=cover'
         + ' scale=' + scale.toFixed(3)
-        + ' visible=' + Math.round(visibleW) + 'x' + Math.round(visibleH)
-        + ' bars: ' + (hBox > 1 ? 'h=' + Math.round(hBox) + 'px/side ' : '')
-        + (vBox > 1 ? 'v=' + Math.round(vBox) + 'px/side' : '(none)');
-      // Use both console and a visible badge so dev tools isn't required
+        + ' visible=' + Math.round(scaledW) + 'x' + Math.round(scaledH)
+        + ' cropped: ' + (overflowX > 1 ? 'h=' + Math.round(overflowX) + 'px/side ' : '')
+        + (overflowY > 1 ? 'v=' + Math.round(overflowY) + 'px/side' : '(none)');
       if (window.console && console.log) console.log(msg);
       var badge = document.getElementById('__diag_badge');
       if (badge) badge.textContent = msg;
