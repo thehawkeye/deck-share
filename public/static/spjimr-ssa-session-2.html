@@ -1,0 +1,1503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>SPJIMR SSA · Session 2</title>
+<style>
+  :root {
+    --bg: #faf8f3;
+    --ink: #1a1612;
+    --ink-soft: #4a4036;
+    --ink-mute: #8a7e6e;
+    --rule: #d4c9b5;
+    --rule-soft: #e8e0cf;
+    --paper: #ffffff;
+    --maroon: #6c131b;
+    --maroon-soft: #8a2a32;
+    --gold: #b08a2e;
+    --gold-soft: #d4b25a;
+    --teal: #1f5d5c;
+    --teal-soft: #2d7a78;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html, body { background: var(--bg); color: var(--ink); font-family: 'Inter', 'Helvetica Neue', system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+  body { display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 24px; }
+  .stage { width: 100%; max-width: 1400px; aspect-ratio: 16/9; }
+
+  /* Slide frame */
+  .slide {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    background: var(--bg);
+    padding: 64px 88px 56px;
+    display: none;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  .slide.active { display: flex; }
+  .slide::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 88px; right: 88px;
+    height: 1px;
+    background: var(--rule);
+  }
+
+  /* Footer — minimal, bottom-right */
+  .footer {
+    position: absolute;
+    bottom: 24px;
+    right: 36px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+  }
+
+  /* ───── Slide 1: Cover ───── */
+  .s-cover { justify-content: space-between; }
+  .s-cover .eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--maroon);
+    margin-top: 80px;
+  }
+  .s-cover h1 {
+    font-family: 'Cormorant Garamond', 'Georgia', serif;
+    font-size: 96px;
+    line-height: 0.95;
+    font-weight: 400;
+    color: var(--ink);
+    margin-top: 16px;
+    max-width: 900px;
+  }
+  .s-cover h1 em {
+    font-style: italic;
+    color: var(--maroon);
+  }
+  .s-cover .subtitle {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 28px;
+    line-height: 1.35;
+    font-style: italic;
+    color: var(--ink-soft);
+    margin-top: 28px;
+    max-width: 780px;
+    font-weight: 400;
+  }
+  .s-cover .ornament {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-top: 48px;
+  }
+  .s-cover .ornament .line {
+    width: 80px;
+    height: 1px;
+    background: var(--maroon);
+  }
+  .s-cover .ornament .glyph {
+    color: var(--maroon);
+    font-size: 18px;
+  }
+  .s-cover .meta {
+    display: flex;
+    gap: 80px;
+    align-items: flex-end;
+  }
+  .s-cover .meta-block {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .s-cover .meta-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+  }
+  .s-cover .meta-value {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    color: var(--ink);
+  }
+  .s-cover .meta-value em {
+    font-style: italic;
+    color: var(--maroon);
+  }
+
+  /* ───── Slide 2: The Moment ───── */
+  .s-moment { justify-content: center; align-items: center; text-align: center; }
+  .s-moment .label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--gold);
+  }
+  .s-moment .quote {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 64px;
+    line-height: 1.15;
+    color: var(--ink);
+    font-style: italic;
+    font-weight: 400;
+    margin: 32px 0 24px;
+    max-width: 1000px;
+  }
+  .s-moment .quote .accent {
+    color: var(--maroon);
+    font-style: normal;
+    font-weight: 500;
+  }
+  .s-moment .source {
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    color: var(--ink-mute);
+    letter-spacing: 0.05em;
+  }
+  .s-moment .source::before {
+    content: "— ";
+    color: var(--gold);
+  }
+  .s-moment .ticker {
+    position: absolute;
+    bottom: 60px;
+    left: 88px;
+    right: 88px;
+    display: flex;
+    justify-content: space-between;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+  }
+  .s-moment .ticker .pulse {
+    color: var(--maroon);
+    animation: pulse 2s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 0.4; }
+    50% { opacity: 1; }
+  }
+
+  /* ───── Slide 3: The Question ───── */
+  .s-question { padding: 80px 88px 56px; }
+  .s-question .top {
+    display: flex;
+    align-items: flex-start;
+    gap: 32px;
+    margin-bottom: 64px;
+  }
+  .s-question .numeral {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 200px;
+    line-height: 0.8;
+    font-weight: 300;
+    color: var(--maroon);
+    font-style: italic;
+  }
+  .s-question .ask {
+    flex: 1;
+    padding-top: 28px;
+  }
+  .s-question .ask .label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-bottom: 16px;
+  }
+  .s-question .ask .text {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 52px;
+    line-height: 1.15;
+    color: var(--ink);
+    font-weight: 500;
+  }
+  .s-question .ask .text em {
+    font-style: italic;
+    color: var(--maroon);
+  }
+  .s-question .bottom {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    margin-top: auto;
+  }
+  .s-question .bottom .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 28px;
+    border: 1.5px solid var(--ink);
+    border-radius: 999px;
+    font-family: 'Inter', sans-serif;
+    font-size: 15px;
+    color: var(--ink);
+  }
+  .s-question .bottom .btn .dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--maroon);
+  }
+  .s-question .bottom .btn.mute {
+    border-color: var(--rule);
+    color: var(--ink-mute);
+  }
+  .s-question .bottom .btn.mute .dot {
+    background: var(--ink-mute);
+  }
+  .s-question .bottom .btn.gold {
+    border-color: var(--gold);
+    color: var(--gold);
+  }
+  .s-question .bottom .btn.gold .dot {
+    background: var(--gold);
+  }
+
+  /* ───── Moment divider ───── */
+  .s-marker {
+    background: var(--maroon);
+    color: var(--bg);
+    padding: 0;
+  }
+  .s-marker .moment {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: var(--gold-soft);
+    margin-bottom: 32px;
+  }
+  .s-marker h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 110px;
+    line-height: 0.9;
+    font-weight: 300;
+    color: var(--bg);
+    max-width: 1100px;
+  }
+  .s-marker h2 em {
+    font-style: italic;
+    color: var(--gold-soft);
+  }
+  .s-marker .stripe {
+    width: 100%;
+    height: 1px;
+    background: var(--gold-soft);
+    margin-top: 48px;
+    opacity: 0.5;
+  }
+  .s-marker .stripe + .meta {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 24px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold-soft);
+    opacity: 0.7;
+  }
+
+  /* ───── Framework slide ───── */
+  .s-framework { padding: 64px 88px 56px; }
+  .s-framework .header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 32px;
+  }
+  .s-framework .header .left {
+    display: flex;
+    align-items: baseline;
+    gap: 20px;
+  }
+  .s-framework .header .badge {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--maroon);
+    padding: 6px 12px;
+    border: 1px solid var(--maroon);
+    border-radius: 3px;
+  }
+  .s-framework .header h3 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 44px;
+    font-weight: 500;
+    color: var(--ink);
+  }
+  .s-framework .header .right {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+  }
+  .s-framework .grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+    flex: 1;
+  }
+  .s-framework .cell {
+    background: var(--paper);
+    border: 1px solid var(--rule-soft);
+    border-radius: 6px;
+    padding: 22px 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+  }
+  .s-framework .cell .icon {
+    width: 36px; height: 36px;
+    margin-bottom: 12px;
+  }
+  .s-framework .cell .roman {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 24px;
+    font-style: italic;
+    color: var(--gold);
+    position: absolute;
+    top: 16px; right: 18px;
+  }
+  .s-framework .cell .name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 24px;
+    line-height: 1.1;
+    font-weight: 500;
+    color: var(--ink);
+    margin-bottom: 6px;
+  }
+  .s-framework .cell .desc {
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    line-height: 1.5;
+    color: var(--ink-soft);
+  }
+  .s-framework .cell.dark {
+    background: var(--maroon);
+    color: var(--bg);
+  }
+  .s-framework .cell.dark .name { color: var(--bg); }
+  .s-framework .cell.dark .desc { color: rgba(250, 248, 243, 0.75); }
+  .s-framework .cell.dark .roman { color: var(--gold-soft); }
+
+  /* ───── Slide: The Spectrum (Pipeline / Platform) ───── */
+  .s-spectrum { padding: 64px 88px 56px; }
+  .s-spectrum .top {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 36px;
+  }
+  .s-spectrum .top .label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--maroon);
+  }
+  .s-spectrum .top h3 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 48px;
+    font-weight: 500;
+    color: var(--ink);
+  }
+  .s-spectrum .top h3 em {
+    font-style: italic;
+    color: var(--maroon);
+  }
+  .s-spectrum .track {
+    position: relative;
+    margin: 60px 0 48px;
+  }
+  .s-spectrum .track .line {
+    height: 1px;
+    background: var(--ink);
+    position: relative;
+  }
+  .s-spectrum .track .line::before,
+  .s-spectrum .track .line::after {
+    content: "";
+    position: absolute;
+    top: -4px;
+    width: 9px; height: 9px;
+    background: var(--ink);
+    border-radius: 50%;
+  }
+  .s-spectrum .track .line::before { left: 0; }
+  .s-spectrum .track .line::after { right: 0; }
+  .s-spectrum .track .endpoints {
+    position: absolute;
+    top: -36px;
+    left: 0; right: 0;
+    display: flex;
+    justify-content: space-between;
+  }
+  .s-spectrum .track .endpoints .ep {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 28px;
+    font-style: italic;
+    color: var(--ink);
+  }
+  .s-spectrum .track .endpoints .ep::first-letter {
+    color: var(--maroon);
+  }
+  .s-spectrum .dots {
+    position: absolute;
+    top: 50%;
+    left: 0; right: 0;
+    transform: translateY(-50%);
+    display: flex;
+    justify-content: space-between;
+    padding: 0 60px;
+  }
+  .s-spectrum .brand {
+    position: absolute;
+    top: 28px;
+    transform: translateX(-50%);
+    text-align: center;
+  }
+  .s-spectrum .brand .name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 28px;
+    font-weight: 500;
+    color: var(--ink);
+    margin-bottom: 4px;
+  }
+  .s-spectrum .brand .name em {
+    font-style: italic;
+    color: var(--maroon);
+  }
+  .s-spectrum .brand .tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+  }
+  .s-spectrum .brand .pin {
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    background: var(--gold);
+    border: 3px solid var(--bg);
+    box-shadow: 0 0 0 1.5px var(--gold);
+    margin: 8px auto 0;
+  }
+  .s-spectrum .brand .pin.dark {
+    background: var(--maroon);
+    box-shadow: 0 0 0 1.5px var(--maroon);
+  }
+  .s-spectrum .legend {
+    display: flex;
+    justify-content: center;
+    gap: 32px;
+    margin-top: 80px;
+  }
+  .s-spectrum .legend .item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    color: var(--ink-soft);
+  }
+  .s-spectrum .legend .item .sw {
+    width: 12px; height: 12px;
+    border-radius: 50%;
+  }
+  .s-spectrum .legend .item .sw.gold { background: var(--gold); }
+  .s-spectrum .legend .item .sw.dark { background: var(--maroon); }
+
+  /* ───── Slide: Theory anchor (Porter etc.) ───── */
+  .s-theory { padding: 80px 88px; }
+  .s-theory .inner {
+    display: flex;
+    align-items: stretch;
+    gap: 60px;
+    flex: 1;
+  }
+  .s-theory .left {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .s-theory .left .label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--maroon);
+    margin-bottom: 24px;
+  }
+  .s-theory .left h3 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 68px;
+    line-height: 1.0;
+    font-weight: 500;
+    color: var(--ink);
+    margin-bottom: 32px;
+  }
+  .s-theory .left h3 em {
+    font-style: italic;
+    color: var(--maroon);
+  }
+  .s-theory .left .prose {
+    font-family: 'Inter', sans-serif;
+    font-size: 18px;
+    line-height: 1.6;
+    color: var(--ink-soft);
+    max-width: 520px;
+  }
+  .s-theory .right {
+    flex: 0 0 460px;
+    background: var(--paper);
+    border-left: 3px solid var(--maroon);
+    padding: 40px 36px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .s-theory .right .pull {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 36px;
+    line-height: 1.2;
+    font-style: italic;
+    color: var(--ink);
+    margin-bottom: 28px;
+  }
+  .s-theory .right .pull::before {
+    content: "“";
+    font-size: 80px;
+    line-height: 0;
+    color: var(--maroon);
+    vertical-align: -20px;
+    margin-right: 4px;
+  }
+  .s-theory .right .attrib {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+  }
+
+  /* ───── Slide: Comparison (Apple/Samsung/Xiaomi/Realme) ───── */
+  .s-matrix { padding: 64px 88px 56px; }
+  .s-matrix .header { margin-bottom: 28px; }
+  .s-matrix .header .label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--maroon);
+    margin-bottom: 8px;
+  }
+  .s-matrix .header h3 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 44px;
+    font-weight: 500;
+    color: var(--ink);
+  }
+  .s-matrix .table {
+    display: grid;
+    grid-template-columns: 200px repeat(4, 1fr);
+    border-top: 2px solid var(--ink);
+    border-bottom: 1px solid var(--rule);
+  }
+  .s-matrix .th, .s-matrix .td {
+    padding: 18px 16px;
+    border-bottom: 1px solid var(--rule-soft);
+    display: flex;
+    align-items: center;
+  }
+  .s-matrix .th {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    background: var(--bg);
+  }
+  .s-matrix .th.brand {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    font-style: italic;
+    text-transform: none;
+    letter-spacing: 0;
+    color: var(--ink);
+    justify-content: flex-start;
+  }
+  .s-matrix .th.brand.accent { color: var(--maroon); }
+  .s-matrix .td.row-label {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 18px;
+    font-style: italic;
+    color: var(--ink-soft);
+  }
+  .s-matrix .td.value {
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    color: var(--ink);
+    line-height: 1.4;
+  }
+  .s-matrix .td.value .num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    font-weight: 500;
+    color: var(--maroon);
+    margin-right: 6px;
+  }
+  .s-matrix .td.value em {
+    color: var(--maroon);
+    font-style: italic;
+  }
+
+  /* ───── Slide: Bar chart visual ───── */
+  .s-bars { padding: 64px 88px 56px; }
+  .s-bars .header { margin-bottom: 48px; }
+  .s-bars .header .label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--maroon);
+    margin-bottom: 8px;
+  }
+  .s-bars .header h3 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 44px;
+    font-weight: 500;
+    color: var(--ink);
+  }
+  .s-bars .header h3 em { font-style: italic; color: var(--maroon); }
+  .s-bars .header p {
+    font-family: 'Inter', sans-serif;
+    font-size: 16px;
+    color: var(--ink-soft);
+    margin-top: 8px;
+    max-width: 700px;
+  }
+  .s-bars .chart {
+    display: grid;
+    grid-template-columns: 140px 1fr 80px;
+    gap: 16px 24px;
+    align-items: center;
+    margin-top: 32px;
+  }
+  .s-bars .chart .lbl {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    color: var(--ink);
+    text-align: right;
+  }
+  .s-bars .chart .lbl em {
+    font-style: italic;
+    color: var(--maroon);
+  }
+  .s-bars .chart .bar-wrap {
+    height: 36px;
+    background: var(--rule-soft);
+    border-radius: 4px;
+    overflow: hidden;
+    position: relative;
+  }
+  .s-bars .chart .bar {
+    height: 100%;
+    background: var(--maroon);
+    border-radius: 4px;
+  }
+  .s-bars .chart .bar.gold { background: var(--gold); }
+  .s-bars .chart .bar.ink { background: var(--ink); }
+  .s-bars .chart .bar.mute { background: var(--ink-mute); }
+  .s-bars .chart .val {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 26px;
+    font-weight: 500;
+    color: var(--ink);
+  }
+  .s-bars .chart .val em { font-style: italic; color: var(--maroon); }
+  .s-bars .axis {
+    grid-column: 2;
+    display: flex;
+    justify-content: space-between;
+    margin-top: 12px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--ink-mute);
+    letter-spacing: 0.1em;
+  }
+  .s-bars .source {
+    position: absolute;
+    bottom: 56px;
+    left: 88px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    color: var(--ink-mute);
+  }
+
+  /* ───── Slide: Vortex (ecosystem flywheel) ───── */
+  .s-vortex { padding: 64px 88px 56px; }
+  .s-vortex .header { margin-bottom: 32px; text-align: center; }
+  .s-vortex .header .label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--maroon);
+    margin-bottom: 8px;
+  }
+  .s-vortex .header h3 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 44px;
+    font-weight: 500;
+    color: var(--ink);
+  }
+  .s-vortex .header h3 em { font-style: italic; color: var(--maroon); }
+  .s-vortex .ring-wrap {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+  .s-vortex svg { display: block; }
+
+  /* ───── Slide: List of three (Take-home style) ───── */
+  .s-three { padding: 80px 88px 56px; }
+  .s-three .label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--maroon);
+    margin-bottom: 24px;
+  }
+  .s-three h3 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 56px;
+    line-height: 1.1;
+    font-weight: 500;
+    color: var(--ink);
+    margin-bottom: 56px;
+    max-width: 1000px;
+  }
+  .s-three h3 em { font-style: italic; color: var(--maroon); }
+  .s-three .items {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 56px;
+    flex: 1;
+  }
+  .s-three .items .item {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    border-top: 2px solid var(--ink);
+    padding-top: 24px;
+  }
+  .s-three .items .item .roman {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 72px;
+    line-height: 1;
+    font-style: italic;
+    color: var(--maroon);
+  }
+  .s-three .items .item h4 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 28px;
+    line-height: 1.15;
+    font-weight: 500;
+    color: var(--ink);
+  }
+  .s-three .items .item p {
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    line-height: 1.55;
+    color: var(--ink-soft);
+  }
+
+  /* ───── Slide: Fireside close ───── */
+  .s-fireside { padding: 80px 88px 56px; justify-content: space-between; }
+  .s-fireside .top .label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--maroon);
+    margin-bottom: 24px;
+  }
+  .s-fireside .top h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 84px;
+    line-height: 1.0;
+    font-weight: 400;
+    color: var(--ink);
+    max-width: 900px;
+  }
+  .s-fireside .top h2 em {
+    font-style: italic;
+    color: var(--maroon);
+  }
+  .s-fireside .qs {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px 48px;
+    margin-top: 40px;
+  }
+  .s-fireside .qs .q {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+  }
+  .s-fireside .qs .q .num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 32px;
+    font-style: italic;
+    color: var(--maroon);
+    line-height: 1;
+    flex-shrink: 0;
+  }
+  .s-fireside .qs .q .text {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    line-height: 1.3;
+    color: var(--ink);
+  }
+  .s-fireside .qs .q .text em { font-style: italic; color: var(--maroon); }
+  .s-fireside .bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-top: 32px;
+  }
+  .s-fireside .bottom .author {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .s-fireside .bottom .author .name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 24px;
+    font-style: italic;
+    color: var(--ink);
+  }
+  .s-fireside .bottom .author .role {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+  }
+  .s-fireside .bottom .handle {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    color: var(--ink-mute);
+  }
+  .s-fireside .bottom .handle em { color: var(--maroon); font-style: normal; }
+</style>
+</head>
+<body>
+
+<div class="stage" id="stage">
+
+  <!-- ════ SLIDE 1 — COVER ════ -->
+  <section class="slide s-cover active" data-n="1">
+    <div>
+      <div class="eyebrow">SPJIMR SSA · Session Two</div>
+      <h1>Smartphones &amp; <em>Consumer Electronics</em></h1>
+      <p class="subtitle">A 7-factor framework for how a category becomes an industry — and how a phone becomes the front door to a country.</p>
+    </div>
+    <div>
+      <div class="ornament">
+        <span class="line"></span>
+        <span class="glyph">✦</span>
+        <span class="line"></span>
+      </div>
+      <div class="meta" style="margin-top: 28px;">
+        <div class="meta-block">
+          <div class="meta-label">Date</div>
+          <div class="meta-value">13 · 06 · 2026</div>
+        </div>
+        <div class="meta-block">
+          <div class="meta-label">Duration</div>
+          <div class="meta-value">70 min <em>+ fireside</em></div>
+        </div>
+        <div class="meta-block">
+          <div class="meta-label">Format</div>
+          <div class="meta-value">Lecture → <em>conversation</em></div>
+        </div>
+      </div>
+    </div>
+    <div class="footer">SPJIMR SSA · SESSION 2</div>
+  </section>
+
+  <!-- ════ SLIDE 2 — THE MOMENT ════ -->
+  <section class="slide s-moment" data-n="2">
+    <div>
+      <div class="label">— 19:42, October 2018 —</div>
+      <div class="quote">"A 19-year-old in Indore walks into Croma, <span class="accent">puts ₹14,000 on the counter</span>, and walks out with a Redmi 6A. In the next 36 months, she will also buy — from the same brand, the same app, the same store — a TV, two pairs of earbuds, a smart band, a smart speaker, an air purifier, and a door lock."</div>
+      <div class="source">A composite sketch from seven years on the platform side</div>
+    </div>
+    <div class="ticker">
+      <div>Three Moments · The Question</div>
+      <div class="pulse">M 1 / 3</div>
+    </div>
+  </section>
+
+  <!-- ════ SLIDE 3 — THE QUESTION ════ -->
+  <section class="slide s-question" data-n="3">
+    <div class="top">
+      <div class="numeral">Q.</div>
+      <div class="ask">
+        <div class="label">A question for the room</div>
+        <div class="text">You have <em>₹25,000</em>. You are 22, in your first job. You will spend it on a phone this weekend. <em>Walk me through the last 24 hours</em> — what made the decision before the decision was made?</div>
+      </div>
+    </div>
+    <div class="bottom">
+      <div class="btn"><span class="dot"></span>Write your answer — 90 seconds</div>
+      <div class="btn mute"><span class="dot"></span>Then: turn to the person next to you</div>
+      <div class="btn gold"><span class="dot"></span>2 × 60 seconds — share</div>
+    </div>
+    <div class="footer">SPJIMR SSA · SESSION 2</div>
+  </section>
+
+  <!-- ════ SLIDE 4 — MOMENT MARKER ════ -->
+  <section class="slide s-marker" data-n="4">
+    <div></div>
+    <div>
+      <div class="moment">— Moment Two —</div>
+      <h2>Why she bought <em>the brand</em>, not the phone.</h2>
+      <div class="stripe"></div>
+      <div class="meta">
+        <div>The Framework</div>
+        <div>7 factors · one industry</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════ SLIDE 5 — THE FRAMEWORK ════ -->
+  <section class="slide s-framework" data-n="5">
+    <div class="header">
+      <div class="left">
+        <span class="badge">The 7 Factors</span>
+        <h3>Hawkeye — CE</h3>
+      </div>
+      <div class="right">Used four ways · same lens</div>
+    </div>
+    <div class="grid">
+      <div class="cell dark">
+        <div>
+          <svg class="icon" viewBox="0 0 36 36" fill="none" stroke="currentColor" stroke-width="1.5">
+            <rect x="6" y="6" width="24" height="24" rx="2"/>
+            <line x1="6" y1="14" x2="30" y2="14"/>
+            <line x1="14" y1="6" x2="14" y2="30"/>
+          </svg>
+          <div class="name">Business Model</div>
+          <div class="desc">Hardware margin vs services flywheel</div>
+        </div>
+        <div class="roman">I</div>
+      </div>
+      <div class="cell">
+        <div>
+          <svg class="icon" viewBox="0 0 36 36" fill="none" stroke="var(--maroon)" stroke-width="1.5">
+            <rect x="10" y="4" width="16" height="28" rx="2"/>
+            <circle cx="18" cy="27" r="1.5" fill="var(--maroon)"/>
+            <line x1="18" y1="8" x2="18" y2="20"/>
+          </svg>
+          <div class="name">Product</div>
+          <div class="desc">Specs, segments, software, design</div>
+        </div>
+        <div class="roman">II</div>
+      </div>
+      <div class="cell">
+        <div>
+          <svg class="icon" viewBox="0 0 36 36" fill="none" stroke="var(--maroon)" stroke-width="1.5">
+            <circle cx="18" cy="18" r="11"/>
+            <path d="M7 18 L29 18 M18 7 L18 29"/>
+            <circle cx="18" cy="18" r="3" fill="var(--maroon)"/>
+          </svg>
+          <div class="name">Supply Chain</div>
+          <div class="desc">BOM, sourcing, manufacturing, PLI</div>
+        </div>
+        <div class="roman">III</div>
+      </div>
+      <div class="cell">
+        <div>
+          <svg class="icon" viewBox="0 0 36 36" fill="none" stroke="var(--maroon)" stroke-width="1.5">
+            <path d="M4 28 L4 12 L18 4 L32 12 L32 28 Z"/>
+            <line x1="4" y1="12" x2="32" y2="12"/>
+            <line x1="18" y1="4" x2="18" y2="28"/>
+          </svg>
+          <div class="name">Brand &amp; Marketing</div>
+          <div class="desc">Story, narrative, community, social</div>
+        </div>
+        <div class="roman">IV</div>
+      </div>
+      <div class="cell">
+        <div>
+          <svg class="icon" viewBox="0 0 36 36" fill="none" stroke="var(--maroon)" stroke-width="1.5">
+            <path d="M6 10 L18 4 L30 10 L30 26 L18 32 L6 26 Z"/>
+            <path d="M6 10 L18 16 L30 10"/>
+            <line x1="18" y1="16" x2="18" y2="32"/>
+          </svg>
+          <div class="name">Channel</div>
+          <div class="desc">Online, offline, modern trade, Mi Home</div>
+        </div>
+        <div class="roman">V</div>
+      </div>
+      <div class="cell">
+        <div>
+          <svg class="icon" viewBox="0 0 36 36" fill="none" stroke="var(--maroon)" stroke-width="1.5">
+            <circle cx="18" cy="18" r="12"/>
+            <path d="M14 14 a4 4 0 1 1 6 3.5 L18 22"/>
+            <circle cx="18" cy="26" r="1.2" fill="var(--maroon)"/>
+          </svg>
+          <div class="name">Service &amp; CX</div>
+          <div class="desc">After-sales, software updates, trust</div>
+        </div>
+        <div class="roman">VI</div>
+      </div>
+      <div class="cell">
+        <div>
+          <svg class="icon" viewBox="0 0 36 36" fill="none" stroke="var(--maroon)" stroke-width="1.5">
+            <circle cx="18" cy="18" r="4"/>
+            <circle cx="6" cy="6" r="2"/>
+            <circle cx="30" cy="6" r="2"/>
+            <circle cx="6" cy="30" r="2"/>
+            <circle cx="30" cy="30" r="2"/>
+            <line x1="18" y1="18" x2="6" y2="6"/>
+            <line x1="18" y1="18" x2="30" y2="6"/>
+            <line x1="18" y1="18" x2="6" y2="30"/>
+            <line x1="18" y1="18" x2="30" y2="30"/>
+          </svg>
+          <div class="name">Ecosystem</div>
+          <div class="desc">Adjacencies, lock-in, flywheel</div>
+        </div>
+        <div class="roman">VII</div>
+      </div>
+      <div class="cell" style="background: var(--rule-soft); border-style: dashed;">
+        <div>
+          <div class="name" style="color: var(--ink-soft); font-size: 18px; font-style: italic;">+ Industry context</div>
+          <div class="desc" style="font-size: 11px;">PLI, China, geopolitics, regulator</div>
+        </div>
+        <div class="roman" style="color: var(--ink-mute);">·</div>
+      </div>
+    </div>
+    <div class="footer">SPJIMR SSA · SESSION 2</div>
+  </section>
+
+  <!-- ════ SLIDE 6 — THE SPECTRUM ════ -->
+  <section class="slide s-spectrum" data-n="6">
+    <div class="top">
+      <div>
+        <div class="label">Factor I · Business Model</div>
+        <h3>One question: <em>pipeline or platform?</em></h3>
+      </div>
+      <div style="text-align: right; font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--ink-mute);">Pipeline ⟶ Platform</div>
+    </div>
+    <div class="ring-wrap">
+      <svg viewBox="0 0 1200 400" width="100%" style="max-width: 1200px;">
+        <!-- the line -->
+        <line x1="60" y1="200" x2="1140" y2="200" stroke="var(--ink)" stroke-width="1.5"/>
+        <circle cx="60" cy="200" r="6" fill="var(--ink)"/>
+        <circle cx="1140" cy="200" r="6" fill="var(--ink)"/>
+        <!-- endpoints -->
+        <text x="60" y="160" font-family="Cormorant Garamond, serif" font-style="italic" font-size="32" fill="var(--ink)">Pipeline</text>
+        <text x="60" y="184" font-family="Inter, sans-serif" font-size="13" fill="var(--ink-mute)">Sell boxes · earn margin · repeat</text>
+        <text x="1140" y="160" text-anchor="end" font-family="Cormorant Garamond, serif" font-style="italic" font-size="32" fill="var(--ink)">Platform</text>
+        <text x="1140" y="184" text-anchor="end" font-family="Inter, sans-serif" font-size="13" fill="var(--ink-mute)">Sell access · earn rent · compound</text>
+        <!-- brand pins -->
+        <!-- Realme at far left -->
+        <circle cx="160" cy="200" r="14" fill="var(--gold)" stroke="var(--bg)" stroke-width="3"/>
+        <text x="160" y="160" text-anchor="middle" font-family="Cormorant Garamond, serif" font-size="28" font-weight="500" fill="var(--ink)">Realme</text>
+        <text x="160" y="178" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="10" letter-spacing="2" fill="var(--ink-mute)">FAST · YOUTH · ONLINE</text>
+        <text x="160" y="250" text-anchor="middle" font-family="Inter, sans-serif" font-size="12" fill="var(--ink-soft)">BOM economics</text>
+        <!-- Xiaomi at 30% -->
+        <circle cx="450" cy="200" r="14" fill="var(--gold)" stroke="var(--bg)" stroke-width="3"/>
+        <text x="450" y="160" text-anchor="middle" font-family="Cormorant Garamond, serif" font-size="28" font-weight="500" fill="var(--ink)">Xiaomi</text>
+        <text x="450" y="178" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="10" letter-spacing="2" fill="var(--ink-mute)">HYBRID · ECOSYSTEM</text>
+        <text x="450" y="250" text-anchor="middle" font-family="Inter, sans-serif" font-size="12" fill="var(--ink-soft)">Services flywheel forming</text>
+        <!-- Samsung at 65% -->
+        <circle cx="800" cy="200" r="14" fill="var(--maroon)" stroke="var(--bg)" stroke-width="3"/>
+        <text x="800" y="160" text-anchor="middle" font-family="Cormorant Garamond, serif" font-size="28" font-weight="500" fill="var(--ink)">Samsung</text>
+        <text x="800" y="178" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="10" letter-spacing="2" fill="var(--ink-mute)">VERTICAL · FRANCHISE</text>
+        <text x="800" y="250" text-anchor="middle" font-family="Inter, sans-serif" font-size="12" fill="var(--ink-soft)">Components → retail</text>
+        <!-- Apple at far right -->
+        <circle cx="1040" cy="200" r="14" fill="var(--maroon)" stroke="var(--bg)" stroke-width="3"/>
+        <text x="1040" y="160" text-anchor="middle" font-family="Cormorant Garamond, serif" font-size="28" font-weight="500" fill="var(--ink)">Apple</text>
+        <text x="1040" y="178" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="10" letter-spacing="2" fill="var(--ink-mute)">OS · SERVICES · RENT</text>
+        <text x="1040" y="250" text-anchor="middle" font-family="Inter, sans-serif" font-size="12" fill="var(--ink-soft)">~25% services revenue</text>
+        <!-- annotation: the cluster -->
+        <line x1="60" y1="290" x2="1140" y2="290" stroke="var(--rule)" stroke-width="1" stroke-dasharray="2,4"/>
+        <text x="600" y="320" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11" letter-spacing="3" fill="var(--ink-mute)">INDIA'S 2014–2026 STORY ⟵  MOST HAVE TO WALK THE LINE FIRST</text>
+      </svg>
+    </div>
+    <div class="legend">
+      <div class="item"><span class="sw gold"></span>Pipeline-led</div>
+      <div class="item"><span class="sw dark"></span>Platform-led</div>
+    </div>
+    <div class="footer">SPJIMR SSA · SESSION 2</div>
+  </section>
+
+  <!-- ════ SLIDE 7 — PORTER ANCHOR ════ -->
+  <section class="slide s-theory" data-n="7">
+    <div class="inner">
+      <div class="left">
+        <div class="label">Theory anchor · No. 1</div>
+        <h3>Three forces, <em>reordered</em>.</h3>
+        <p class="prose">Porter's five forces assume a stable industry structure. In consumer electronics, the threat that shapes margin is rarely new entrants — it is <em>platformisation</em>: the brand's own success in adjacencies eroding the hardware premium that funded the original push. The 7-factor lens inverts the priority: rivalry, then platform risk, then suppliers.</p>
+      </div>
+      <div class="right">
+        <div class="pull">Strategy is the deliberate choice to <em>not</em> do things that look profitable today.</div>
+        <div class="attrib">— Michael Porter, HBR 1996</div>
+      </div>
+    </div>
+    <div class="footer">SPJIMR SSA · SESSION 2</div>
+  </section>
+
+  <!-- ════ SLIDE 8 — BAR CHART: ECOSYSTEM WIDTH ════ -->
+  <section class="slide s-bars" data-n="8">
+    <div class="header">
+      <div class="label">Factor VII · Ecosystem Expansion</div>
+      <h3>How wide is the <em>adjacency</em>?</h3>
+      <p>Categories a brand operates in, by consumer electronics OEM. A proxy for flywheel potential — not for revenue, for compounding lock-in.</p>
+    </div>
+    <div class="chart">
+      <div class="lbl">Apple</div>
+      <div class="bar-wrap"><div class="bar ink" style="width: 100%;"></div></div>
+      <div class="val">12</div>
+      <div class="lbl">Samsung</div>
+      <div class="bar-wrap"><div class="bar" style="width: 83%;"></div></div>
+      <div class="val">10</div>
+      <div class="lbl">Xiaomi</div>
+      <div class="bar-wrap"><div class="bar" style="width: 75%;"></div></div>
+      <div class="val"><em>9</em></div>
+      <div class="lbl">Realme</div>
+      <div class="bar-wrap"><div class="bar gold" style="width: 33%;"></div></div>
+      <div class="val">4</div>
+      <div class="lbl">OnePlus</div>
+      <div class="bar-wrap"><div class="bar gold" style="width: 25%;"></div></div>
+      <div class="val">3</div>
+      <div class="lbl">Vivo</div>
+      <div class="bar-wrap"><div class="bar mute" style="width: 17%;"></div></div>
+      <div class="val">2</div>
+    </div>
+    <div class="axis">
+      <span>0</span><span>3</span><span>6</span><span>9</span><span>12</span>
+    </div>
+    <div class="source">Source: brand product catalogues, India, 2026. Headline only — depth not width.</div>
+    <div class="footer">SPJIMR SSA · SESSION 2</div>
+  </section>
+
+  <!-- ════ SLIDE 9 — THE VORTEX ════ -->
+  <section class="slide s-vortex" data-n="9">
+    <div class="header">
+      <div class="label">The Vortex</div>
+      <h3>One purchase. <em>Six follow-ons.</em></h3>
+    </div>
+    <div class="ring-wrap">
+      <svg viewBox="0 0 1000 540" width="100%" style="max-width: 1000px;">
+        <!-- center node -->
+        <circle cx="500" cy="270" r="76" fill="var(--maroon)"/>
+        <text x="500" y="262" text-anchor="middle" font-family="Cormorant Garamond, serif" font-style="italic" font-size="28" fill="var(--bg)">The</text>
+        <text x="500" y="296" text-anchor="middle" font-family="Cormorant Garamond, serif" font-size="30" font-weight="500" fill="var(--bg)">Phone</text>
+        <!-- ring of six follow-ons -->
+        <g font-family="Cormorant Garamond, serif" font-size="20" font-weight="500" fill="var(--ink)">
+          <!-- top: TWS earbuds -->
+          <g transform="translate(500,90)">
+            <circle r="52" fill="var(--paper)" stroke="var(--gold)" stroke-width="2"/>
+            <text text-anchor="middle" y="-4">TWS Earbuds</text>
+            <text text-anchor="middle" y="18" font-family="JetBrains Mono, monospace" font-size="10" letter-spacing="2" fill="var(--ink-mute)">₹ 1,500</text>
+          </g>
+          <!-- top-right: Smart band -->
+          <g transform="translate(770,180)">
+            <circle r="52" fill="var(--paper)" stroke="var(--gold)" stroke-width="2"/>
+            <text text-anchor="middle" y="-4">Smart Band</text>
+            <text text-anchor="middle" y="18" font-family="JetBrains Mono, monospace" font-size="10" letter-spacing="2" fill="var(--ink-mute)">₹ 2,500</text>
+          </g>
+          <!-- bottom-right: Smart TV -->
+          <g transform="translate(770,360)">
+            <circle r="52" fill="var(--paper)" stroke="var(--gold)" stroke-width="2"/>
+            <text text-anchor="middle" y="-4">Smart TV</text>
+            <text text-anchor="middle" y="18" font-family="JetBrains Mono, monospace" font-size="10" letter-spacing="2" fill="var(--ink-mute)">₹ 24,000</text>
+          </g>
+          <!-- bottom: Smart speaker -->
+          <g transform="translate(500,450)">
+            <circle r="52" fill="var(--paper)" stroke="var(--gold)" stroke-width="2"/>
+            <text text-anchor="middle" y="-4">Speaker</text>
+            <text text-anchor="middle" y="18" font-family="JetBrains Mono, monospace" font-size="10" letter-spacing="2" fill="var(--ink-mute)">₹ 3,500</text>
+          </g>
+          <!-- bottom-left: Air purifier -->
+          <g transform="translate(230,360)">
+            <circle r="52" fill="var(--paper)" stroke="var(--gold)" stroke-width="2"/>
+            <text text-anchor="middle" y="-4">Purifier</text>
+            <text text-anchor="middle" y="18" font-family="JetBrains Mono, monospace" font-size="10" letter-spacing="2" fill="var(--ink-mute)">₹ 12,000</text>
+          </g>
+          <!-- top-left: Smart lock -->
+          <g transform="translate(230,180)">
+            <circle r="52" fill="var(--paper)" stroke="var(--gold)" stroke-width="2"/>
+            <text text-anchor="middle" y="-4">Door Lock</text>
+            <text text-anchor="middle" y="18" font-family="JetBrains Mono, monospace" font-size="10" letter-spacing="2" fill="var(--ink-mute)">₹ 9,500</text>
+          </g>
+        </g>
+        <!-- connecting lines -->
+        <g stroke="var(--rule)" stroke-width="1" fill="none">
+          <line x1="500" y1="270" x2="500" y2="142"/>
+          <line x1="500" y1="270" x2="718" y2="180"/>
+          <line x1="500" y1="270" x2="718" y2="360"/>
+          <line x1="500" y1="270" x2="500" y2="398"/>
+          <line x1="500" y1="270" x2="282" y2="360"/>
+          <line x1="500" y1="270" x2="282" y2="180"/>
+        </g>
+        <!-- arrows toward center (lock-in direction) -->
+        <g fill="var(--maroon)">
+          <polygon points="500,254 494,266 506,266"/>
+          <polygon points="490,256 502,266 502,250" opacity="0.5"/>
+        </g>
+        <!-- total callout -->
+        <g transform="translate(880,460)">
+          <line x1="0" y1="0" x2="-60" y2="-40" stroke="var(--ink-mute)" stroke-width="1"/>
+          <text font-family="JetBrains Mono, monospace" font-size="10" letter-spacing="2" fill="var(--ink-mute)">LIFETIME SPEND</text>
+          <text y="20" font-family="Cormorant Garamond, serif" font-size="36" font-style="italic" fill="var(--maroon)">₹ 53,000+</text>
+        </g>
+      </svg>
+    </div>
+    <div class="footer">SPJIMR SSA · SESSION 2</div>
+  </section>
+
+  <!-- ════ SLIDE 10 — MATRIX: ACROSS THE 4 BRANDS ════ -->
+  <section class="slide s-matrix" data-n="10">
+    <div class="header">
+      <div class="label">Cross-cut · same 7 factors</div>
+      <h3>Four brands, <em>one lens</em>.</h3>
+    </div>
+    <div class="table">
+      <div class="th"></div>
+      <div class="th brand">Realme</div>
+      <div class="th brand">Xiaomi</div>
+      <div class="th brand">Samsung</div>
+      <div class="th brand accent">Apple</div>
+      <div class="td row-label">Business model</div>
+      <div class="td value">Online-first · slim margin</div>
+      <div class="td value">Hybrid · services forming</div>
+      <div class="td value">Vertical · components → retail</div>
+      <div class="td value"><em>OS + services rent</em></div>
+      <div class="td row-label">Product span</div>
+      <div class="td value">Phones, audio, wearables</div>
+      <div class="td value">Phone → 9 categories</div>
+      <div class="td value">Phone + components + retail</div>
+      <div class="td value">Phone + 12 adjacencies</div>
+      <div class="td row-label">Brand promise</div>
+      <div class="td value">"Dare to leap"</div>
+      <div class="td value">"Mi for all"</div>
+      <div class="td value">"Do what you can't"</div>
+      <div class="td value"><em>"Think different"</em></div>
+      <div class="td row-label">Channel</div>
+      <div class="td value">Flipkart, Amazon</div>
+      <div class="td value">Mi Home + online + retail</div>
+      <div class="td value">Samsung Experience stores</div>
+      <div class="td value">Apple + resellers (capped)</div>
+      <div class="td row-label">Service moat</div>
+      <div class="td value">Thin</div>
+      <div class="td value">Mi Care, growing</div>
+      <div class="td value">Strong, in-region</div>
+      <div class="td value">Best in class, premium</div>
+    </div>
+    <div class="footer">SPJIMR SSA · SESSION 2</div>
+  </section>
+
+  <!-- ════ SLIDE 11 — CHRISTENSEN ANCHOR ════ -->
+  <section class="slide s-theory" data-n="11">
+    <div class="inner">
+      <div class="left">
+        <div class="label">Theory anchor · No. 2</div>
+        <h3>Cheap is not <em>good enough</em>.</h3>
+        <p class="prose">Christensen's disruption requires the entrant to start at the low end, then climb. In 2014–2020, Chinese OEMs disrupted by offering more for less. The next disruption — from the high end, or from a non-obvious adjacency — looks different. The thesis: the lock-in flywheel, not the BOM, is the moat that survives commoditisation.</p>
+      </div>
+      <div class="right">
+        <div class="pull">Disruption is a process, not an event. It is a <em>journey</em>, not a destination.</div>
+        <div class="attrib">— Clayton Christensen, HBR 2015</div>
+      </div>
+    </div>
+    <div class="footer">SPJIMR SSA · SESSION 2</div>
+  </section>
+
+  <!-- ════ SLIDE 12 — THE THESIS ════ -->
+  <section class="slide s-moment" data-n="12">
+    <div style="background: var(--maroon); color: var(--bg); position: absolute; inset: 0; padding: 100px 88px; display: flex; flex-direction: column; justify-content: center;">
+      <div style="font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: 0.3em; text-transform: uppercase; color: var(--gold-soft); margin-bottom: 36px;">— Moment Three —</div>
+      <div style="font-family: 'Cormorant Garamond', serif; font-size: 80px; line-height: 1.05; font-weight: 400; max-width: 1100px;">The cheapest phone is <span style="font-style: italic; color: var(--gold-soft);">never</span> the cheapest category.<br>The brand that wins the phone <em>owns the next ₹40,000</em>.</div>
+    </div>
+  </section>
+
+  <!-- ════ SLIDE 13 — THREE TAKEAWAYS ════ -->
+  <section class="slide s-three" data-n="13">
+    <div>
+      <div class="label">What to remember</div>
+      <h3>Three shifts to take <em>out of the room</em>.</h3>
+    </div>
+    <div class="items">
+      <div class="item">
+        <div class="roman">I.</div>
+        <h4>Phone is the <em>front door</em>.</h4>
+        <p>Hardware is loss-leader economics. The customer journey that matters is the seven-touch, three-year, ₹50K+ adjacency arc — not the first transaction.</p>
+      </div>
+      <div class="item">
+        <div class="roman">II.</div>
+        <h4>PLI is <em>necessary, not sufficient</em>.</h4>
+        <p>Manufacturing scale wins components. The flywheel that compounds needs brand, retail, software, and service — all four, simultaneously, in seven years.</p>
+      </div>
+      <div class="item">
+        <div class="roman">III.</div>
+        <h4>Lock-in is <em>depth</em>, not width.</h4>
+        <p>Realme has 4 categories. Apple has 12. The number isn't the moat — what compounds inside each category, across two or three touch-points per year, is.</p>
+      </div>
+    </div>
+    <div class="footer">SPJIMR SSA · SESSION 2</div>
+  </section>
+
+  <!-- ════ SLIDE 14 — FIRESIDE ════ -->
+  <section class="slide s-fireside" data-n="14">
+    <div class="top">
+      <div class="label">Fireside · 20 minutes</div>
+      <h2>From <em>frameworks</em> to <em>your decisions</em>.</h2>
+    </div>
+    <div class="qs">
+      <div class="q">
+        <div class="num">01</div>
+        <div class="text">Of the four brands, which is closest to <em>becoming a platform</em> — and what's the next 24 months of evidence you'd watch for?</div>
+      </div>
+      <div class="q">
+        <div class="num">02</div>
+        <div class="text">PLI v2: which bottleneck is genuinely closing, and which is being <em>papered over</em> by the duty structure?</div>
+      </div>
+      <div class="q">
+        <div class="num">03</div>
+        <div class="text">Pick a category — TWS, smart TV, wearables. Which brand <em>didn't exist there</em> five years ago that you would not bet against in 2030?</div>
+      </div>
+      <div class="q">
+        <div class="num">04</div>
+        <div class="text">Ecosystem lock-in in 2016 vs 2026: did it get <em>stronger, weaker, or just</em> look different? Pick one and defend.</div>
+      </div>
+    </div>
+    <div class="bottom">
+      <div class="author">
+        <div class="name">Muralikrishnan B.</div>
+        <div class="role">Founding Partner, LatticeEd</div>
+      </div>
+      <div class="handle">SPJIMR SSA · Session 2 · <em>thank you</em></div>
+    </div>
+  </section>
+
+</div>
+
+<style>
+  /* Nav */
+  .nav {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 6px;
+    z-index: 100;
+    background: rgba(255,255,255,0.85);
+    backdrop-filter: blur(8px);
+    border-radius: 999px;
+    padding: 8px 14px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+  }
+  .nav button {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: var(--ink-mute);
+    border: 0;
+    cursor: pointer;
+    opacity: 0.35;
+    transition: opacity 0.2s, transform 0.2s;
+  }
+  .nav button.active { opacity: 1; background: var(--maroon); transform: scale(1.4); }
+  .nav button:hover { opacity: 0.7; }
+  .nav .arrow {
+    background: none;
+    width: auto;
+    height: auto;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--ink);
+    padding: 0 6px;
+    opacity: 0.7;
+  }
+  .nav .arrow:hover { opacity: 1; }
+</style>
+
+<div class="nav" id="nav">
+  <button class="arrow" data-go="prev">‹</button>
+  <button data-go="1" class="active"></button><button data-go="2"></button><button data-go="3"></button><button data-go="4"></button><button data-go="5"></button><button data-go="6"></button><button data-go="7"></button><button data-go="8"></button><button data-go="9"></button><button data-go="10"></button><button data-go="11"></button><button data-go="12"></button><button data-go="13"></button><button data-go="14"></button>
+  <button class="arrow" data-go="next">›</button>
+</div>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<script>
+  const slides = document.querySelectorAll('.slide');
+  const navBtns = document.querySelectorAll('.nav button');
+  let cur = 1;
+  const total = slides.length;
+
+  function go(n) {
+    n = Math.max(1, Math.min(total, n));
+    slides.forEach(s => s.classList.remove('active'));
+    slides[n-1].classList.add('active');
+    navBtns.forEach(b => {
+      if (b.dataset.go && !isNaN(parseInt(b.dataset.go))) {
+        b.classList.toggle('active', parseInt(b.dataset.go) === n);
+      }
+    });
+    cur = n;
+    if (location.hash !== '#' + n) {
+      history.replaceState(null, '', '#' + n);
+    }
+  }
+
+  navBtns.forEach(b => {
+    b.addEventListener('click', () => {
+      const t = b.dataset.go;
+      if (t === 'prev') go(cur - 1);
+      else if (t === 'next') go(cur + 1);
+      else go(parseInt(t));
+    });
+  });
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') { e.preventDefault(); go(cur + 1); }
+    else if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); go(cur - 1); }
+    else if (e.key === 'Home') go(1);
+    else if (e.key === 'End') go(total);
+  });
+
+  // init from hash
+  const init = parseInt(location.hash.replace('#',''));
+  if (init >= 1 && init <= total) go(init);
+  else go(1);
+</script>
+
+</body>
+</html>
