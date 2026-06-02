@@ -753,6 +753,15 @@
     if (!isNaN(start) && start >= 1 && start <= total) idx = start - 1;
     show(idx);
 
+    // React to hash changes (browser back/forward, manual URL edits)
+    window.addEventListener('hashchange', function(){
+      var hh = (location.hash || '').replace('#','');
+      var n = parseInt(hh, 10);
+      if (!isNaN(n) && n >= 1 && n <= total && (n - 1) !== idx) {
+        show(n - 1);
+      }
+    });
+
     // Diagnostic: log viewport state for debugging. Visible in browser console.
     function reportViewportState(){
       var sw = stage.clientWidth, sh = stage.clientHeight;
