@@ -220,6 +220,47 @@
     text-transform:uppercase}
   .s-close .callback{margin-top:24px;font-size:22px;color:var(--muted);font-style:italic;
     font-family:'Cormorant Garamond',serif;max-width:900px;line-height:1.4}
+  /* === MOBILE / ON-SCREEN NAV === */
+  .nav-bar{
+    position:fixed;left:0;right:0;bottom:0;z-index:1000;
+    display:flex;align-items:center;gap:12px;
+    padding:14px 20px calc(14px + env(safe-area-inset-bottom)) 20px;
+    background:linear-gradient(180deg,rgba(0,0,0,0) 0%,rgba(0,0,0,.85) 40%,rgba(0,0,0,.95) 100%);
+    backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+  }
+  .nav-btn{
+    flex:0 0 auto;min-width:54px;height:44px;border-radius:22px;
+    background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);
+    color:#fff;font-size:20px;line-height:1;display:flex;align-items:center;
+    justify-content:center;cursor:pointer;-webkit-tap-highlight-color:transparent;
+    font-family:'Outfit',sans-serif;user-select:none;
+  }
+  .nav-btn:active{background:rgba(201,169,98,.25);border-color:var(--gold)}
+  .nav-btn:disabled{opacity:.3;cursor:not-allowed}
+  .nav-progress{flex:1 1 auto;height:4px;background:rgba(255,255,255,.12);border-radius:2px;
+    overflow:hidden;position:relative}
+  .nav-progress-fill{position:absolute;left:0;top:0;bottom:0;background:var(--gold);
+    width:0%;transition:width .25s ease}
+  .nav-counter{flex:0 0 auto;font-size:13px;color:var(--muted);letter-spacing:.12em;
+    font-variant-numeric:tabular-nums;min-width:60px;text-align:right}
+  /* Tap zones (desktop / projector without keyboard) */
+  .tap-zone{position:fixed;top:0;bottom:0;width:25%;z-index:999;cursor:pointer;
+    -webkit-tap-highlight-color:transparent}
+  .tap-zone.prev{left:0}
+  .tap-zone.next{right:0}
+  /* Slide visibility: only the active slide is shown */
+  .slide{visibility:hidden;opacity:0;transition:opacity .25s ease}
+  .slide.active{visibility:visible;opacity:1}
+  /* Hide on-screen nav when printing or in iframe > 1024px wide projector mode */
+  @media (min-width:1200px) and (hover:hover){
+    .nav-bar{display:none}
+    .tap-zone{display:none}
+  }
+  @media print{
+    .nav-bar,.tap-zone{display:none}
+    .slide{visibility:visible;opacity:1;position:relative;page-break-after:always;
+      transform:none !important;width:100%;height:100vh}
+  }
 </style>
 </head>
 <body>
@@ -556,48 +597,133 @@
 
 </div>
 
+<!-- Mobile / on-screen navigation -->
+<button class="tap-zone prev" id="tapPrev" aria-label="Previous slide"></button>
+<button class="tap-zone next" id="tapNext" aria-label="Next slide"></button>
+<nav class="nav-bar" id="navBar" aria-label="Slide navigation">
+  <button class="nav-btn" id="btnPrev" aria-label="Previous slide">‹</button>
+  <div class="nav-progress"><div class="nav-progress-fill" id="progFill"></div></div>
+  <span class="nav-counter" id="counter">01 / 16</span>
+  <button class="nav-btn" id="btnNext" aria-label="Next slide">›</button>
+</nav>
+
 <script>
-  // Scale each slide to fit the stage while preserving 16:9 aspect ratio.
-  // Slides are designed at 1600x900; we scale uniformly based on whichever dimension is tighter.
+  // 16:9 scale-to-fit deck with multi-input navigation.
+  // Inputs: keyboard (arrows/space/page), touch swipe, on-screen buttons, click on left/right edges.
   (function(){
     var stage = document.getElementById('stage');
-    var slides = stage.querySelectorAll('.slide');
-    function fit(){
-      var sw = stage.clientWidth;
-      var sh = stage.clientHeight;
-      var scale = Math.min(sw / 1600, sh / 900);
-      slides.forEach(function(s){
-        s.style.transform = 'scale(' + scale + ')';
-      });
-    }
-    fit();
-    window.addEventListener('resize', fit);
-    // Keyboard navigation: arrow keys / space to advance, shift+arrow to go back
+    var slides = Array.prototype.slice.call(stage.querySelectorAll('.slide'));
+    var total = slides.length;
     var idx = 0;
-    function show(i){
-      idx = Math.max(0, Math.min(slides.length - 1, i));
-      slides[idx].scrollIntoView({behavior:'instant', block:'start'});
-    }
-    // Stack slides on top of each other so only one is visible at a time
-    slides.forEach(function(s, i){
-      s.style.position = 'absolute';
-      s.style.left = (stage.clientWidth/2 - 800) + 'px';
-      s.style.top = (stage.clientHeight/2 - 450) + 'px';
-    });
-    function reposition(){
+
+    // Position slides: stack absolutely at the centre of the stage, scaled to fit.
+    function placeSlides(){
+      var sw = stage.clientWidth, sh = stage.clientHeight;
+      var scale = Math.min(sw / 1600, sh / 900);
+      var left = (sw - 1600 * scale) / 2;
+      var top  = (sh - 900 * scale) / 2;
       slides.forEach(function(s){
-        s.style.left = (stage.clientWidth/2 - 800) + 'px';
-        s.style.top = (stage.clientHeight/2 - 450) + 'px';
+        s.style.position = 'absolute';
+        s.style.left = left + 'px';
+        s.style.top  = top + 'px';
+        s.style.width  = '1600px';
+        s.style.height = '900px';
+        s.style.transform = 'scale(' + scale + ')';
+        s.style.transformOrigin = 'top left';
       });
     }
-    reposition();
-    window.addEventListener('resize', function(){ fit(); reposition(); });
+
+    function show(i){
+      idx = Math.max(0, Math.min(total - 1, i));
+      slides.forEach(function(s, n){ s.classList.toggle('active', n === idx); });
+      // update UI
+      var c = document.getElementById('counter');
+      var p = document.getElementById('progFill');
+      var prev = document.getElementById('btnPrev');
+      var next = document.getElementById('btnNext');
+      if (c) c.textContent = String(idx + 1).padStart(2, '0') + ' / ' + String(total).padStart(2, '0');
+      if (p) p.style.width = (((idx + 1) / total) * 100) + '%';
+      if (prev) prev.disabled = (idx === 0);
+      if (next) next.disabled = (idx === total - 1);
+      // Update page number overlay on the active slide (the existing .pg element)
+      slides.forEach(function(s, n){
+        var pg = s.querySelector('.pg');
+        if (!pg) return;
+        if (n === idx) {
+          var orig = pg.getAttribute('data-orig') || pg.textContent;
+          pg.setAttribute('data-orig', orig);
+          pg.textContent = String(idx + 1).padStart(2, '0') + ' / ' + String(total).padStart(2, '0');
+          pg.style.display = '';
+        } else {
+          pg.style.display = 'none';
+        }
+      });
+      // Reflect in URL hash for deep-linking
+      try { history.replaceState(null, '', '#' + (idx + 1)); } catch(e) {}
+    }
+
+    function go(delta){ show(idx + delta); }
+    function first(){ show(0); }
+    function last(){ show(total - 1); }
+
+    // Keyboard
     document.addEventListener('keydown', function(e){
-      if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') { show(idx+1); e.preventDefault(); }
-      if (e.key === 'ArrowLeft' || e.key === 'PageUp') { show(idx-1); e.preventDefault(); }
-      if (e.key === 'Home') { show(0); e.preventDefault(); }
-      if (e.key === 'End') { show(slides.length-1); e.preventDefault(); }
+      if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') { go(1); e.preventDefault(); }
+      else if (e.key === 'ArrowLeft' || e.key === 'PageUp') { go(-1); e.preventDefault(); }
+      else if (e.key === 'Home') { first(); e.preventDefault(); }
+      else if (e.key === 'End')  { last();  e.preventDefault(); }
     });
+
+    // On-screen buttons
+    var btnPrev = document.getElementById('btnPrev');
+    var btnNext = document.getElementById('btnNext');
+    if (btnPrev) btnPrev.addEventListener('click', function(e){ e.stopPropagation(); go(-1); });
+    if (btnNext) btnNext.addEventListener('click', function(e){ e.stopPropagation(); go(1);  });
+
+    // Tap zones (left 25% = prev, right 25% = next)
+    var tapPrev = document.getElementById('tapPrev');
+    var tapNext = document.getElementById('tapNext');
+    if (tapPrev) tapPrev.addEventListener('click', function(e){ e.stopPropagation(); go(-1); });
+    if (tapNext) tapNext.addEventListener('click', function(e){ e.stopPropagation(); go(1);  });
+
+    // Touch swipe
+    var touchStartX = null, touchStartY = null, touchStartT = 0;
+    var SWIPE_MIN = 40;   // px
+    var SWIPE_MAX_MS = 800;
+    stage.addEventListener('touchstart', function(e){
+      if (!e.touches || e.touches.length !== 1) return;
+      touchStartX = e.touches[0].clientX;
+      touchStartY = e.touches[0].clientY;
+      touchStartT = Date.now();
+    }, {passive: true});
+    stage.addEventListener('touchend', function(e){
+      if (touchStartX === null) return;
+      var t = (e.changedTouches && e.changedTouches[0]) || null;
+      if (!t) { touchStartX = null; return; }
+      var dx = t.clientX - touchStartX;
+      var dy = t.clientY - touchStartY;
+      var dt = Date.now() - touchStartT;
+      // Horizontal swipe dominant
+      if (Math.abs(dx) > SWIPE_MIN && Math.abs(dx) > Math.abs(dy) && dt < SWIPE_MAX_MS) {
+        if (dx < 0) go(1); else go(-1);
+      }
+      touchStartX = null; touchStartY = null;
+    }, {passive: true});
+
+    // Resize handler — re-place, don't reset index
+    var resizeT = null;
+    window.addEventListener('resize', function(){
+      if (resizeT) clearTimeout(resizeT);
+      resizeT = setTimeout(function(){ placeSlides(); }, 80);
+    });
+
+    // Init
+    placeSlides();
+    // Honour deep-link from URL hash (#5 → start at slide 5)
+    var h = (location.hash || '').replace('#','');
+    var start = parseInt(h, 10);
+    if (!isNaN(start) && start >= 1 && start <= total) idx = start - 1;
+    show(idx);
   })();
 </script>
 
