@@ -3,6 +3,14 @@ import { createRequestId, generateMagicToken } from "@/lib/token";
 import { sendMagicLinkEmail } from "@/lib/email";
 
 const DEFAULT_OWNER_EMAIL = "muralikrishnan@gmail.com";
+const DEFAULT_DECK_EXPIRY_HOURS = Number(process.env.DECKS_DEFAULT_EXPIRY_HOURS ?? "24");
+
+function getDefaultDeckExpiryIso(nowMs: number = Date.now()): string | null {
+  if (!Number.isFinite(DEFAULT_DECK_EXPIRY_HOURS) || DEFAULT_DECK_EXPIRY_HOURS <= 0) {
+    return null;
+  }
+  return new Date(nowMs + DEFAULT_DECK_EXPIRY_HOURS * 60 * 60 * 1000).toISOString();
+}
 
 export type DeckMode = "locked" | "request" | "open";
 export type EmailStatus = "pending" | "active" | "revoked";
@@ -73,7 +81,8 @@ export async function ensureManifest(filename: string, title?: string): Promise<
     return existing;
   }
 
-  const now = new Date().toISOString();
+  const nowMs = Date.now();
+  const now = new Date(nowMs).toISOString();
   const manifest: DeckManifest = {
     title: title ?? humanizeFilename(filename),
     mode: "locked",
@@ -87,7 +96,7 @@ export async function ensureManifest(filename: string, title?: string): Promise<
       },
     ],
     emailDomains: [],
-    expiresAt: null,
+    expiresAt: getDefaultDeckExpiryIso(nowMs),
     createdAt: now,
     updatedAt: now,
   };
