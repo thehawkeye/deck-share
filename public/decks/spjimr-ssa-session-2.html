@@ -665,6 +665,151 @@
     font-style: italic;
   }
 
+  /* ───── Slide: Factor deep-dive (Factor I–VII, 7 slides) ───── */
+  .s-factor { padding: 56px 80px 48px; }
+  .s-factor .top {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--rule);
+    padding-bottom: 18px;
+    margin-bottom: 32px;
+  }
+  .s-factor .top .left {
+    display: flex;
+    align-items: baseline;
+    gap: 20px;
+  }
+  .s-factor .roman {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 56px;
+    font-weight: 500;
+    font-style: italic;
+    color: var(--maroon);
+    line-height: 1;
+  }
+  .s-factor .factor-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 44px;
+    font-weight: 500;
+    color: var(--ink);
+    line-height: 1;
+  }
+  .s-factor .factor-name em { font-style: italic; color: var(--maroon); }
+  .s-factor .top .right {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+  }
+  .s-factor .question {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 30px;
+    font-style: italic;
+    color: var(--ink);
+    line-height: 1.25;
+    margin-bottom: 32px;
+    max-width: 1100px;
+  }
+  .s-factor .body {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 28px;
+    flex: 1;
+  }
+  .s-factor .col {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .s-factor .col-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--maroon);
+    margin-bottom: 4px;
+  }
+  .s-factor .col h4 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    font-weight: 500;
+    color: var(--ink);
+    line-height: 1.15;
+    margin-bottom: 4px;
+  }
+  .s-factor .col ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .s-factor .col li {
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--ink-soft);
+    padding: 6px 0 6px 18px;
+    position: relative;
+    border-bottom: 1px dotted var(--rule-soft);
+  }
+  .s-factor .col li:last-child { border-bottom: 0; }
+  .s-factor .col li::before {
+    content: "·";
+    position: absolute;
+    left: 4px;
+    top: 6px;
+    color: var(--gold);
+    font-weight: 700;
+  }
+  .s-factor .col .talk {
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    line-height: 1.55;
+    color: var(--ink);
+  }
+  .s-factor .col .talk b {
+    color: var(--maroon);
+    font-weight: 600;
+  }
+  .s-factor .col .case {
+    background: var(--paper);
+    border-left: 3px solid var(--gold);
+    padding: 14px 16px;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--ink-soft);
+  }
+  .s-factor .col .case b { color: var(--ink); font-weight: 600; }
+  .s-factor .col .anchor {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 18px;
+    font-style: italic;
+    color: var(--ink-soft);
+    line-height: 1.4;
+    padding-top: 8px;
+    border-top: 1px solid var(--rule-soft);
+  }
+  .s-factor .col .anchor::before {
+    content: "“";
+    color: var(--maroon);
+    font-size: 28px;
+    line-height: 0;
+    vertical-align: -10px;
+    margin-right: 4px;
+  }
+  .s-factor .col .anchor b {
+    display: block;
+    margin-top: 8px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    font-style: normal;
+  }
+
   /* ───── Slide: Bar chart visual ───── */
   .s-bars { padding: 64px 88px 56px; }
   .s-bars .header { margin-bottom: 48px; }
@@ -1101,8 +1246,386 @@
     <div class="footer">SPJIMR SSA · SESSION 2</div>
   </section>
 
-  <!-- ════ SLIDE 6 — THE SPECTRUM ════ -->
-  <section class="slide s-spectrum" data-n="6">
+  <!-- ════ SLIDE 6 — FACTOR I: BUSINESS MODEL (deep-dive) ════ -->
+  <section class="slide s-factor" data-n="6">
+    <div class="top">
+      <div class="left">
+        <span class="roman">I.</span>
+        <span class="factor-name">Business <em>Model</em></span>
+      </div>
+      <div class="right">Hawkeye Factor · 1 of 7</div>
+    </div>
+    <div class="question">"Are they selling boxes — or selling access?"</div>
+    <div class="body">
+      <div class="col">
+        <div class="col-label">What to look for</div>
+        <h4>Four diagnostic questions</h4>
+        <ul>
+          <li>Hardware % of revenue — and what direction it's moving (year on year)</li>
+          <li>Services or software attach rate per device shipped</li>
+          <li>Whether gross margin comes from the box or from a follow-on</li>
+          <li>What survives if hardware sales flatline for two quarters</li>
+        </ul>
+        <div class="anchor">
+          If the only line on the income statement is the device, you don't have a business model. You have a SKU.
+          <b>— Practitioner rule</b>
+        </div>
+      </div>
+      <div class="col">
+        <div class="col-label">Talking points</div>
+        <div class="talk">
+          <b>The simplest test in the room.</b> Take the brand's last 10-K. Strip out the phone. What survives? Apple's services, store, watch. Xiaomi's MIUI ads, IoT, India retail. Realme's… silence. That tells you the business model.
+        </div>
+        <div class="talk">
+          <b>Pipeline vs platform is not a slogan.</b> It's a P&L shape. Pipelines get the spike, then the cliff. Platforms get the slow rise, then compounding. Both can be profitable in year three. Only one is profitable in year ten.
+        </div>
+        <div class="talk">
+          <b>Realme, OnePlus, Vivo, Poco</b> — all of them have the same business model today. Online-first, BOM-economics, slim margin. The interesting question is which of them is <b>deliberately choosing</b> to add a second revenue line, and which is pretending it isn't needed.
+        </div>
+      </div>
+      <div class="col">
+        <div class="col-label">Real-world signal</div>
+        <div class="case">
+          <b>Xiaomi India, 2018–22.</b> Hardware gross margin ran at 4–8%. Internet services (MIUI ads, app store, fintech) ran at 60%+. The 5-year bet was: lose money on the box, make it on the OS. Investors who read only the phone line called it a low-margin commodity business. They missed the architecture.
+        </div>
+        <div class="case">
+          <b>Apple, 2025.</b> iPhone is still ~50% of revenue. Services is ~25% and growing faster, with margins 2.5x the device. The phone is the front door. Services is the building.
+        </div>
+        <div class="anchor">
+          The best way to shut me up is to show me data.
+          <b>— Murali, on what evidence looks like</b>
+        </div>
+      </div>
+    </div>
+    <div class="footer">SPJIMR SSA · SESSION 2</div>
+  </section>
+
+  <!-- ════ SLIDE 7 — FACTOR II: PRODUCT (deep-dive) ════ -->
+  <section class="slide s-factor" data-n="7">
+    <div class="top">
+      <div class="left">
+        <span class="roman">II.</span>
+        <span class="factor-name"><em>Product</em></span>
+      </div>
+      <div class="right">Hawkeye Factor · 2 of 7</div>
+    </div>
+    <div class="question">"Is the product a spec sheet — or a position?"</div>
+    <div class="body">
+      <div class="col">
+        <div class="col-label">What to look for</div>
+        <h4>Four diagnostic questions</h4>
+        <ul>
+          <li>Spec leadership: do they own the headline feature, or chase it?</li>
+          <li>Software update commitment — years, not months</li>
+          <li>Segment coverage: budget, mid, premium, ultra-premium — and gap strategy</li>
+          <li>Design language: consistent across portfolio, or SKU-by-SKU</li>
+        </ul>
+        <div class="anchor">
+          If a spec sheet is your product strategy, you don't have a product. You have a procurement function with packaging.
+          <b>— Practitioner rule</b>
+        </div>
+      </div>
+      <div class="col">
+        <div class="col-label">Talking points</div>
+        <div class="talk">
+          <b>The Xiaomi 2014 lesson.</b> We were first to bring 4G, first to bring 6GB RAM at ₹10K, first to bring near-flagship specs at mid-range price. Spec leadership worked — until it didn't, because Realme arrived in eight months with the same chip and a louder Instagram.
+        </div>
+        <div class="talk">
+          <b>Apple doesn't win on specs.</b> It wins on the integration of chip, OS, hardware, and services into one ride. The A-series chip is an integration moat. The 5+ year software update is a trust moat. <b>Spec leadership is the wrong game for the top of the pyramid.</b>
+        </div>
+        <div class="talk">
+          <b>Software updates are the quietest moat in the industry.</b> Nobody buys a phone because it gets 5 years of updates. But the moment you have one, the second-hand value of your device rises, the residual trust compounds, and churn drops. Samsung copied this. Nobody else has.
+        </div>
+      </div>
+      <div class="col">
+        <div class="col-label">Real-world signal</div>
+        <div class="case">
+          <b>Samsung's foldable pivot, 2019–24.</b> Five years of losing the spec war to Chinese OEMs on price. The answer wasn't a cheaper flagship — it was a new category. Galaxy Fold and Flip created a hardware segment with no real competition. Apple has yet to enter. <b>The lesson: a new product shape resets the race.</b>
+        </div>
+        <div class="case">
+          <b>Pixel in India, 2024–26.</b> Google's product is software-led, not hardware-led. The Tensor chip is mid-range. The camera AI is best-in-class. The strategy is to lose the spec war and win the AI experience war. India outcome: still niche, but the only credible Android alternative to Samsung at the top.
+        </div>
+        <div class="anchor">
+          Product is a position, not a spec sheet. The position survives the spec.
+          <b>— Positioning (Ries & Trout)</b>
+        </div>
+      </div>
+    </div>
+    <div class="footer">SPJIMR SSA · SESSION 2</div>
+  </section>
+
+  <!-- ════ SLIDE 8 — FACTOR III: SUPPLY CHAIN (deep-dive) ════ -->
+  <section class="slide s-factor" data-n="8">
+    <div class="top">
+      <div class="left">
+        <span class="roman">III.</span>
+        <span class="factor-name">Supply <em>Chain</em></span>
+      </div>
+      <div class="right">Hawkeye Factor · 3 of 7</div>
+    </div>
+    <div class="question">"Where does the BoM live — and who owns the IP?"</div>
+    <div class="body">
+      <div class="col">
+        <div class="col-label">What to look for</div>
+        <h4>Four diagnostic questions</h4>
+        <ul>
+          <li>BoM cost share in India vs China vs Taiwan vs Korea</li>
+          <li>Vertical integration: components, modules, or assembly only</li>
+          <li>PLI scheme utilisation: allocated, claimed, disbursed</li>
+          <li>Single-source risk: chipset, display, battery, OS</li>
+        </ul>
+        <div class="anchor">
+          Assembly is what countries do when they don't yet have a supply chain. A supply chain is what survives if the assembler leaves.
+          <b>— Practitioner rule</b>
+        </div>
+      </div>
+      <div class="col">
+        <div class="col-label">Talking points</div>
+        <div class="talk">
+          <b>India assembled, not made.</b> Every smartphone "Made in India" in 2026 still ships with a Snapdragon or MediaTek SoC, a Samsung or BOE display, a Sony or Samsung sensor, and a CATL or BYD battery. <b>Four of the five most expensive components are foreign IP and foreign manufacturing.</b> The final assembly is Indian. The value is not.
+        </div>
+        <div class="talk">
+          <b>PLI is sustaining, not disruptive.</b> It moves the assembly line. It does not move the IP. The question for India is not "how many phones did we assemble in 2026" — it is "how many component layers did we add to the BoM, and at what margin". The answer: 18% of BoM in 2026 vs 15% in 2020. <b>3 percentage points in six years is not a disruption. It is a head start.</b>
+        </div>
+        <div class="talk">
+          <b>China's edge is not cheap labour.</b> It's the deep supplier base within 200 km of Shenzhen. The cluster effect means a new phone design goes from CAD to MP in 6 weeks. India has no equivalent cluster. Foxconn, Wistron, Pegatron — they brought the line, not the network. <b>PLI v2 has to be about the network, not the line.</b>
+        </div>
+      </div>
+      <div class="col">
+        <div class="col-label">Real-world signal</div>
+        <div class="case">
+          <b>Apple's China dependency, 2022–24.</b> The Foxconn Zhengzhou riots exposed that 90%+ of iPhone production sat inside a single 1.4-million-worker campus. Apple's response: shift 25% of iPhone production to India by 2027, but more importantly, move the <b>supplier ecosystem</b> — Luxshare, Sunwoda, and 50+ others — alongside.
+        </div>
+        <div class="case">
+          <b>Samsung's vertical play.</b> Displays, memory, chips, batteries — Samsung makes them all in-house. The reason Samsung phones are not price-competitive is that internal transfers are priced at market, not at cost. The reason Samsung phones can survive a Chinese price war is that they own the IP layer. <b>Vertical integration is a defence, not an offence.</b>
+        </div>
+        <div class="anchor">
+          A supply chain is not a list of vendors. It is a network with a specific gravity.
+          <b>— Cluster economics (Porter)</b>
+        </div>
+      </div>
+    </div>
+    <div class="footer">SPJIMR SSA · SESSION 2</div>
+  </section>
+
+  <!-- ════ SLIDE 9 — FACTOR IV: BRAND & MARKETING (deep-dive) ════ -->
+  <section class="slide s-factor" data-n="9">
+    <div class="top">
+      <div class="left">
+        <span class="roman">IV.</span>
+        <span class="factor-name">Brand &amp; <em>Marketing</em></span>
+      </div>
+      <div class="right">Hawkeye Factor · 4 of 7</div>
+    </div>
+    <div class="question">"Can the consumer finish the sentence — and is the sentence true?"</div>
+    <div class="body">
+      <div class="col">
+        <div class="col-label">What to look for</div>
+        <h4>Four diagnostic questions</h4>
+        <ul>
+          <li>One-sentence brand promise — and is it actually delivered?</li>
+          <li>Awareness vs consideration vs advocacy — the funnel asymmetry</li>
+          <li>Celebrity, sports, content spend as % of revenue — and ROI on each</li>
+          <li>Organic vs paid reach — does the brand compound or rent attention?</li>
+        </ul>
+        <div class="anchor">
+          A brand is a promise. A brand promise you don't keep is a liability with a logo.
+          <b>— Brand equity (Aaker)</b>
+        </div>
+      </div>
+      <div class="col">
+        <div class="col-label">Talking points</div>
+        <div class="talk">
+          <b>Apple in India, 2018–22.</b> Zero celebrity endorsements. No sports sponsorships. A handful of print ads. The brand compound was: experience zones, retail theatre, and word of mouth from people who already owned the device. <b>Apple spent less on Indian marketing than Realme — and won the consideration war at ₹70K+.</b>
+        </div>
+        <div class="talk">
+          <b>Xiaomi's community-to-marketing flip.</b> In 2014, Mi Forums and MIUI beta community were the marketing. By 2018, the strategy had shifted to Mi Explorers, Mi Studios, brand ambassadors. The community still existed, but the brand was buying attention, not earning it. <b>The ROI compressed. The brand premium compressed with it.</b>
+        </div>
+        <div class="talk">
+          <b>Three questions to ask any brand manager.</b> What is the most expensive word in your vocabulary? What did your last ₹10 Cr in marketing buy — awareness, trial, or loyalty? And if you stopped all marketing for six months, what is the one metric that would still move? <b>If the manager cannot answer #3, the brand is renting attention, not compounding it.</b>
+        </div>
+      </div>
+      <div class="col">
+        <div class="col-label">Real-world signal</div>
+        <div class="case">
+          <b>Nothing, CMF, iQOO.</b> The 2024–25 entry of sub-brand and lifestyle brands shows that a generation of Indian consumers is willing to pay a 10–15% premium for a brand identity, not a spec sheet. The category has split: <b>spec-driven purchase, identity-driven loyalty.</b>
+        </div>
+        <div class="case">
+          <b>OnePlus's "Never Settle" promise.</b> 2015–19: a high-quality, developer-friendly, premium-feeling phone at a fair price. The promise held. 2022–26: a portfolio spread so wide that the "never settle" position got diluted across Nord, R, T, and numbered series. The brand is now spread. <b>A brand that tries to be everything ends up being nothing distinct.</b>
+        </div>
+        <div class="anchor">
+          Marketing is what you do when your product can't speak for itself. Brand is what you have when it can.
+          <b>— Positioning (Ries & Trout)</b>
+        </div>
+      </div>
+    </div>
+    <div class="footer">SPJIMR SSA · SESSION 2</div>
+  </section>
+
+  <!-- ════ SLIDE 10 — FACTOR V: CHANNEL (deep-dive) ════ -->
+  <section class="slide s-factor" data-n="10">
+    <div class="top">
+      <div class="left">
+        <span class="roman">V.</span>
+        <span class="factor-name"><em>Channel</em></span>
+      </div>
+      <div class="right">Hawkeye Factor · 5 of 7</div>
+    </div>
+    <div class="question">"Where does the consumer touch the brand — and who controls the moment?"</div>
+    <div class="body">
+      <div class="col">
+        <div class="col-label">What to look for</div>
+        <h4>Four diagnostic questions</h4>
+        <ul>
+          <li>Online vs offline vs exclusive split — and the trend direction</li>
+          <li>Owned retail footprint — Mi Home, Apple, Samsung Experience, Vivo</li>
+          <li>Last-mile reach: Tier-2/3 service and delivery coverage</li>
+          <li>Channel margin: what the retailer actually makes per device sold</li>
+        </ul>
+        <div class="anchor">
+          The channel is not where the product is. The channel is where the customer makes the decision.
+          <b>— Channel theory</b>
+        </div>
+      </div>
+      <div class="col">
+        <div class="col-label">Talking points</div>
+        <div class="talk">
+          <b>Online-first was a 2014–18 strategy. It is a 2026 vulnerability.</b> Flipkart and Amazon now own 45% of smartphone sales. They own the search, the recommendation, the price visibility, the payment instrument, and the loyalty currency (SuperCoins, Pay balances). The brand that "sold online" traded a retailer margin for a platform tax.
+        </div>
+        <div class="talk">
+          <b>Exclusive retail is the new battleground.</b> Mi Home 3,500+, Apple 500+, Samsung Experience 1,800+, Vivo 1,200+. The numbers that matter: <b>visitors per square foot, conversion rate, accessory attach rate, footfall-driven upgrades.</b> Exclusive is the only place the brand owns the moment without an intermediary's algorithm in the way.
+        </div>
+        <div class="talk">
+          <b>Multi-brand offline is being squeezed from both sides.</b> Croma, Reliance Digital, Vijay Sales — they were the dominant channel in 2018 at 48%. Today: 38% and falling. The squeeze: online platforms take the convenience shopper, exclusive retail takes the experience shopper. <b>The middle is the worst place to be.</b>
+        </div>
+      </div>
+      <div class="col">
+        <div class="col-label">Real-world signal</div>
+        <div class="case">
+          <b>Apple's "reseller cap" strategy.</b> Apple in India limits authorised resellers to ~15–20 partners. They control price, experience, and inventory visibility. The result: no grey market, no margin wars, and the highest accessory attach rate in the industry. <b>Channel is a control system, not a distribution system.</b>
+        </div>
+        <div class="case">
+          <b>Realme, 2019–22.</b> Online-exclusive. Dependent on Flipkart and Amazon for traffic, visibility, and pricing. When Realme wanted to push a 20% margin increase, Amazon's algorithm de-ranked the listings. The brand could not raise price without losing the channel. <b>This is what it means to not own the channel.</b>
+        </div>
+        <div class="anchor">
+          Channels are not neutral pipes. They are power structures with their own P&L.
+          <b>— Channel power (Stern & El-Ansary)</b>
+        </div>
+      </div>
+    </div>
+    <div class="footer">SPJIMR SSA · SESSION 2</div>
+  </section>
+
+  <!-- ════ SLIDE 11 — FACTOR VI: SERVICE & CX (deep-dive) ════ -->
+  <section class="slide s-factor" data-n="11">
+    <div class="top">
+      <div class="left">
+        <span class="roman">VI.</span>
+        <span class="factor-name">Service &amp; <em>CX</em></span>
+      </div>
+      <div class="right">Hawkeye Factor · 6 of 7</div>
+    </div>
+    <div class="question">"Is the device you buy today still a device you can trust in 2031?"</div>
+    <div class="body">
+      <div class="col">
+        <div class="col-label">What to look for</div>
+        <h4>Four diagnostic questions</h4>
+        <ul>
+          <li>Years of OS updates and security patches — committed, not promised</li>
+          <li>Service network density: Tier-2 and Tier-3 coverage, not just metros</li>
+          <li>Average repair time and first-time-fix rate</li>
+          <li>Software reliability: app crash rate, battery degradation curve</li>
+        </ul>
+        <div class="anchor">
+          Service is what you do in year two of the relationship. Most brands treat it as a cost; the smart ones treat it as a moat.
+          <b>— Service-dominant logic (Vargo & Lusch)</b>
+        </div>
+      </div>
+      <div class="col">
+        <div class="col-label">Talking points</div>
+        <div class="talk">
+          <b>Apple's 5+ year OS update is the most under-priced moat in the industry.</b> The cost to Apple: $0 incremental per device. The cost to the consumer who has to replace a phone in year 3: ₹25K–80K. The signal: an iPhone holds ~60% of its value at year 3; an Android holds ~30%. <b>The user is paying themselves to stay in the ecosystem.</b>
+        </div>
+        <div class="talk">
+          <b>Tier-2/3 service is a 5-year operational bet.</b> Realme and OnePlus entered with online-first models and outsourced service networks. The result: a 25% of addressable Indian market — Tier-2/3 — that will not buy a phone they cannot service within 50 km. <b>That is roughly ₹35,000 Cr in annual smartphone demand that the exclusive-retail-plus-owned-service brands can capture.</b>
+        </div>
+        <div class="talk">
+          <b>First-time-fix rate is the metric nobody talks about.</b> Apple's stores run at 80%+. Most Indian OEM outsourced networks run at 50–60%. The cost of a second visit is not just the warranty cost — it is the trust cost, which never shows up in the P&L. <b>Trust is a P&L item. It is just on a different page.</b>
+        </div>
+      </div>
+      <div class="col">
+        <div class="col-label">Real-world signal</div>
+        <div class="case">
+          <b>Mi Care, 2018–24.</b> Xiaomi built 2,000+ service centres across India, including 600+ in Tier-2/3 cities. The cost: 6–8% of revenue. The benefit: the only major Chinese OEM with a credible national service network. <b>Whether they monetise it later (Mi subscription, accessories) is the next bet.</b>
+        </div>
+        <div class="case">
+          <b>Samsung's service-led premium.</b> Samsung's service network is the deepest in India. The result: in cities where Apple's reach is still building, Samsung captures the "I need help, today" buyer at premium price. <b>Service is a sales channel disguised as a cost centre.</b>
+        </div>
+        <div class="anchor">
+          A phone you cannot fix is a phone you will not keep. A phone you will not keep is a relationship that never compounds.
+          <b>— CX economics</b>
+        </div>
+      </div>
+    </div>
+    <div class="footer">SPJIMR SSA · SESSION 2</div>
+  </section>
+
+  <!-- ════ SLIDE 12 — FACTOR VII: ECOSYSTEM (deep-dive) ════ -->
+  <section class="slide s-factor" data-n="12">
+    <div class="top">
+      <div class="left">
+        <span class="roman">VII.</span>
+        <span class="factor-name"><em>Ecosystem</em></span>
+      </div>
+      <div class="right">Hawkeye Factor · 7 of 7</div>
+    </div>
+    <div class="question">"Can the customer leave — and what is the actual cost of leaving?"</div>
+    <div class="body">
+      <div class="col">
+        <div class="col-label">What to look for</div>
+        <h4>Four diagnostic questions</h4>
+        <ul>
+          <li>Categories a brand operates in — and depth (not just width) in each</li>
+          <li>Cross-device data continuity: iMessage, iCloud, AirDrop, FindMy</li>
+          <li>Recurring touchpoints per year: 1 purchase or 12</li>
+          <li>Switching cost: how much time, money, and identity transfers out</li>
+        </ul>
+        <div class="anchor">
+          The ecosystem is not what you sell. It is what the customer cannot leave.
+          <b>— Switching costs (Porter / Burnham)</b>
+        </div>
+      </div>
+      <div class="col">
+        <div class="col-label">Talking points</div>
+        <div class="talk">
+          <b>Width is not the moat. Depth is.</b> Realme operates in 4 categories. Apple operates in 12. The 3x difference is not what makes Apple win. What makes Apple win is that within each of those 12 categories, there are 3–4 cross-device touchpoints per year: AirPods paired to iPhone, iPad, Mac; iMessage continuity; Apple Pay auto-fill; AirDrop to laptop; iCloud photo sync. <b>Multiply 12 categories × 4 touchpoints = 48 sticky moments a year. Realme's number is closer to 4.</b>
+        </div>
+        <div class="talk">
+          <b>Ecosystem compounds at year 3, not year 1.</b> Most adjacencies lose money for the first two years. Apple Watch was a $1.4B business in year 1 — 80% gross margin erosion because it was subsidized by iPhone. By year 5, it was $25B at 60% margin. <b>The discipline is to fund the loss for 3 years, then harvest the lock-in for 10.</b>
+        </div>
+        <div class="talk">
+          <b>The Xiaomi India ecosystem is the most under-discussed moat in the category.</b> Mi phones, Mi TVs, Mi air purifiers, Mi security cameras, Mi smart bulbs, Mi smart bands — all controlled by the Mi Home app, with shared login, shared data, shared UI. A household with 5 Mi devices has a 5× switching cost multiplier. <b>It is the only Android-side architecture that competes with Apple on depth.</b>
+        </div>
+      </div>
+      <div class="col">
+        <div class="col-label">Real-world signal</div>
+        <div class="case">
+          <b>Apple's flywheel, 2007–26.</b> The iPhone was the front door. The App Store was the lock. iMessage was the chain. AirPods, Watch, iCloud, Apple Pay — each one added a layer to the lock. By 2025: <b>~70% of iPhone buyers in the US were inside an existing Apple household. The product was no longer the product. The household was.</b>
+        </div>
+        <div class="case">
+          <b>Samsung's open-vs-closed bet.</b> Samsung is in 10+ categories. They make their own OS skin, but run on Android. The result: ecosystem reach without the integration moat. Samsung's switching cost is "this is what I bought." Apple's is "this is who I am." <b>Two ecosystems, two different switching costs, two different multiples.</b>
+        </div>
+        <div class="anchor">
+          The moat is not the product. The moat is the time-compounded, feedback-reinforced depth across products.
+          <b>— Agent economy / agent memory depth (research-in-progress)</b>
+        </div>
+      </div>
+    </div>
+    <div class="footer">SPJIMR SSA · SESSION 2</div>
+  </section>
+
+  <!-- ════ SLIDE 13 — THE SPECTRUM ════ -->
+   <section class="slide s-spectrum" data-n="13">
     <div class="top">
       <div>
         <div class="label">Factor I · Business Model</div>
@@ -1154,8 +1677,8 @@
     <div class="footer">SPJIMR SSA · SESSION 2</div>
   </section>
 
-  <!-- ════ SLIDE 7 — PORTER ANCHOR ════ -->
-  <section class="slide s-theory" data-n="7">
+  <!-- ════ SLIDE 14 — PORTER ANCHOR ════ -->
+  <section class="slide s-theory" data-n="14">
     <div class="inner">
       <div class="left">
         <div class="label">Theory anchor · No. 1</div>
@@ -1170,8 +1693,8 @@
     <div class="footer">SPJIMR SSA · SESSION 2</div>
   </section>
 
-  <!-- ════ SLIDE 8 — BAR CHART: ECOSYSTEM WIDTH ════ -->
-  <section class="slide s-bars" data-n="8">
+  <!-- ════ SLIDE 15 — BAR CHART: ECOSYSTEM WIDTH ════ -->
+  <section class="slide s-bars" data-n="15">
     <div class="header">
       <div class="label">Factor VII · Ecosystem Expansion</div>
       <h3>How wide is the <em>adjacency</em>?</h3>
@@ -1204,8 +1727,8 @@
     <div class="footer">SPJIMR SSA · SESSION 2</div>
   </section>
 
-  <!-- ════ SLIDE 9 — THE VORTEX ════ -->
-  <section class="slide s-vortex" data-n="9">
+  <!-- ════ SLIDE 16 — THE VORTEX ════ -->
+  <section class="slide s-vortex" data-n="16">
     <div class="header">
       <div class="label">The Vortex</div>
       <h3>One purchase. <em>Six follow-ons.</em></h3>
@@ -1280,8 +1803,8 @@
     <div class="footer">SPJIMR SSA · SESSION 2</div>
   </section>
 
-  <!-- ════ SLIDE 10 — MATRIX: ACROSS THE 4 BRANDS ════ -->
-  <section class="slide s-matrix" data-n="10">
+  <!-- ════ SLIDE 17 — MATRIX: ACROSS THE 4 BRANDS ════ -->
+  <section class="slide s-matrix" data-n="17">
     <div class="header">
       <div class="label">Cross-cut · same 7 factors</div>
       <h3>Four brands, <em>one lens</em>.</h3>
@@ -1321,8 +1844,8 @@
     <div class="footer">SPJIMR SSA · SESSION 2</div>
   </section>
 
-  <!-- ════ SLIDE 11 — CHRISTENSEN ANCHOR ════ -->
-  <section class="slide s-theory" data-n="11">
+  <!-- ════ SLIDE 18 — CHRISTENSEN ANCHOR ════ -->
+  <section class="slide s-theory" data-n="18">
     <div class="inner">
       <div class="left">
         <div class="label">Theory anchor · No. 2</div>
@@ -1337,16 +1860,16 @@
     <div class="footer">SPJIMR SSA · SESSION 2</div>
   </section>
 
-  <!-- ════ SLIDE 12 — THE THESIS ════ -->
-  <section class="slide s-moment" data-n="12">
+  <!-- ════ SLIDE 19 — THE THESIS ════ -->
+  <section class="slide s-moment" data-n="19">
     <div style="background: var(--maroon); color: var(--bg); position: absolute; inset: 0; padding: 100px 88px; display: flex; flex-direction: column; justify-content: center;">
       <div style="font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: 0.3em; text-transform: uppercase; color: var(--gold-soft); margin-bottom: 36px;">— Moment Three —</div>
       <div style="font-family: 'Cormorant Garamond', serif; font-size: 80px; line-height: 1.05; font-weight: 400; max-width: 1100px;">The cheapest phone is <span style="font-style: italic; color: var(--gold-soft);">never</span> the cheapest category.<br>The brand that wins the phone <em>owns the next ₹40,000</em>.</div>
     </div>
   </section>
 
-  <!-- ════ SLIDE 13 — THREE TAKEAWAYS ════ -->
-  <section class="slide s-three" data-n="13">
+  <!-- ════ SLIDE 20 — THREE TAKEAWAYS ════ -->
+  <section class="slide s-three" data-n="20">
     <div>
       <div class="label">What to remember</div>
       <h3>Three shifts to take <em>out of the room</em>.</h3>
@@ -1371,8 +1894,8 @@
     <div class="footer">SPJIMR SSA · SESSION 2</div>
   </section>
 
-  <!-- ════ SLIDE 14 — FIRESIDE ════ -->
-  <section class="slide s-fireside" data-n="14">
+  <!-- ════ SLIDE 21 — FIRESIDE ════ -->
+  <section class="slide s-fireside" data-n="21">
     <div class="top">
       <div class="label">Fireside · 20 minutes</div>
       <h2>From <em>frameworks</em> to <em>your decisions</em>.</h2>
@@ -1448,7 +1971,7 @@
 
 <div class="nav" id="nav">
   <button class="arrow" data-go="prev">‹</button>
-  <button data-go="1" class="active"></button><button data-go="2"></button><button data-go="3"></button><button data-go="4"></button><button data-go="5"></button><button data-go="6"></button><button data-go="7"></button><button data-go="8"></button><button data-go="9"></button><button data-go="10"></button><button data-go="11"></button><button data-go="12"></button><button data-go="13"></button><button data-go="14"></button>
+  <button data-go="1" class="active"></button><button data-go="2"></button><button data-go="3"></button><button data-go="4"></button><button data-go="5"></button><button data-go="6"></button><button data-go="7"></button><button data-go="8"></button><button data-go="9"></button><button data-go="10"></button><button data-go="11"></button><button data-go="12"></button><button data-go="13"></button><button data-go="14"></button><button data-go="15"></button><button data-go="16"></button><button data-go="17"></button><button data-go="18"></button><button data-go="19"></button><button data-go="20"></button><button data-go="21"></button>
   <button class="arrow" data-go="next">›</button>
 </div>
 
