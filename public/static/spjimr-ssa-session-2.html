@@ -665,6 +665,164 @@
     font-style: italic;
   }
 
+  /* ───── Slide: Factor deep-dive (Factor I–VII, 7 slides) ───── */
+  .s-factor { padding: 56px 80px 48px; }
+  .s-factor .top {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--rule);
+    padding-bottom: 18px;
+    margin-bottom: 32px;
+  }
+  .s-factor .top .left {
+    display: flex;
+    align-items: baseline;
+    gap: 20px;
+  }
+  .s-factor .roman {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 56px;
+    font-weight: 500;
+    font-style: italic;
+    color: var(--maroon);
+    line-height: 1;
+  }
+  .s-factor .factor-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 44px;
+    font-weight: 500;
+    color: var(--ink);
+    line-height: 1;
+  }
+  .s-factor .factor-name em { font-style: italic; color: var(--maroon); }
+  .s-factor .top .right {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+  }
+  .s-factor .question {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 30px;
+    font-style: italic;
+    color: var(--ink);
+    line-height: 1.25;
+    margin-bottom: 32px;
+    max-width: 1100px;
+  }
+  .s-factor .body {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 28px;
+    flex: 1;
+  }
+  .s-factor .col {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .s-factor .col-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--maroon);
+    margin-bottom: 4px;
+  }
+  .s-factor .col h4 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    font-weight: 500;
+    color: var(--ink);
+    line-height: 1.15;
+    margin-bottom: 4px;
+  }
+  .s-factor .col ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .s-factor .col li {
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--ink-soft);
+    padding: 6px 0 6px 18px;
+    position: relative;
+    border-bottom: 1px dotted var(--rule-soft);
+  }
+  .s-factor .col li:last-child { border-bottom: 0; }
+  .s-factor .col li::before {
+    content: "·";
+    position: absolute;
+    left: 4px;
+    top: 6px;
+    color: var(--gold);
+    font-weight: 700;
+  }
+  .s-factor .col .talk {
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    line-height: 1.55;
+    color: var(--ink);
+  }
+  .s-factor .col .talk b {
+    color: var(--maroon);
+    font-weight: 600;
+  }
+  .s-factor .col .case {
+    background: var(--paper);
+    border-left: 3px solid var(--gold);
+    padding: 14px 16px;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--ink-soft);
+  }
+  .s-factor .col .case b { color: var(--ink); font-weight: 600; }
+  .s-factor .col .anchor {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 18px;
+    font-style: italic;
+    color: var(--ink-soft);
+    line-height: 1.4;
+    padding-top: 8px;
+    border-top: 1px solid var(--rule-soft);
+  }
+  .s-factor .col .anchor::before {
+    content: "“";
+    color: var(--maroon);
+    font-size: 28px;
+    line-height: 0;
+    vertical-align: -10px;
+    margin-right: 4px;
+  }
+  .s-factor .col .anchor b {
+    display: block;
+    margin-top: 8px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    font-style: normal;
+  }
+
+
+  .s-factor .body { display: flex; align-items: center; justify-content: center; }
+  .s-factor .col-center { width: 100%; text-align: center; padding: 40px; }
+  .s-factor .callout {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 64px;
+    font-weight: 500;
+    line-height: 1.15;
+    color: var(--ink);
+    max-width: 1200px;
+  }
+  .s-factor .callout em { font-style: italic; color: var(--maroon); }
+
   /* ───── Slide: Bar chart visual ───── */
   .s-bars { padding: 64px 88px 56px; }
   .s-bars .header { margin-bottom: 48px; }
@@ -1101,8 +1259,127 @@
     <div class="footer">SPJIMR SSA · SESSION 2</div>
   </section>
 
-  <!-- ════ SLIDE 6 — THE SPECTRUM ════ -->
-  <section class="slide s-spectrum" data-n="6">
+  <!-- ════ SLIDE 6 — FACTOR I: BUSINESS MODEL (deep-dive) ════ -->
+  <section class="slide s-factor" data-n="6">
+    <div class="top">
+      <div class="left">
+        <span class="roman">I.</span>
+        <span class="factor-name">Business <em>Model</em></span>
+      </div>
+      <div class="right">Hawkeye Factor · 1 of 7</div>
+    </div>
+    <div class="body">
+      <div class="col col-center">
+        <div class="callout">Hardware % of revenue → services flywheel</div>
+      </div>
+    </div>
+    <div class="footer">SPJIMR SSA · SESSION 2</div>
+  </section>
+
+  <!-- ════ SLIDE 7 — FACTOR II: PRODUCT (deep-dive) ════ -->
+  <section class="slide s-factor" data-n="7">
+    <div class="top">
+      <div class="left">
+        <span class="roman">II.</span>
+        <span class="factor-name"><em>Product</em></span>
+      </div>
+      <div class="right">Hawkeye Factor · 2 of 7</div>
+    </div>
+    <div class="body">
+      <div class="col col-center">
+        <div class="callout">Spec leadership vs spec position</div>
+      </div>
+    </div>
+    <div class="footer">SPJIMR SSA · SESSION 2</div>
+  </section>
+
+  <!-- ════ SLIDE 8 — FACTOR III: SUPPLY CHAIN (deep-dive) ════ -->
+  <section class="slide s-factor" data-n="8">
+    <div class="top">
+      <div class="left">
+        <span class="roman">III.</span>
+        <span class="factor-name">Supply <em>Chain</em></span>
+      </div>
+      <div class="right">Hawkeye Factor · 3 of 7</div>
+    </div>
+    <div class="body">
+      <div class="col col-center">
+        <div class="callout">India assembled, not made · PLI moves lines, not IP</div>
+      </div>
+    </div>
+    <div class="footer">SPJIMR SSA · SESSION 2</div>
+  </section>
+
+  <!-- ════ SLIDE 9 — FACTOR IV: BRAND & MARKETING (deep-dive) ════ -->
+  <section class="slide s-factor" data-n="9">
+    <div class="top">
+      <div class="left">
+        <span class="roman">IV.</span>
+        <span class="factor-name">Brand &amp; <em>Marketing</em></span>
+      </div>
+      <div class="right">Hawkeye Factor · 4 of 7</div>
+    </div>
+    <div class="body">
+      <div class="col col-center">
+        <div class="callout">Promise + delivery + whether you compound or rent attention</div>
+      </div>
+    </div>
+    <div class="footer">SPJIMR SSA · SESSION 2</div>
+  </section>
+
+  <!-- ════ SLIDE 10 — FACTOR V: CHANNEL (deep-dive) ════ -->
+  <section class="slide s-factor" data-n="10">
+    <div class="top">
+      <div class="left">
+        <span class="roman">V.</span>
+        <span class="factor-name"><em>Channel</em></span>
+      </div>
+      <div class="right">Hawkeye Factor · 5 of 7</div>
+    </div>
+    <div class="body">
+      <div class="col col-center">
+        <div class="callout">Online 45% · Multi-brand 38% · Exclusive 17% (and rising)</div>
+      </div>
+    </div>
+    <div class="footer">SPJIMR SSA · SESSION 2</div>
+  </section>
+
+  <!-- ════ SLIDE 11 — FACTOR VI: SERVICE & CX (deep-dive) ════ -->
+  <section class="slide s-factor" data-n="11">
+    <div class="top">
+      <div class="left">
+        <span class="roman">VI.</span>
+        <span class="factor-name">Service &amp; <em>CX</em></span>
+      </div>
+      <div class="right">Hawkeye Factor · 6 of 7</div>
+    </div>
+    <div class="body">
+      <div class="col col-center">
+        <div class="callout">OS updates · service density · first-time-fix rate</div>
+      </div>
+    </div>
+    <div class="footer">SPJIMR SSA · SESSION 2</div>
+  </section>
+
+  <!-- ════ SLIDE 12 — FACTOR VII: ECOSYSTEM (deep-dive) ════ -->
+  <section class="slide s-factor" data-n="12">
+    <div class="top">
+      <div class="left">
+        <span class="roman">VII.</span>
+        <span class="factor-name"><em>Ecosystem</em></span>
+      </div>
+      <div class="right">Hawkeye Factor · 7 of 7</div>
+    </div>
+    <div class="body">
+      <div class="col col-center">
+        <div class="callout">Width × depth = sticky moments per year</div>
+      </div>
+    </div>
+    <div class="footer">SPJIMR SSA · SESSION 2</div>
+  </section>
+
+  <!-- ════ SLIDE 13 — THE SPECTRUM ════ -->
+   <section class="slide s-spectrum" data-n="13">
     <div class="top">
       <div>
         <div class="label">Factor I · Business Model</div>
@@ -1154,8 +1431,8 @@
     <div class="footer">SPJIMR SSA · SESSION 2</div>
   </section>
 
-  <!-- ════ SLIDE 7 — PORTER ANCHOR ════ -->
-  <section class="slide s-theory" data-n="7">
+  <!-- ════ SLIDE 14 — PORTER ANCHOR ════ -->
+  <section class="slide s-theory" data-n="14">
     <div class="inner">
       <div class="left">
         <div class="label">Theory anchor · No. 1</div>
@@ -1170,8 +1447,8 @@
     <div class="footer">SPJIMR SSA · SESSION 2</div>
   </section>
 
-  <!-- ════ SLIDE 8 — BAR CHART: ECOSYSTEM WIDTH ════ -->
-  <section class="slide s-bars" data-n="8">
+  <!-- ════ SLIDE 15 — BAR CHART: ECOSYSTEM WIDTH ════ -->
+  <section class="slide s-bars" data-n="15">
     <div class="header">
       <div class="label">Factor VII · Ecosystem Expansion</div>
       <h3>How wide is the <em>adjacency</em>?</h3>
@@ -1204,8 +1481,8 @@
     <div class="footer">SPJIMR SSA · SESSION 2</div>
   </section>
 
-  <!-- ════ SLIDE 9 — THE VORTEX ════ -->
-  <section class="slide s-vortex" data-n="9">
+  <!-- ════ SLIDE 16 — THE VORTEX ════ -->
+  <section class="slide s-vortex" data-n="16">
     <div class="header">
       <div class="label">The Vortex</div>
       <h3>One purchase. <em>Six follow-ons.</em></h3>
@@ -1280,8 +1557,8 @@
     <div class="footer">SPJIMR SSA · SESSION 2</div>
   </section>
 
-  <!-- ════ SLIDE 10 — MATRIX: ACROSS THE 4 BRANDS ════ -->
-  <section class="slide s-matrix" data-n="10">
+  <!-- ════ SLIDE 17 — MATRIX: ACROSS THE 4 BRANDS ════ -->
+  <section class="slide s-matrix" data-n="17">
     <div class="header">
       <div class="label">Cross-cut · same 7 factors</div>
       <h3>Four brands, <em>one lens</em>.</h3>
@@ -1321,8 +1598,8 @@
     <div class="footer">SPJIMR SSA · SESSION 2</div>
   </section>
 
-  <!-- ════ SLIDE 11 — CHRISTENSEN ANCHOR ════ -->
-  <section class="slide s-theory" data-n="11">
+  <!-- ════ SLIDE 18 — CHRISTENSEN ANCHOR ════ -->
+  <section class="slide s-theory" data-n="18">
     <div class="inner">
       <div class="left">
         <div class="label">Theory anchor · No. 2</div>
@@ -1337,16 +1614,16 @@
     <div class="footer">SPJIMR SSA · SESSION 2</div>
   </section>
 
-  <!-- ════ SLIDE 12 — THE THESIS ════ -->
-  <section class="slide s-moment" data-n="12">
+  <!-- ════ SLIDE 19 — THE THESIS ════ -->
+  <section class="slide s-moment" data-n="19">
     <div style="background: var(--maroon); color: var(--bg); position: absolute; inset: 0; padding: 100px 88px; display: flex; flex-direction: column; justify-content: center;">
       <div style="font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: 0.3em; text-transform: uppercase; color: var(--gold-soft); margin-bottom: 36px;">— Moment Three —</div>
       <div style="font-family: 'Cormorant Garamond', serif; font-size: 80px; line-height: 1.05; font-weight: 400; max-width: 1100px;">The cheapest phone is <span style="font-style: italic; color: var(--gold-soft);">never</span> the cheapest category.<br>The brand that wins the phone <em>owns the next ₹40,000</em>.</div>
     </div>
   </section>
 
-  <!-- ════ SLIDE 13 — THREE TAKEAWAYS ════ -->
-  <section class="slide s-three" data-n="13">
+  <!-- ════ SLIDE 20 — THREE TAKEAWAYS ════ -->
+  <section class="slide s-three" data-n="20">
     <div>
       <div class="label">What to remember</div>
       <h3>Three shifts to take <em>out of the room</em>.</h3>
@@ -1371,8 +1648,8 @@
     <div class="footer">SPJIMR SSA · SESSION 2</div>
   </section>
 
-  <!-- ════ SLIDE 14 — FIRESIDE ════ -->
-  <section class="slide s-fireside" data-n="14">
+  <!-- ════ SLIDE 21 — FIRESIDE ════ -->
+  <section class="slide s-fireside" data-n="21">
     <div class="top">
       <div class="label">Fireside · 20 minutes</div>
       <h2>From <em>frameworks</em> to <em>your decisions</em>.</h2>
@@ -1448,7 +1725,7 @@
 
 <div class="nav" id="nav">
   <button class="arrow" data-go="prev">‹</button>
-  <button data-go="1" class="active"></button><button data-go="2"></button><button data-go="3"></button><button data-go="4"></button><button data-go="5"></button><button data-go="6"></button><button data-go="7"></button><button data-go="8"></button><button data-go="9"></button><button data-go="10"></button><button data-go="11"></button><button data-go="12"></button><button data-go="13"></button><button data-go="14"></button>
+  <button data-go="1" class="active"></button><button data-go="2"></button><button data-go="3"></button><button data-go="4"></button><button data-go="5"></button><button data-go="6"></button><button data-go="7"></button><button data-go="8"></button><button data-go="9"></button><button data-go="10"></button><button data-go="11"></button><button data-go="12"></button><button data-go="13"></button><button data-go="14"></button><button data-go="15"></button><button data-go="16"></button><button data-go="17"></button><button data-go="18"></button><button data-go="19"></button><button data-go="20"></button><button data-go="21"></button>
   <button class="arrow" data-go="next">›</button>
 </div>
 
